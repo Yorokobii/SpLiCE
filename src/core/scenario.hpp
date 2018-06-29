@@ -34,7 +34,7 @@ template <typename cell_t, typename config_t> class Scenario {
     world.setDt(config.sim_dt);
     duration = config.sim_duration;
 
-    world.addCell(new Cell(MecaCell::Vec::zero()));
+    world.addCell(new cell_t(MecaCell::Vec::zero()));
     world.update();
     MecaCell::logger<MecaCell::DBG>("Done initializing scenario");
   }

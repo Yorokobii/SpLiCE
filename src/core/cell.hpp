@@ -4,18 +4,30 @@
 #include <mecacell/elasticbody.hpp>
 #include <mecacell/springbody.hpp>
 
-class Cell : public MecaCell::ConnectableCell<Cell, MecaCell::SpringBody> {
+template <typename Controller> class Cell
+  : public MecaCell::ConnectableCell<Cell<Controller>, MecaCell::SpringBody> {
   bool contracting = false;
   double contractTime = 0.0;
 
  public:
+	using Vec = MecaCell::Vec;
+  using Base = MecaCell::ConnectableCell<Cell<Controller>, MecaCell::SpringBody>;
   double originalRadius = 30.0;
   double adhCoef = 25.0;
   double contractRatio = 0.9;
   double contractDuration = 0.4;
+  double theta = 0.0;
+  double phi = 0.0;
+  int age = 0;
+  double energy = 100.0;
+  Controller ctrl;
 
-  using Parent = MecaCell::ConnectableCell<Cell, MecaCell::SpringBody>;
-  Cell(const MecaCell::Vector3D& v) : Parent(v) {}
+  Cell(const Vec& p): Base(p), ctrl() {}
+
+  Cell(const Vec& p, const Controller& ct, double e): Base(p), ctrl(ct) {
+    energy = e;
+  }
+
   double getAdhesionWith(Cell*, MecaCell::Vec) { return adhCoef; }
 
   void startContracting() {
@@ -27,6 +39,10 @@ class Cell : public MecaCell::ConnectableCell<Cell, MecaCell::SpringBody> {
   }
 
   template <typename W> void updateBehavior(W& w) {
+    double output = ctrl.getOutput("contract");
+    if (output < 0.5) {
+        startContracting();
+    }
     if (contracting) {
       contractTime += w.getDt();
       if (contractTime > contractDuration) {
@@ -35,6 +51,7 @@ class Cell : public MecaCell::ConnectableCell<Cell, MecaCell::SpringBody> {
         this->body.setRadius(originalRadius);
       }
     }
+    age += 1;
   }
 };
 #endif

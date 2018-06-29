@@ -2,10 +2,11 @@
 #define LALACONFIG_HPP
 #include <mecacell/mecacell.h>
 #include <fstream>
-#include "cell.hpp"
 #include "../external/cxxopts/cxxopts.hpp"
 #include "../external/json/json.hpp"
+#include "cell.hpp"
 #include "scenario.hpp"
+#include "controller.hpp"
 
 #define CHKPARAM(paramName)         \
   if (it.key() == "" #paramName "") \
@@ -17,7 +18,9 @@ struct Config {
   using json = nlohmann::json;
 
   // ---------   STATIC CONFIG  ----------
-  using scenario_t = Scenario<Cell, Config>;
+	using CtrlType = BaseController;
+  using CellType = Cell<BaseController>;
+  using scenario_t = Scenario<CellType, Config>;
 
   // --------    DYNAMIC CONFIG  ----------
   // params and their default values
