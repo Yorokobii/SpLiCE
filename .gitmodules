@@ -7,3 +7,6 @@
 [submodule "src/external/mecacell"]
 	path = src/external/mecacell
 	url = git@github.com:jdisset/mecacell.git
+[submodule "src/external/metaconfig"]
+	path = src/external/metaconfig
+	url = git@github.com:jdisset/metaconfig.git
