@@ -1,0 +1,10 @@
+{
+    "sim_duration": 1000.0,
+    "sim_dt": 0.01,
+    "cell_radius": 20.0,
+    "cell_mass": 0.05,
+    "cell_stiffness": 1000.0,
+    "cell_adhesion": 250.0,
+    "fluid_density": 0.0001,
+    "t_contract": 100
+}
