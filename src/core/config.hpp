@@ -1,55 +1,76 @@
-#pragma once
+#ifndef LALACONFIG_HPP
+#define LALACONFIG_HPP
 #include <mecacell/mecacell.h>
-#include <metaconfig/metaconfig.hpp>
+#include <fstream>
+#include "../external/cxxopts/cxxopts.hpp"
+#include "../external/json/json.hpp"
 #include "cell.hpp"
-#include "controller.hpp"
 #include "scenario.hpp"
+#include "controller.hpp"
 
-struct BaseController;
+#define CHKPARAM(paramName)         \
+  if (it.key() == "" #paramName "") \
+  paramName = it.value(),           \
+  MecaCell::logger<MecaCell::INF>("Config :: \"", it.key(), "\" = ", it.value())
+
 template <typename Cell, typename Conf> class Scenario;
 struct Config {
-	// ---------   STATIC CONFIG   ------------
+  using json = nlohmann::json;
+
+  // ---------   STATIC CONFIG  ----------
 	using CtrlType = BaseController;
-	using CellType = Cell<BaseController>;
-	using scenario_t = Scenario<CellType, Config>;
+  using CellType = Cell<BaseController, Config>;
+  using scenario_t = Scenario<CellType, Config>;
 
-	// ---------   DYNAMICAL CONFIG  ----------
-	// -- GA
-	struct GAConfig {
-		DECLARE_CONFIG(GAConfig, (size_t, populationSize), (double, mutationRate),
-		               (double, crossoverRate), (size_t, nbGenerations), (size_t, verbosity),
-		               (size_t, nbThreads), (size_t, minSpecieSize), (bool, speciation),
-		               (double, speciationThreshold_base),
-		               (double, speciationThreshold_increment),
-		               (double, speciationThreshold_max), (double, speciationThreshold_min))
-		GAConfig() {
-			populationSize = 200;
-			mutationRate = 0.9;
-			crossoverRate = 0.1;
-			nbGenerations = 400;
-			verbosity = 2;
-			nbThreads = 4;
-			speciation = true;
-			speciationThreshold_base = 0.3;
-			speciationThreshold_increment = 0.3;
-			speciationThreshold_max = 0.8;
-			speciationThreshold_min = 0.01;
-		}
-	};
+  // --------    DYNAMIC CONFIG  ----------
+  // params and their default values
+  double sim_duration = 1000.0;
+  double sim_dt = 0.1;
+  int t_contract = 500;
+  double cell_radius = 10.0;
+  double cell_mass = 0.001;
+  double cell_stiffness = 10.0;
+  double cell_adhesion = 5.0;
+  double div_radius = 20.0;
+  double fluid_density = 1e-4;
+  double energy_initial = 10.0;
+  double energy_duplicate = 1.0;
+  double energy_rotate = 0.1;
+  double energy_apoptosis = 0.5;
+  double energy_contraction = 0.1;
+  double energy_quiescence = 0.01;
+  int seed = 0;
 
-	// -- Simulation
-	DECLARE_CONFIG(Config, (int, seed), (double, dt), (double, maxDuration),
-	               (size_t, t_contract), (double, cell_radius), (double, cell_stiffness),
-	               (double, cell_adhesion), (double, fluid_density), (GAConfig, ga))
+  Config(int argc, char** argv) {
+    cxxopts::Options options("lala", "lala experiment program");
+    options.add_options()("f,file", "configuration file", cxxopts::value<std::string>());
+    options.parse(argc, argv);
 
-	Config() {
-		seed = 0;
-		dt = 0.05;
-		maxDuration = 20;
-		t_contract = 500;
-		cell_radius = 10.0;
-		cell_stiffness = 10.0;
-		cell_adhesion = 5.0;
-		fluid_density = 1e-4;
-	}
+    if (!options.count("file"))
+      MecaCell::logger<MecaCell::WARN>("No configuration file specified. Using defaults");
+    else
+      load(options["file"].as<std::string>());
+  }
+
+  // loads a conf file
+  void load(std::string file) {
+    std::ifstream t(file);
+    std::stringstream buffer;
+    buffer << t.rdbuf();
+    auto o = json::parse(buffer.str());
+    for (auto it = o.begin(); it != o.end(); ++it) {
+      CHKPARAM(sim_duration);
+      else CHKPARAM(sim_dt);
+      else CHKPARAM(t_contract);
+      else CHKPARAM(cell_radius);
+      else CHKPARAM(cell_mass);
+      else CHKPARAM(cell_stiffness);
+      else CHKPARAM(cell_adhesion);
+      else CHKPARAM(div_radius);
+      else CHKPARAM(fluid_density);
+      else CHKPARAM(seed);
+      else MecaCell::logger<MecaCell::WARN>("Config :: unknown field \"", it.key(), "\"");
+    }
+  }
 };
+#endif
