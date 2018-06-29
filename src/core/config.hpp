@@ -39,6 +39,7 @@ struct Config {
   double energy_apoptosis = 0.5;
   double energy_contraction = 0.1;
   double energy_quiescence = 0.01;
+  int min_action_age = 20;
   int seed = 0;
 
   Config(int argc, char** argv) {

@@ -53,44 +53,47 @@ template <typename Controller, typename Config> class Cell
 
   template <typename W> void updateBehavior(W& w) {
     age += 1;
-    std::vector<double> actions;
-    for (auto& astr : action_outputs) {
-      actions.push_back(ctrl.getOutput(astr));
-    }
-    int actionMax = 0; double actionMaxConc = 0.0;
-    for (auto i = 0; i < actions.size(); ++i) {
-      if (actions[i] > actionMaxConc) {
-        actionMax = i;
-        actionMaxConc = actions[i];
-      }
-    }
-    std::string action = action_outputs[actionMax];
+    usedEnergy = 0.0;
+    if (age > config.min_action_age) {
+        std::vector<double> actions;
+        for (auto& astr : action_outputs) {
+          actions.push_back(ctrl.getOutput(astr));
+        }
+        int actionMax = 0; double actionMaxConc = 0.0;
+        for (auto i = 0; i < actions.size(); ++i) {
+          if (actions[i] > actionMaxConc) {
+            actionMax = i;
+            actionMaxConc = actions[i];
+          }
+        }
+        std::string action = action_outputs[actionMax];
 
-    if (action == "duplicate") {
-      // cell duplicate
-      Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
-      Vec child_pos = dpos * config.div_radius + this->getPosition();
-      w.addCell(new Cell(child_pos, config));
-      age = 0;
-      usedEnergy = config.energy_duplicate;
-    } else if (action == "rotate") {
-      // cell rotate
-      double dtheta = ((ctrl.getOutput("theta_plus") - ctrl.getOutput("theta_minus")) /
-                       (ctrl.getOutput("theta_plus") + ctrl.getOutput("theta_minus")));
-      theta = min(max(theta + dtheta, 0.0), 2 * M_PI);
-      double dphi = ((ctrl.getOutput("phi_plus") - ctrl.getOutput("phi_minus")) /
-                     (ctrl.getOutput("phi_plus") + ctrl.getOutput("phi_minus")));
-      phi = min(max(phi + dphi, 0.0), 2 * M_PI);
-      usedEnergy = config.energy_rotate;
-    } else if (action == "apoptosis") {
-      // cell death
-      if (w.cells.size() > 1) { this->die(); }
-      usedEnergy = config.energy_apoptosis;
-    } else if (action == "contraction") {
-      startContracting();
-      usedEnergy = config.energy_contraction;
-    } else if (action == "quiescence") {
-      usedEnergy = config.energy_quiescence;
+        if (action == "duplicate") {
+          // cell duplicate
+          Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
+          Vec child_pos = dpos * config.div_radius + this->getPosition();
+          w.addCell(new Cell(child_pos, config));
+          age = 0;
+          usedEnergy = config.energy_duplicate;
+        } else if (action == "rotate") {
+          // cell rotate
+          double dtheta = ((ctrl.getOutput("theta_plus") - ctrl.getOutput("theta_minus")) /
+                          (ctrl.getOutput("theta_plus") + ctrl.getOutput("theta_minus")));
+          theta = min(max(theta + dtheta, 0.0), 2 * M_PI);
+          double dphi = ((ctrl.getOutput("phi_plus") - ctrl.getOutput("phi_minus")) /
+                        (ctrl.getOutput("phi_plus") + ctrl.getOutput("phi_minus")));
+          phi = min(max(phi + dphi, 0.0), 2 * M_PI);
+          usedEnergy = config.energy_rotate;
+        } else if (action == "apoptosis") {
+          // cell death
+          if (w.cells.size() > 5) { this->die(); }
+          usedEnergy = config.energy_apoptosis;
+        } else if (action == "contraction") {
+          startContracting();
+          usedEnergy = config.energy_contraction;
+        } else if (action == "quiescence") {
+          usedEnergy = config.energy_quiescence;
+        }
     }
 
     if (contracting) {
