@@ -1,7 +1,7 @@
 #define MECACELL_TERMINAL_COLORS
 #define MECACELL_LOGGER_WARN_DISABLE
 #include <mecacell/mecacell.h>
-#include "config.hpp"
+#include "core/config.hpp"
 
 int main(int argc, char **argv) {
   Config cfg(argc, argv);

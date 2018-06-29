@@ -5,7 +5,7 @@
 #include <random>
 #include <cmath>
 #include <math.h>
-#include "simplifiedfluidplugin.hpp"
+#include "../simplifiedfluidplugin.hpp"
 #include "config.hpp"
 
 template <typename cell_t, typename config_t> class Scenario;

@@ -3,7 +3,7 @@
 #include <mecacell/mecacell.h>
 #include <mecacellviewer/viewer.h>
 #include <mecacellviewer/plugins/meshviewerplugin.hpp>
-#include "config.hpp"
+#include "core/config.hpp"
 #include "viewerplugins/camera.hpp"
 #include "viewerplugins/colors.hpp"
 #include "viewerplugins/complugin.hpp"

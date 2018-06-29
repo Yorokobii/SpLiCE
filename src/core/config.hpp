@@ -3,8 +3,8 @@
 #include <mecacell/mecacell.h>
 #include <fstream>
 #include "cell.hpp"
-#include "external/cxxopts/cxxopts.hpp"
-#include "external/json/json.hpp"
+#include "../external/cxxopts/cxxopts.hpp"
+#include "../external/json/json.hpp"
 #include "scenario.hpp"
 
 #define CHKPARAM(paramName)         \
