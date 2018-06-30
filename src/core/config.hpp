@@ -41,6 +41,8 @@ struct Config {
   double energy_quiescence = 0.01;
   int min_action_age = 20;
   int seed = 0;
+  int controllerUpdate = 5;
+  double betaAge = 0.4;
 
   Config(int argc, char** argv) {
     cxxopts::Options options("lala", "lala experiment program");

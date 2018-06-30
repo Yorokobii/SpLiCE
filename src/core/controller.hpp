@@ -14,6 +14,8 @@ struct BaseController {
 		std::uniform_real_distribution<> dis(0.0, 1.0);
 		return dis(MecaCell::Config::globalRand());
 	}
+
+  void update() {}
 };
 
 #endif

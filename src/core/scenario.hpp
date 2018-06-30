@@ -19,6 +19,8 @@ template <typename cell_t, typename config_t> class Scenario {
   std::mt19937 gen;
   double duration = 0.0;
   double energy = 0.0;
+  double gcomm = 0.0;
+  int worldAge = 0;
 
  protected:
   double currentTime = 0;
@@ -42,13 +44,36 @@ template <typename cell_t, typename config_t> class Scenario {
     MecaCell::logger<MecaCell::DBG>("Done initializing scenario");
   }
 
+  void controllerUpdate() {
+ 		// for (auto& conn : world.cellPlugin.connections) {
+    //   conn.cells.first.lcomm += conn.cells.second.dlcomm;
+    //   conn.cells.second.lcomm += conn.cells.first.dlcomm;
+    // }
+    double maxPressure = 0.0;
+    for (auto& c : world.cells) {
+      energy -= c->usedEnergy;
+      gcomm += c->dgcomm;
+      c->nage = c->age / worldAge;
+      maxPressure = max(c->getBody().getPressure(), maxPressure);
+      for (auto& d : world.cells) {
+        if (c->isConnectedTo(d)) c->lcomm += d->dlcomm;
+      }
+    }
+    gcomm = min(max(gcomm, 0.0), 1.0);
+    for (auto& c : world.cells) {
+      c->lcomm = min(max(c->lcomm, 0.0), 1.0);
+      c->gcomm = gcomm;
+      c->maxPressure = maxPressure;
+      c->ctrl_update = true;
+    }
+  }
+
   void loop() {
     currentTime += world.getDt();
     world.update();
-    for (auto& c : world.cells) {
-      energy -= c->usedEnergy;
-    }
-    MecaCell::logger<MecaCell::DBG>(energy);
+    if (worldAge % config.controllerUpdate) controllerUpdate();
+    worldAge += 1;
+    MecaCell::logger<MecaCell::DBG>(currentTime, " ", worldAge, " ", energy, " ", gcomm);
   }
 
   world_t& getWorld() { return world; }
