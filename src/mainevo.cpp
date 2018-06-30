@@ -17,9 +17,10 @@ int main(int argc, char** argv) {
 
         MecaCell::Vec com = scenario.com;
 
-        individual.fitnesses["DistanceEnergy"] = (com.x() * com.x() +
-                                                  com.y() * com.y() +
-                                                  com.z() * com.z()); // TODO: use julia.
+        individual.fitnesses["DistanceEnergy"] = (sqrt(com.x() * com.x() +
+                                                       com.y() * com.y() +
+                                                       com.z() * com.z()) /
+                                                  cfg.originalRadius);
       },
       "DistanceEnergy");
 
