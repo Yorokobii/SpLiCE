@@ -13,39 +13,37 @@
   paramName = it.value(),           \
   MecaCell::logger<MecaCell::INF>("Config :: \"", it.key(), "\" = ", it.value())
 
-template <typename Cell, typename Conf> class Scenario;
+template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario;
 struct Config {
   using json = nlohmann::json;
 
   // ---------   STATIC CONFIG  ----------
 	using CtrlType = BaseController;
   using CellType = Cell<BaseController, Config>;
-  using scenario_t = Scenario<CellType, Config>;
+  using scenario_t = Scenario<CellType, CtrlType, Config>;
 
   // --------    DYNAMIC CONFIG  ----------
   // params and their default values
-  double sim_duration = 1000.0;
-  double sim_dt = 0.1;
-  int t_contract = 500;
-  double cell_radius = 10.0;
-  double cell_mass = 0.001;
-  double cell_stiffness = 10.0;
-  double cell_adhesion = 5.0;
-  double div_radius = 20.0;
-  double fluid_density = 1e-4;
-  double energy_initial = 10.0;
-  double energy_duplicate = 1.0;
-  double energy_rotate = 0.1;
-  double energy_apoptosis = 0.5;
-  double energy_contraction = 0.1;
-  double energy_quiescence = 0.01;
-  int min_action_age = 20;
-  int seed = 0;
-  int controllerUpdate = 5;
+  double simDuration = 1000.0;
+  double dt = 0.01;
+  double originalRadius = 30.0;
+  double adhCoef = 25.0;
+  double contractRatio = 0.9;
+  double contractDuration = 0.4;
+  double divRadius = 20.0;
+  int minActionAge = 20;
+  double energyDuplicate = 1.0;
+  double energyRotate = 0.1;
+  double energyContraction = 0.1;
+  double energyQuiescence = 0.01;
+  double energyInitial = 10.0;
   double betaAge = 0.4;
+  double fluidDensity = 1e-4;
+  int controllerUpdate = 5;
+  int seed = 0;
 
   Config(int argc, char** argv) {
-    cxxopts::Options options("lala", "lala experiment program");
+    cxxopts::Options options("splice", "spike-based learning in a cellular environment");
     options.add_options()("f,file", "configuration file", cxxopts::value<std::string>());
     options.parse(argc, argv);
 
@@ -62,15 +60,22 @@ struct Config {
     buffer << t.rdbuf();
     auto o = json::parse(buffer.str());
     for (auto it = o.begin(); it != o.end(); ++it) {
-      CHKPARAM(sim_duration);
-      else CHKPARAM(sim_dt);
-      else CHKPARAM(t_contract);
-      else CHKPARAM(cell_radius);
-      else CHKPARAM(cell_mass);
-      else CHKPARAM(cell_stiffness);
-      else CHKPARAM(cell_adhesion);
-      else CHKPARAM(div_radius);
-      else CHKPARAM(fluid_density);
+      CHKPARAM(simDuration);
+      else CHKPARAM(dt);
+      else CHKPARAM(originalRadius);
+      else CHKPARAM(adhCoef);
+      else CHKPARAM(contractRatio);
+      else CHKPARAM(contractDuration);
+      else CHKPARAM(divRadius);
+      else CHKPARAM(minActionAge);
+      else CHKPARAM(energyDuplicate);
+      else CHKPARAM(energyRotate);
+      else CHKPARAM(energyContraction);
+      else CHKPARAM(energyQuiescence);
+      else CHKPARAM(energyInitial);
+      else CHKPARAM(betaAge);
+      else CHKPARAM(fluidDensity);
+      else CHKPARAM(controllerUpdate);
       else CHKPARAM(seed);
       else MecaCell::logger<MecaCell::WARN>("Config :: unknown field \"", it.key(), "\"");
     }

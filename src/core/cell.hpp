@@ -14,7 +14,8 @@ template <typename Controller, typename Config> class Cell
 
  public:
 	using Vec = MecaCell::Vec;
-  using Base = MecaCell::ConnectableCell<Cell<Controller, Config>, MecaCell::ContactSurfaceBody>;
+  using Base = MecaCell::ConnectableCell<Cell<Controller, Config>,
+                                         MecaCell::ContactSurfaceBody>;
   double originalRadius = 30.0;
   double adhCoef = 25.0;
   double contractRatio = 0.9;
@@ -35,21 +36,18 @@ template <typename Controller, typename Config> class Cell
   std::vector<std::string> action_outputs = {"duplicate", "rotate", "quiescence",
                                         "apoptosis", "contraction"};
 
-  Cell(const Vec& p, Config& cfg): Base(p), ctrl(), config(cfg) {
-    init();
-  }
-
-  Cell(const Vec& p, const Controller& ct, Config& cfg): Base(p), ctrl(ct), config(cfg) {
-    init();
+  Cell(const Vec& p, double th, double ph, const Controller& ct, Config& cfg)
+    : Base(p), theta(th), phi(ph), ctrl(ct), config(cfg) {
+    // std::uniform_real_distribution<> dis(0.0, 2 * M_PI);
+    // theta = dis(MecaCell::Config::globalRand());
+    // phi = dis(MecaCell::Config::globalRand());
+    originalRadius = config.originalRadius;
+    adhCoef = config.adhCoef;
+    contractRatio = config.contractRatio;
+    contractDuration = config.contractDuration;
   }
 
   double getAdhesionWith(Cell*, MecaCell::Vec) { return adhCoef; }
-
-  void init() {
-    std::uniform_real_distribution<> dis(0.0, 2 * M_PI);
-    theta = dis(MecaCell::Config::globalRand());
-    phi = dis(MecaCell::Config::globalRand());
-  }
 
   void startContracting() {
     contractTime = 0.0;
@@ -73,7 +71,7 @@ template <typename Controller, typename Config> class Cell
               (ctrl.getOutput("dlcomm_plus") + ctrl.getOutput("dlcomm_minus")));
     dgcomm = ((ctrl.getOutput("dgcomm_plus") - ctrl.getOutput("dgcomm_minus")) /
               (ctrl.getOutput("dgcomm_plus") + ctrl.getOutput("dgcomm_minus")));
-    if (age > config.min_action_age) {
+    if (age > config.minActionAge) {
       std::vector<double> actions;
       for (auto& astr : action_outputs) {
         actions.push_back(ctrl.getOutput(astr));
@@ -90,10 +88,10 @@ template <typename Controller, typename Config> class Cell
       if (action == "duplicate") {
         // cell duplicate
         Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
-        Vec child_pos = dpos * config.div_radius + this->getPosition();
-        w.addCell(new Cell(child_pos, config));
+        Vec child_pos = dpos * config.divRadius + this->getPosition();
+        w.addCell(new Cell(child_pos, theta, phi, ctrl, config));
         age = 0;
-        usedEnergy = config.energy_duplicate;
+        usedEnergy = config.energyDuplicate;
       } else if (action == "rotate") {
         // cell rotate
         double dtheta = ((ctrl.getOutput("theta_plus") - ctrl.getOutput("theta_minus")) /
@@ -102,18 +100,14 @@ template <typename Controller, typename Config> class Cell
         double dphi = ((ctrl.getOutput("phi_plus") - ctrl.getOutput("phi_minus")) /
                       (ctrl.getOutput("phi_plus") + ctrl.getOutput("phi_minus")));
         phi = min(max(phi + dphi, 0.0), 2 * M_PI);
-        usedEnergy = config.energy_rotate;
-      } else if (action == "apoptosis") {
-        // cell death
-        if (w.cells.size() > 5) { this->die(); }
-        usedEnergy = config.energy_apoptosis;
+        usedEnergy = config.energyRotate;
       } else if (action == "contraction") {
         // start a new contraction event
         startContracting();
-        usedEnergy = config.energy_contraction;
+        usedEnergy = config.energyContraction;
       } else if (action == "quiescence") {
         // do nothing
-        usedEnergy = config.energy_quiescence;
+        usedEnergy = config.energyQuiescence;
       }
       ctrl_update = false;
     }
@@ -127,7 +121,7 @@ template <typename Controller, typename Config> class Cell
       ctrl.update();
       // get outputs and control cell
       age += 1;
-      usedEnergy = config.energy_quiescence;
+      usedEnergy = config.energyQuiescence;
       updateOuputs(w);
     }
 

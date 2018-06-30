@@ -8,12 +8,10 @@
 #include "../simplifiedfluidplugin.hpp"
 #include "config.hpp"
 
-template <typename cell_t, typename config_t> class Scenario;
-
-template <typename cell_t, typename config_t> class Scenario {
+template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
  public:
   using world_t = MecaCell::World<cell_t>;
-  config_t& config;
+  cfg_t& config;
   world_t world;
   std::random_device rd;
   std::mt19937 gen;
@@ -27,19 +25,18 @@ template <typename cell_t, typename config_t> class Scenario {
   MecaCell::SimplifiedFluidPlugin<cell_t> sfp;  // fluid dynamics
 
  public:
-  Scenario(config_t& c) : config(c), gen(rd()) {
-    energy = config.energy_initial;
-  }
+  Scenario(cfg_t& c) : config(c), gen(rd()) {}
 
   void init() {
     gen.seed(config.seed);
-    sfp.fluidDensity = config.fluid_density;
+    sfp.fluidDensity = config.fluidDensity;
     sfp.fluidVelocity = {0, 0, 0};
     world.registerPlugins(sfp);
-    world.setDt(config.sim_dt);
-    duration = config.sim_duration;
+    world.setDt(config.dt);
+    duration = config.simDuration;
+    energy = config.energyInitial;
 
-    world.addCell(new cell_t(MecaCell::Vec::zero(), config));
+    world.addCell(new cell_t(MecaCell::Vec::zero(), 0.0, 0.0, ctrl_t(), config));
     world.update();
     MecaCell::logger<MecaCell::DBG>("Done initializing scenario");
   }
@@ -50,14 +47,20 @@ template <typename cell_t, typename config_t> class Scenario {
     //   conn.cells.second.lcomm += conn.cells.first.dlcomm;
     // }
     double maxPressure = 0.0;
+    int nconn = 0;
     for (auto& c : world.cells) {
       energy -= c->usedEnergy;
       gcomm += c->dgcomm;
       c->nage = c->age / worldAge;
       maxPressure = max(c->getBody().getPressure(), maxPressure);
+      nconn = 0;
       for (auto& d : world.cells) {
-        if (c->isConnectedTo(d)) c->lcomm += d->dlcomm;
+        if (c->isConnectedTo(d)) {
+          c->lcomm += d->dlcomm;
+          nconn += 1;
+        }
       }
+      if (nconn == 0 && world.cells.size() > 1) c->die();
     }
     gcomm = min(max(gcomm, 0.0), 1.0);
     for (auto& c : world.cells) {
