@@ -28,6 +28,7 @@ template <typename Controller, typename Config> class Cell
   double lcomm = 0.0;
   double dlcomm = 0.0;
   double pressure = 0.0;
+  double energy = 0.0;
   int nconn = 0;
   int maxConn = 0;
   int age = 0;
@@ -40,9 +41,9 @@ template <typename Controller, typename Config> class Cell
 
   Cell(const Vec& p, double th, double ph, const Controller& ct, Config& cfg)
     : Base(p), theta(th), phi(ph), ctrl(ct), config(cfg) {
-    std::uniform_real_distribution<> dis(0.0, 2 * M_PI);
-    theta = dis(MecaCell::Config::globalRand());
-    phi = dis(MecaCell::Config::globalRand());
+    // std::uniform_real_distribution<> dis(0.0, 2 * M_PI);
+    // theta = dis(MecaCell::Config::globalRand());
+    // phi = dis(MecaCell::Config::globalRand());
     originalRadius = config.originalRadius;
     this->getBody().setRadius(originalRadius);
     // this->getBody().setStiffness(config.springStiffness);
@@ -68,6 +69,8 @@ template <typename Controller, typename Config> class Cell
     ctrl.setInput("theta", theta / (2 * M_PI));
     ctrl.setInput("phi", phi / (2 * M_PI));
     ctrl.setInput("pressure", exp(-pressure / config.betaPressure));
+    ctrl.setInput("energy", energy / config.energyInitial);
+    ctrl.setInput("ncells", (double) w.cells.size() / (double) config.maxCells);
   }
 
   template <typename W> void updateOuputs(W& w) {
@@ -89,18 +92,20 @@ template <typename Controller, typename Config> class Cell
 
       if (action == "duplicate") {
         // cell duplicate
-        Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
-        Vec child_pos = dpos * config.divRadius + this->getPosition();
-        Vec new_pos = this->getPosition() - dpos * config.divRadius;
-        this->getBody().moveTo(new_pos);
-        w.addCell(new Cell(child_pos, theta, phi, ctrl, config));
-        age = 0;
-        usedEnergy = config.energyDuplicate;
-        if (contracting) {
-          contracting = false;
-          contractTime = 0.0;
-          this->body.setRadius(originalRadius);
-          usedEnergy += config.energyContraction;
+        if (w.cells.size() < config.maxCells) {
+          Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
+          Vec child_pos = dpos * config.divRadius + this->getPosition();
+          Vec new_pos = this->getPosition() - dpos * config.divRadius;
+          this->getBody().moveTo(new_pos);
+          w.addCell(new Cell(child_pos, theta, phi, ctrl, config));
+          age = 0;
+          usedEnergy = config.energyDuplicate;
+          if (contracting) {
+            contracting = false;
+            contractTime = 0.0;
+            this->body.setRadius(originalRadius);
+            usedEnergy += config.energyContraction;
+          }
         }
       } else if (action == "rotate") {
         // cell rotate

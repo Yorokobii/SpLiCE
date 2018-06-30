@@ -18,9 +18,12 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
   double duration = 0.0;
   double energy = 0.0;
   double gcomm = 0.0;
+  double fit = 0.0;
+  bool reachedCellSize = false;
   int worldAge = 0;
   ctrl_t controller;
   MecaCell::Vec com = MecaCell::Vec::zero();
+  MecaCell::Vec comDevo = MecaCell::Vec::zero();
 
  protected:
   double currentTime = 0;
@@ -67,13 +70,30 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       c->nconn = nconn;
       maxConn = max(nconn, maxConn);
     }
+    for (auto& c : world.cells) {
+      com += c->getPosition();
+    }
+    com /= world.cells.size();
+    if (!reachedCellSize && (world.cells.size() > config.devCells)) {
+      reachedCellSize = true;
+      comDevo = com;
+    }
     gcomm = min(max(gcomm, 0.0), 1.0);
     for (auto& c : world.cells) {
       c->lcomm = min(max(c->lcomm, 0.0), 1.0);
       c->gcomm = gcomm;
       c->maxConn = maxConn;
+      c->energy = energy;
       c->ctrl_update = true;
     }
+    if (reachedCellSize) {
+      MecaCell::Vec movement = comDevo - com;
+      fit = movement.length() / config.originalRadius;
+    }
+    MecaCell::logger<MecaCell::DBG>(":S| ", currentTime, " ", worldAge, " ", energy, " ",
+                                    world.cells.size(), " ", gcomm, " ", comDevo, " ",
+                                    com, " ", fit, " ");
+
   }
 
   void loop() {
@@ -81,12 +101,6 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     worldAge += 1;
     world.update();
     if (worldAge % config.controllerUpdate) controllerUpdate();
-    for (auto& c : world.cells) {
-      com += c->getPosition();
-    }
-    com /= world.cells.size();
-    MecaCell::logger<MecaCell::DBG>(":S| ", currentTime, " ", worldAge, " ", energy, " ",
-                                    com, " ", gcomm);
   }
 
   world_t& getWorld() { return world; }

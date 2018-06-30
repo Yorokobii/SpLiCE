@@ -16,9 +16,7 @@ int main(int argc, char** argv) {
         scenario.init();
         while (!scenario.finished()) scenario.loop();
 
-        MecaCell::Vec com = scenario.com;
-
-        individual.fitnesses["DistanceEnergy"] = (com.length() / cfg.originalRadius);
+        individual.fitnesses["DistanceEnergy"] = scenario.fit;
       },
       "DistanceEnergy");
 

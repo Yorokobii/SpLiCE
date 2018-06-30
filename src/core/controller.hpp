@@ -6,17 +6,17 @@
 
 struct BaseController {
  public:
+  double state = 0.0;
 	BaseController() {}
 
   static BaseController random() {
     return BaseController();
   }
 
-	void setInput(const std::string &input, double val) {
-    MecaCell::logger<MecaCell::DBG>("input: ", input, " ", val);
-  }
+	void setInput(const std::string &input, double val) {}
 
 	double getOutput(const std::string &output) const {
+    if (output == "contract") return state;
 		std::uniform_real_distribution<> dis(0.0, 1.0);
 		return dis(MecaCell::Config::globalRand());
 	}
@@ -36,7 +36,10 @@ struct BaseController {
 
   void reset() {}
 
-  void update() {}
+  void update() {
+    state += 0.1;
+    if (state > 1.0) state = 0.0;
+  }
 
   void mutate() {}
 
