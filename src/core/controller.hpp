@@ -8,7 +8,13 @@ struct BaseController {
  public:
 	BaseController() {}
 
-	void setInput(const std::string &input, double val) {}
+  static BaseController random() {
+    return BaseController();
+  }
+
+	void setInput(const std::string &input, double val) {
+    MecaCell::logger<MecaCell::DBG>("input: ", input, " ", val);
+  }
 
 	double getOutput(const std::string &output) const {
 		std::uniform_real_distribution<> dis(0.0, 1.0);
@@ -25,7 +31,22 @@ struct BaseController {
     return 0.0;
   }
 
+  BaseController(const string& s) {}  // unserialize
+  std::string serialize() const { return ""; }
+
+  void reset() {}
+
   void update() {}
+
+  void mutate() {}
+
+  BaseController crossover(const BaseController& other) {
+    return BaseController();
+  }
+  inline static double getDistance(const BaseController& a, const BaseController& b) {
+    return 0.0;
+  }
+
 };
 
 #endif

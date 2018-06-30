@@ -27,6 +27,7 @@ template <typename Controller, typename Config> class Cell
   double dgcomm = 0.0;
   double lcomm = 0.0;
   double dlcomm = 0.0;
+  double pressure = 0.0;
   int nconn = 0;
   int maxConn = 0;
   int age = 0;
@@ -39,9 +40,9 @@ template <typename Controller, typename Config> class Cell
 
   Cell(const Vec& p, double th, double ph, const Controller& ct, Config& cfg)
     : Base(p), theta(th), phi(ph), ctrl(ct), config(cfg) {
-    // std::uniform_real_distribution<> dis(0.0, 2 * M_PI);
-    // theta = dis(MecaCell::Config::globalRand());
-    // phi = dis(MecaCell::Config::globalRand());
+    std::uniform_real_distribution<> dis(0.0, 2 * M_PI);
+    theta = dis(MecaCell::Config::globalRand());
+    phi = dis(MecaCell::Config::globalRand());
     originalRadius = config.originalRadius;
     this->getBody().setRadius(originalRadius);
     // this->getBody().setStiffness(config.springStiffness);
@@ -61,16 +62,12 @@ template <typename Controller, typename Config> class Cell
   }
 
   template <typename W> void updateInputs(W& w) {
-    ctrl.setInput("age", min(exp(-age / config.betaAge), 1.0));
+    ctrl.setInput("age", exp(-nage / config.betaAge));
     ctrl.setInput("gcomm", gcomm);
     ctrl.setInput("lcomm", lcomm);
     ctrl.setInput("theta", theta / (2 * M_PI));
     ctrl.setInput("phi", phi / (2 * M_PI));
-    if (maxConn > 0) {
-      ctrl.setInput("conns", nconn / maxConn);
-    } else {
-      ctrl.setInput("conns", 0.0);
-    }
+    ctrl.setInput("pressure", exp(-pressure / config.betaPressure));
   }
 
   template <typename W> void updateOuputs(W& w) {
@@ -94,6 +91,8 @@ template <typename Controller, typename Config> class Cell
         // cell duplicate
         Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
         Vec child_pos = dpos * config.divRadius + this->getPosition();
+        Vec new_pos = this->getPosition() - dpos * config.divRadius;
+        this->getBody().moveTo(new_pos);
         w.addCell(new Cell(child_pos, theta, phi, ctrl, config));
         age = 0;
         usedEnergy = config.energyDuplicate;

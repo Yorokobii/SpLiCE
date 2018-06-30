@@ -44,30 +44,26 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       controller = ctrl_t(buffer.str());
     }
 
-    MecaCell::logger<MecaCell::DBG>("GRN ", controller.grn.serialize());
     world.addCell(new cell_t(MecaCell::Vec::zero(), 0.0, 0.0, controller, config));
     world.update();
   }
 
   void controllerUpdate() {
- 		// for (auto& conn : world.cellPlugin.connections) {
-    //   conn.cells.first.lcomm += conn.cells.second.dlcomm;
-    //   conn.cells.second.lcomm += conn.cells.first.dlcomm;
-    // }
     int nconn = 0;
     int maxConn = 0;
     for (auto& c : world.cells) {
       energy -= c->usedEnergy;
       gcomm += c->dgcomm;
-      c->nage = c->age / worldAge;
+      c->nage = (double) c->age / (double) worldAge;
       nconn = 0;
-      for (auto& d : world.cells) {
-        if (c->isConnectedTo(d)) {
-          c->lcomm += d->dlcomm;
-          nconn += 1;
-        }
+      MecaCell::Vec pressure = MecaCell::Vec::zero();
+      for (auto& con : c->getBody().cellConnections) {
+        nconn += 1;
+        pressure += con->collision.computeForce(config.dt) * con->direction;
+        con->cells.first->lcomm += con->cells.second->dlcomm;
       }
       if (nconn == 0 && world.cells.size() > 1) c->die();
+      c->pressure = exp(-pressure.length() / config.betaPressure);
       c->nconn = nconn;
       maxConn = max(nconn, maxConn);
     }

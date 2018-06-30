@@ -5,30 +5,33 @@
 struct GRNController {  // both controller and DNA
   using GRN_t = GRN<RealCoords>;
   GRN_t grn;
-  GRNController() {
-    grn.addRandomProtein(ProteinType::input, "age");
-    grn.addRandomProtein(ProteinType::input, "gcomm");
-    grn.addRandomProtein(ProteinType::input, "lcomm");
-    grn.addRandomProtein(ProteinType::input, "theta");
-    grn.addRandomProtein(ProteinType::input, "phi");
-    grn.addRandomProtein(ProteinType::input, "conns");
+  GRNController() {}
 
-    grn.addRandomProtein(ProteinType::output, "duplicate");
-    grn.addRandomProtein(ProteinType::output, "rotate");
-    grn.addRandomProtein(ProteinType::output, "quiescence");
-    grn.addRandomProtein(ProteinType::output, "contraction");
-    grn.addRandomProtein(ProteinType::output, "dlcommPlus");
-    grn.addRandomProtein(ProteinType::output, "dlcommMinus");
-    grn.addRandomProtein(ProteinType::output, "dgcommPlus");
-    grn.addRandomProtein(ProteinType::output, "dgcommMinus");
-    grn.addRandomProtein(ProteinType::output, "thetaPlus");
-    grn.addRandomProtein(ProteinType::output, "thetaMinus");
-    grn.addRandomProtein(ProteinType::output, "phiPlus");
-    grn.addRandomProtein(ProteinType::output, "phiMinus");
+	static GRNController random() {
+    GRN_t g;
+    g.addRandomProtein(ProteinType::input, "age");
+    g.addRandomProtein(ProteinType::input, "gcomm");
+    g.addRandomProtein(ProteinType::input, "lcomm");
+    g.addRandomProtein(ProteinType::input, "theta");
+    g.addRandomProtein(ProteinType::input, "phi");
+    g.addRandomProtein(ProteinType::input, "pressure");
 
-    grn.randomParams();   // Random Beta & Delta
-    grn.randomReguls(1);  // start with one regul
-    reset();
+    g.addRandomProtein(ProteinType::output, "duplicate");
+    g.addRandomProtein(ProteinType::output, "rotate");
+    g.addRandomProtein(ProteinType::output, "quiescence");
+    g.addRandomProtein(ProteinType::output, "contraction");
+    g.addRandomProtein(ProteinType::output, "dlcommPlus");
+    g.addRandomProtein(ProteinType::output, "dlcommMinus");
+    g.addRandomProtein(ProteinType::output, "dgcommPlus");
+    g.addRandomProtein(ProteinType::output, "dgcommMinus");
+    g.addRandomProtein(ProteinType::output, "thetaPlus");
+    g.addRandomProtein(ProteinType::output, "thetaMinus");
+    g.addRandomProtein(ProteinType::output, "phiPlus");
+    g.addRandomProtein(ProteinType::output, "phiMinus");
+
+    g.randomParams();   // Random Beta & Delta
+    g.randomReguls(1);  // start with one regul
+    return GRNController(g);
   }
 
   GRNController(GRN_t g) : grn(g) { reset(); }

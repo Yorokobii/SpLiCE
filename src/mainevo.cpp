@@ -18,10 +18,7 @@ int main(int argc, char** argv) {
 
         MecaCell::Vec com = scenario.com;
 
-        individual.fitnesses["DistanceEnergy"] = (sqrt(com.x() * com.x() +
-                                                       com.y() * com.y() +
-                                                       com.z() * com.z()) /
-                                                  cfg.originalRadius);
+        individual.fitnesses["DistanceEnergy"] = (com.length() / cfg.originalRadius);
       },
       "DistanceEnergy");
 
@@ -45,8 +42,7 @@ int main(int argc, char** argv) {
   }
 
 	ga.initPopulation([]() {
-                      Config::CtrlType dna;
-                      return dna;
+                      return Config::CtrlType::random();
                     });
   ga.step(cfg.nbGenerations);
   return 0;

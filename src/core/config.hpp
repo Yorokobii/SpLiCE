@@ -39,6 +39,7 @@ struct Config {
   double energyQuiescence = 0.01;
   double energyInitial = 10.0;
   double betaAge = 0.4;
+  double betaPressure = 30.0;
   double fluidDensity = 1e-4;
   int controllerUpdate = 5;
   int seed = 0;
@@ -90,6 +91,7 @@ struct Config {
       else CHKPARAM(energyQuiescence);
       else CHKPARAM(energyInitial);
       else CHKPARAM(betaAge);
+      else CHKPARAM(betaPressure);
       else CHKPARAM(fluidDensity);
       else CHKPARAM(controllerUpdate);
       else CHKPARAM(seed);

@@ -14,6 +14,7 @@ int main(int argc, char** argv) {
   Config cfg(argc, argv);
   Config::scenario_t scenario(cfg);
 
+  scenario.controller = Config::CtrlType::random();
   scenario.init();
 
   ColorModePlugins cmp;

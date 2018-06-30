@@ -6,6 +6,7 @@
 int main(int argc, char **argv) {
   Config cfg(argc, argv);
   Config::scenario_t scenario(cfg);
+  scenario.controller = Config::CtrlType::random();
   auto start = chrono::high_resolution_clock::now();
   scenario.init();
   while (!scenario.finished()) scenario.loop();
