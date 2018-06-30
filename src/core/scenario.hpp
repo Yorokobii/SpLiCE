@@ -54,6 +54,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
   void controllerUpdate() {
     int nconn = 0;
     int maxConn = 0;
+    std::uniform_real_distribution<> dis(0.0, 2 * M_PI);
     for (auto& c : world.cells) {
       energy -= c->usedEnergy;
       gcomm += c->dgcomm;
@@ -85,6 +86,11 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       c->maxConn = maxConn;
       c->energy = energy;
       c->ctrl_update = true;
+      if (c->isNew) {
+        c->theta = dis(gen);
+        c->phi= dis(gen);
+        c->isNew = false;
+      }
     }
     if (reachedCellSize) {
       MecaCell::Vec movement = comDevo - com;

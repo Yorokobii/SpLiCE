@@ -34,6 +34,7 @@ template <typename Controller, typename Config> class Cell
   int age = 0;
   double nage = 0.0;
   bool ctrl_update = false;
+  bool isNew = true;
   Controller ctrl;
   Config& config;
   std::vector<std::string> action_outputs = {"quiescence", "duplicate", "rotate", 
@@ -41,9 +42,7 @@ template <typename Controller, typename Config> class Cell
 
   Cell(const Vec& p, double th, double ph, const Controller& ct, Config& cfg)
     : Base(p), theta(th), phi(ph), ctrl(ct), config(cfg) {
-    // std::uniform_real_distribution<> dis(0.0, 2 * M_PI);
-    // theta = dis(MecaCell::Config::globalRand());
-    // phi = dis(MecaCell::Config::globalRand());
+
     originalRadius = config.originalRadius;
     this->getBody().setRadius(originalRadius);
     // this->getBody().setStiffness(config.springStiffness);
@@ -76,7 +75,7 @@ template <typename Controller, typename Config> class Cell
   template <typename W> void updateOuputs(W& w) {
     dlcomm = ctrl.getDelta("dlcommPlus", "dlcommMinus");
     dgcomm = ctrl.getDelta("dgcommPlus", "dgcommMinus");
-    if (age > config.minActionAge) {
+    if (!isNew) {
       std::vector<double> actions;
       for (auto& astr : action_outputs) {
         actions.push_back(ctrl.getOutput(astr));
