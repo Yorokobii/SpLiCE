@@ -8,14 +8,14 @@
 #include <string>
 
 template <typename Controller, typename Config> class Cell
-  : public MecaCell::ConnectableCell<Cell<Controller, Config>, MecaCell::ContactSurfaceBody> {
+  : public MecaCell::ConnectableCell<Cell<Controller, Config>, MecaCell::SpringBody> {
   bool contracting = false;
   double contractTime = 0.0;
 
  public:
 	using Vec = MecaCell::Vec;
   using Base = MecaCell::ConnectableCell<Cell<Controller, Config>,
-                                         MecaCell::ContactSurfaceBody>;
+                                         MecaCell::SpringBody>;
   double originalRadius = 30.0;
   double adhCoef = 25.0;
   double contractRatio = 0.9;
@@ -27,7 +27,8 @@ template <typename Controller, typename Config> class Cell
   double dgcomm = 0.0;
   double lcomm = 0.0;
   double dlcomm = 0.0;
-  double maxPressure = 0.0;
+  int nconn = 0;
+  int maxConn = 0;
   int age = 0;
   double nage = 0.0;
   bool ctrl_update = false;
@@ -42,6 +43,8 @@ template <typename Controller, typename Config> class Cell
     // theta = dis(MecaCell::Config::globalRand());
     // phi = dis(MecaCell::Config::globalRand());
     originalRadius = config.originalRadius;
+    this->getBody().setRadius(originalRadius);
+    // this->getBody().setStiffness(config.springStiffness);
     adhCoef = config.adhCoef;
     contractRatio = config.contractRatio;
     contractDuration = config.contractDuration;
@@ -63,7 +66,7 @@ template <typename Controller, typename Config> class Cell
     ctrl.setInput("lcomm", lcomm);
     ctrl.setInput("theta", theta / (2 * M_PI));
     ctrl.setInput("phi", phi / (2 * M_PI));
-		ctrl.setInput("pressure", this->getBody().getPressure() / maxPressure);
+		ctrl.setInput("conns", nconn / maxConn);
   }
 
   template <typename W> void updateOuputs(W& w) {
@@ -87,11 +90,13 @@ template <typename Controller, typename Config> class Cell
 
       if (action == "duplicate") {
         // cell duplicate
-        Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
-        Vec child_pos = dpos * config.divRadius + this->getPosition();
-        w.addCell(new Cell(child_pos, theta, phi, ctrl, config));
-        age = 0;
-        usedEnergy = config.energyDuplicate;
+        if (!contracting) {
+          Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
+          Vec child_pos = dpos * config.divRadius + this->getPosition();
+          w.addCell(new Cell(child_pos, theta, phi, ctrl, config));
+          age = 0;
+          usedEnergy = config.energyDuplicate;
+        }
       } else if (action == "rotate") {
         // cell rotate
         double dtheta = ((ctrl.getOutput("theta_plus") - ctrl.getOutput("theta_minus")) /

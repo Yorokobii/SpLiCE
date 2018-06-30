@@ -1,11 +1,19 @@
 {
-    "sim_duration": 1000.0,
-    "sim_dt": 0.01,
-    "div_radius": 40.0,
-    "cell_radius": 10.0,
-    "cell_mass": 0.05,
-    "cell_stiffness": 1000.0,
-    "cell_adhesion": 250.0,
-    "fluid_density": 0.0001,
-    "t_contract": 20
+    "simDuration": 1000.0,
+    "dt": 0.01,
+    "originalRadius": 30.0,
+    "divRadius": 40.0,
+    "adhCoef": 1.0,
+    "contractRatio": 0.9,
+    "contractDuration": 0.05,
+    "minActionAge": 100,
+    "energyDuplicate": 1.0,
+    "energyRotate": 0.1,
+    "energyContraction": 0.005,
+    "energyQuiescence": 0.001,
+    "energyInitial": 1000.0,
+    "betaAge": 0.4,
+    "fluidDensity": 0.00001,
+    "controllerUpdate": 50,
+    "seed": 0
 }
