@@ -34,8 +34,8 @@ template <typename Controller, typename Config> class Cell
   bool ctrl_update = false;
   Controller ctrl;
   Config& config;
-  std::vector<std::string> action_outputs = {"duplicate", "rotate", "quiescence",
-                                        "apoptosis", "contraction"};
+  std::vector<std::string> action_outputs = {"quiescence", "duplicate", "rotate", 
+                                             "contraction"};
 
   Cell(const Vec& p, double th, double ph, const Controller& ct, Config& cfg)
     : Base(p), theta(th), phi(ph), ctrl(ct), config(cfg) {
@@ -66,14 +66,16 @@ template <typename Controller, typename Config> class Cell
     ctrl.setInput("lcomm", lcomm);
     ctrl.setInput("theta", theta / (2 * M_PI));
     ctrl.setInput("phi", phi / (2 * M_PI));
-		ctrl.setInput("conns", nconn / maxConn);
+    if (maxConn > 0) {
+      ctrl.setInput("conns", nconn / maxConn);
+    } else {
+      ctrl.setInput("conns", 0.0);
+    }
   }
 
   template <typename W> void updateOuputs(W& w) {
-    dlcomm = ((ctrl.getOutput("dlcomm_plus") - ctrl.getOutput("dlcomm_minus")) /
-              (ctrl.getOutput("dlcomm_plus") + ctrl.getOutput("dlcomm_minus")));
-    dgcomm = ((ctrl.getOutput("dgcomm_plus") - ctrl.getOutput("dgcomm_minus")) /
-              (ctrl.getOutput("dgcomm_plus") + ctrl.getOutput("dgcomm_minus")));
+    dlcomm = ctrl.getDelta("dlcommPlus", "dlcommMinus");
+    dgcomm = ctrl.getDelta("dgcommPlus", "dgcommMinus");
     if (age > config.minActionAge) {
       std::vector<double> actions;
       for (auto& astr : action_outputs) {
@@ -99,11 +101,9 @@ template <typename Controller, typename Config> class Cell
         }
       } else if (action == "rotate") {
         // cell rotate
-        double dtheta = ((ctrl.getOutput("theta_plus") - ctrl.getOutput("theta_minus")) /
-                        (ctrl.getOutput("theta_plus") + ctrl.getOutput("theta_minus")));
+        double dtheta = ctrl.getDelta("thetaPlus", "thetaMinus");
         theta = min(max(theta + dtheta, 0.0), 2 * M_PI);
-        double dphi = ((ctrl.getOutput("phi_plus") - ctrl.getOutput("phi_minus")) /
-                      (ctrl.getOutput("phi_plus") + ctrl.getOutput("phi_minus")));
+        double dphi = ctrl.getDelta("phiPlus", "phiMinus");
         phi = min(max(phi + dphi, 0.0), 2 * M_PI);
         usedEnergy = config.energyRotate;
       } else if (action == "contraction") {

@@ -39,7 +39,6 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
 
     world.addCell(new cell_t(MecaCell::Vec::zero(), 0.0, 0.0, ctrl_t(), config));
     world.update();
-    MecaCell::logger<MecaCell::DBG>("Done initializing scenario");
   }
 
   void controllerUpdate() {
@@ -75,14 +74,14 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
 
   void loop() {
     currentTime += world.getDt();
+    worldAge += 1;
     world.update();
     if (worldAge % config.controllerUpdate) controllerUpdate();
     for (auto& c : world.cells) {
       com += c->getPosition();
     }
     com /= world.cells.size();
-    worldAge += 1;
-    MecaCell::logger<MecaCell::DBG>(currentTime, " ", worldAge, " ", energy, " ",
+    MecaCell::logger<MecaCell::DBG>(":S| ", currentTime, " ", worldAge, " ", energy, " ",
                                     com, " ", gcomm);
   }
 

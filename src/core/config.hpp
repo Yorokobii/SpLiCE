@@ -7,6 +7,7 @@
 #include "cell.hpp"
 #include "scenario.hpp"
 #include "controller.hpp"
+#include "grncontroller.hpp"
 
 #define CHKPARAM(paramName)         \
   if (it.key() == "" #paramName "") \
@@ -18,8 +19,8 @@ struct Config {
   using json = nlohmann::json;
 
   // ---------   STATIC CONFIG  ----------
-	using CtrlType = BaseController;
-  using CellType = Cell<BaseController, Config>;
+	using CtrlType = GRNController;
+  using CellType = Cell<CtrlType, Config>;
   using scenario_t = Scenario<CellType, CtrlType, Config>;
 
   // --------    DYNAMIC CONFIG  ----------

@@ -15,6 +15,16 @@ struct BaseController {
 		return dis(MecaCell::Config::globalRand());
 	}
 
+  double getDelta(const std::string &o1, const std::string &o2) {
+    double plus = getOutput(o1);
+    double minus = getOutput(o1);
+    double div = plus + minus;
+    if (div > 0.0) {
+      return (plus - minus) / div;
+    }
+    return 0.0;
+  }
+
   void update() {}
 };
 

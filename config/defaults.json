@@ -15,5 +15,5 @@
     "betaAge": 0.4,
     "fluidDensity": 0.00001,
     "controllerUpdate": 50,
-    "seed": 0
+    "seed": 1234
 }
