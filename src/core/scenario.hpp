@@ -106,7 +106,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     currentTime += world.getDt();
     worldAge += 1;
     world.update();
-    if (worldAge % config.controllerUpdate) controllerUpdate();
+    if (worldAge % config.controllerUpdate == 0) controllerUpdate();
   }
 
   world_t& getWorld() { return world; }
