@@ -11,7 +11,7 @@
 template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
  public:
   using world_t = MecaCell::World<cell_t>;
-  cfg_t& config;
+  cfg_t config;
   world_t world;
   std::random_device rd;
   std::mt19937 gen;
@@ -26,7 +26,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
   MecaCell::SimplifiedFluidPlugin<cell_t> sfp;  // fluid dynamics
 
  public:
-  Scenario(cfg_t& c) : config(c), gen(rd()) {}
+  Scenario(cfg_t c) : config(c), gen(rd()) {}
 
   void init() {
     gen.seed(config.seed);

@@ -92,12 +92,16 @@ template <typename Controller, typename Config> class Cell
 
       if (action == "duplicate") {
         // cell duplicate
-        if (!contracting) {
-          Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
-          Vec child_pos = dpos * config.divRadius + this->getPosition();
-          w.addCell(new Cell(child_pos, theta, phi, ctrl, config));
-          age = 0;
-          usedEnergy = config.energyDuplicate;
+        Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
+        Vec child_pos = dpos * config.divRadius + this->getPosition();
+        w.addCell(new Cell(child_pos, theta, phi, ctrl, config));
+        age = 0;
+        usedEnergy = config.energyDuplicate;
+        if (contracting) {
+          contracting = false;
+          contractTime = 0.0;
+          this->body.setRadius(originalRadius);
+          usedEnergy += config.energyContraction;
         }
       } else if (action == "rotate") {
         // cell rotate

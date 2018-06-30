@@ -21,8 +21,8 @@ set(MECACELL_VIEWER_DIR ${MECACELL_DIR}/mecacellviewer)
 add_executable(console ${SRC} src/mainconsole.cpp)
 target_include_directories(console PUBLIC ${MECACELL_DIR} src/external)
 
-# add_executable(spherepacking ${SRC} src/mainspherepacking.cpp)
-# target_link_libraries(spherepacking mecacell)
+add_executable(evo ${SRC} src/mainevo.cpp)
+target_include_directories(evo PUBLIC ${MECACELL_DIR} src/external)
 
 find_package(Qt5 COMPONENTS Core Quick REQUIRED)
 set(CMAKE_AUTOMOC ON)
