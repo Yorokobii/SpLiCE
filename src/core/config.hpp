@@ -44,6 +44,7 @@ struct Config {
   double betaPressure = 30.0;
   double fluidDensity = 1e-4;
   int controllerUpdate = 5;
+  int devoSteps = 1000;
   int seed = 0;
 
   size_t populationSize = 200;
@@ -98,6 +99,7 @@ struct Config {
       else CHKPARAM(betaPressure);
       else CHKPARAM(fluidDensity);
       else CHKPARAM(controllerUpdate);
+      else CHKPARAM(devoSteps);
       else CHKPARAM(seed);
       else CHKPARAM(populationSize);
       else CHKPARAM(mutationRate);

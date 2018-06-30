@@ -1,4 +1,5 @@
 #pragma once
+// #include <mecacell/mecacell.h>
 #include <grgen/grn.hpp>
 #include <grgen/real.hpp>
 
@@ -9,14 +10,15 @@ struct GRNController {  // both controller and DNA
 
 	static GRNController random() {
     GRN_t g;
-    g.addRandomProtein(ProteinType::input, "age");
+    g.addRandomProtein(ProteinType::input, "devoPhase");
+    g.addRandomProtein(ProteinType::input, "movementPhase");
     g.addRandomProtein(ProteinType::input, "gcomm");
     g.addRandomProtein(ProteinType::input, "lcomm");
     g.addRandomProtein(ProteinType::input, "theta");
     g.addRandomProtein(ProteinType::input, "phi");
     g.addRandomProtein(ProteinType::input, "pressure");
     g.addRandomProtein(ProteinType::input, "energy");
-    g.addRandomProtein(ProteinType::input, "ncells");
+    g.addRandomProtein(ProteinType::input, "comdist");
 
     g.addRandomProtein(ProteinType::output, "duplicate");
     g.addRandomProtein(ProteinType::output, "rotate");
@@ -32,7 +34,7 @@ struct GRNController {  // both controller and DNA
     g.addRandomProtein(ProteinType::output, "phiMinus");
 
     g.randomParams();   // Random Beta & Delta
-    g.randomReguls(1);  // start with one regul
+    g.randomReguls(5);  // start with one regul
     return GRNController(g);
   }
 
@@ -48,11 +50,13 @@ struct GRNController {  // both controller and DNA
   void update() { grn.step(); }
 
   void setInput(const std::string &input, double val) {
+    // MecaCell::logger<MecaCell::DBG>("input: ", input, " ", val);
     grn.setProteinConcentration(input, ProteinType::input, val);
   }
 
   double getOutput(const std::string &output) const {
     auto r = grn.getProteinConcentration(output, ProteinType::output);
+    // MecaCell::logger<MecaCell::DBG>("output: ", output, " ", r);
     return r;
   }
 

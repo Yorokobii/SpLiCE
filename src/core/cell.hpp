@@ -29,17 +29,18 @@ template <typename Controller, typename Config> class Cell
   double dlcomm = 0.0;
   double pressure = 0.0;
   double energy = 0.0;
+  double comdist = 0.0;
   int nconn = 0;
   int maxConn = 0;
   int age = 0;
+  int worldAge = 0;
   double nage = 0.0;
   bool ctrl_update = false;
   bool isNew = true;
+  bool devoPhase = true;
   Controller ctrl;
   Config& config;
-  std::vector<std::string> action_outputs = {"quiescence", "duplicate", "rotate", 
-                                             "contraction"};
-
+  std::vector<std::string> action_outputs = {"quiescence", "duplicate", "rotate"};
   Cell(const Vec& p, double th, double ph, const Controller& ct, Config& cfg)
     : Base(p), theta(th), phi(ph), ctrl(ct), config(cfg) {
 
@@ -62,14 +63,15 @@ template <typename Controller, typename Config> class Cell
   }
 
   template <typename W> void updateInputs(W& w) {
-    ctrl.setInput("age", exp(-nage / config.betaAge));
+    ctrl.setInput("devoPhase", (double)devoPhase);
+    ctrl.setInput("movementPhase", (double)!devoPhase);
     ctrl.setInput("gcomm", gcomm);
     ctrl.setInput("lcomm", lcomm);
     ctrl.setInput("theta", theta / (2 * M_PI));
     ctrl.setInput("phi", phi / (2 * M_PI));
     ctrl.setInput("pressure", exp(-pressure / config.betaPressure));
     ctrl.setInput("energy", energy / config.energyInitial);
-    ctrl.setInput("ncells", (double) w.cells.size() / (double) config.maxCells);
+    ctrl.setInput("comdist", comdist);
   }
 
   template <typename W> void updateOuputs(W& w) {
@@ -91,20 +93,18 @@ template <typename Controller, typename Config> class Cell
 
       if (action == "duplicate") {
         // cell duplicate
-        if (w.cells.size() < config.maxCells) {
-          Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
-          Vec child_pos = dpos * config.divRadius + this->getPosition();
-          Vec new_pos = this->getPosition() - dpos * config.divRadius;
-          this->getBody().moveTo(new_pos);
-          w.addCell(new Cell(child_pos, theta, phi, ctrl, config));
-          age = 0;
-          usedEnergy = config.energyDuplicate;
-          if (contracting) {
-            contracting = false;
-            contractTime = 0.0;
-            this->body.setRadius(originalRadius);
-            usedEnergy += config.energyContraction;
-          }
+        Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
+        Vec child_pos = dpos * config.divRadius + this->getPosition();
+        Vec new_pos = this->getPosition() - dpos * config.divRadius;
+        this->getBody().moveTo(new_pos);
+        w.addCell(new Cell(child_pos, theta, phi, ctrl, config));
+        age = 0;
+        usedEnergy = config.energyDuplicate;
+        if (contracting) {
+          contracting = false;
+          contractTime = 0.0;
+          this->body.setRadius(originalRadius);
+          usedEnergy += config.energyContraction;
         }
       } else if (action == "rotate") {
         // cell rotate
