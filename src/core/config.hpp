@@ -56,6 +56,8 @@ struct Config {
   double speciationThreshold_max = 0.8;
   double speciationThreshold_min = 0.01;
 
+  std::string grnFile = "";
+
   Config(int argc, char** argv) {
     cxxopts::Options options("splice", "spike-based learning in a cellular environment");
     options.add_options()("f,file", "configuration file", cxxopts::value<std::string>());
@@ -103,6 +105,7 @@ struct Config {
       else CHKPARAM(speciationThreshold_increment);
       else CHKPARAM(speciationThreshold_max);
       else CHKPARAM(speciationThreshold_min);
+      else CHKPARAM(grnFile);
       else MecaCell::logger<MecaCell::WARN>("Config :: unknown field \"", it.key(), "\"");
     }
   }

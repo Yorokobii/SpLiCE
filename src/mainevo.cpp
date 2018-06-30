@@ -12,6 +12,7 @@ int main(int argc, char** argv) {
 
   ga.setEvaluator([cfg](auto& individual, int) {
         Config::scenario_t scenario(cfg);
+        scenario.controller = Config::CtrlType(individual.dna);
         scenario.init();
         while (!scenario.finished()) scenario.loop();
 

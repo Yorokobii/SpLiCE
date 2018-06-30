@@ -19,6 +19,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
   double energy = 0.0;
   double gcomm = 0.0;
   int worldAge = 0;
+  ctrl_t controller;
   MecaCell::Vec com = MecaCell::Vec::zero();
 
  protected:
@@ -36,8 +37,15 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     world.setDt(config.dt);
     duration = config.simDuration;
     energy = config.energyInitial;
+    if (config.grnFile != "") {
+      std::ifstream file(config.grnFile);
+      std::stringstream buffer;
+      buffer << file.rdbuf();
+      controller = ctrl_t(buffer.str());
+    }
 
-    world.addCell(new cell_t(MecaCell::Vec::zero(), 0.0, 0.0, ctrl_t(), config));
+    MecaCell::logger<MecaCell::DBG>("GRN ", controller.grn.serialize());
+    world.addCell(new cell_t(MecaCell::Vec::zero(), 0.0, 0.0, controller, config));
     world.update();
   }
 
