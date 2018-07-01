@@ -15,7 +15,7 @@
     "energyContraction": 0.1,
     "energyQuiescence": 0.01,
     "energyInitial": 800.0,
-    "devCells": 0,
+    "devCells": 100,
     "maxCells": 0,
     "betaAge": 0.4,
     "betaPressure": 30.0,

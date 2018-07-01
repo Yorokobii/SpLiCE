@@ -129,7 +129,8 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       }
     }
     if (setDevoPhase) {
-      if (((config.devoSteps > 0) && ncells > devCells) || (config.devoSteps == 0)) {
+      if (((config.devoSteps > 0) && (ncells > config.devCells))
+          || (config.devoSteps == 0)) {
         MecaCell::Vec movement = comDevo - com;
         fit = movement.length() / config.originalRadius;
       }
