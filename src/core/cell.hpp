@@ -107,7 +107,10 @@ template <typename Controller, typename Config> class Cell
       // start a new contraction event
       // startContracting();
       Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
-      this->getBody().receiveForce(config.force, dpos, config.compressForce);
+      for (auto &conn : this->getBody().cellConnections) {
+        this->getBody().receiveForce(config.force * dpos.dot(conn->direction),
+                                     conn->direction, config.compressForce);
+      }
       usedEnergy = config.energyContraction;
     } else if (action == "quiescence") {
       // do nothing
@@ -117,7 +120,7 @@ template <typename Controller, typename Config> class Cell
   }
 
   template <typename W> void updateBehavior(W& w) {
-    if (ctrl_update) {
+    if (!isNew && ctrl_update) {
       // set inputs
       updateInputs(w);
       // call the controller

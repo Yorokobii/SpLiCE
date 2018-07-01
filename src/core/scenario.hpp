@@ -122,11 +122,11 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       c->worldAge = worldAge;
       if (ncells > 1) c->comdist = c->comdist / maxComDist;
       c->ctrl_update = true;
-      // if (c->isNew) {
-      //   c->theta = dis(gen);
-      //   c->phi= dis(gen);
-      //   c->isNew = false;
-      // }
+      if (c->isNew) {
+        c->theta = dis(gen);
+        c->phi= dis(gen);
+        c->isNew = false;
+      }
     }
     if (setDevoPhase) {
       MecaCell::Vec movement = comDevo - com;
@@ -149,7 +149,6 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
         c->getBody().setAngularVelocity(MecaCell::Vec::zero());
         c->getBody().setTorque(MecaCell::Vec::zero());
         c->getBody().setVelocity(MecaCell::Vec::zero());
-        // c->saveConnectedCells();
         c->action_outputs = {"quiescence", "rotate", "contraction"};
         for (auto &conn : c->getBody().cellConnections) {
           conn->unbreakable = true;
