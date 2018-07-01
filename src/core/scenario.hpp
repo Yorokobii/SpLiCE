@@ -146,6 +146,9 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       comDevo = com;
       for (auto& c : world.cells) {
         c->devoPhase = false;
+        c->getBody().setAngularVelocity(MecaCell::Vec::zero());
+        c->getBody().setTorque(MecaCell::Vec::zero());
+        c->getBody().setVelocity(MecaCell::Vec::zero());
         // c->saveConnectedCells();
         c->action_outputs = {"quiescence", "contraction"};
         for (auto &conn : c->getBody().cellConnections) {
