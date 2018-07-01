@@ -150,7 +150,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
         c->getBody().setTorque(MecaCell::Vec::zero());
         c->getBody().setVelocity(MecaCell::Vec::zero());
         // c->saveConnectedCells();
-        c->action_outputs = {"quiescence", "rotation", "contraction"};
+        c->action_outputs = {"quiescence", "rotate", "contraction"};
         for (auto &conn : c->getBody().cellConnections) {
           conn->unbreakable = true;
           conn->adhCoef = c->adhCoef;

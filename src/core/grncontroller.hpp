@@ -65,7 +65,7 @@ struct GRNController {  // both controller and DNA
 
   double getDelta(const std::string &o1, const std::string &o2) {
     double plus = getOutput(o1);
-    double minus = getOutput(o1);
+    double minus = getOutput(o2);
     double div = plus + minus;
     if (div > 0.0) {
       return (plus - minus) / div;
