@@ -71,10 +71,17 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       MecaCell::logger<MecaCell::DBG>("Added cells");
       world.update();
       world.update();
+      world.update();
+      world.update();
 
       // unbreakable initial bonds & no new adhesions, only collisions
-      for (auto& conn : world.cellPlugin.connections) conn.second->unbreakable = true;
-      for (auto& c : world.cells) c->adhCoef = 0.0;
+      // for (auto& conn : world.cells.connections) conn.second->unbreakable = true;
+      for (auto& c : world.cells) {
+        c->adhCoef = 0.0;
+        for (auto &conn : c->getBody().cellConnections) {
+          conn->unbreakable = true; conn->adhesionEnabled = false;
+        }
+      }
     } else {
       world.addCell(new cell_t(MecaCell::Vec::zero(), 0.0, 0.0, controller, config));
       world.update();

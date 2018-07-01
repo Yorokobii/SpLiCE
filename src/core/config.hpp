@@ -29,6 +29,8 @@ struct Config {
   double simDuration = 1000.0;
   double dt = 0.01;
   double originalRadius = 30.0;
+  double cellMass = 0.05;
+  double cellStiffness = 1000;
   double adhCoef = 25.0;
   double contractRatio = 0.9;
   double contractDuration = 0.4;
@@ -85,6 +87,8 @@ struct Config {
       else CHKPARAM(simDuration);
       else CHKPARAM(dt);
       else CHKPARAM(originalRadius);
+      else CHKPARAM(cellMass);
+      else CHKPARAM(cellStiffness);
       else CHKPARAM(adhCoef);
       else CHKPARAM(contractRatio);
       else CHKPARAM(contractDuration);

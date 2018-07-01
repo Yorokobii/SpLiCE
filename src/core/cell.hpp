@@ -11,17 +11,12 @@ template <typename Controller, typename Config> class Cell
   : public MecaCell::ConnectableCell<Cell<Controller, Config>, MecaCell::SpringBody> {
   bool contracting = false;
   double contractTime = 0.0;
-  double cellMass = 0.05;
-  double cellStiffness = 1000;
 
  public:
 	using Vec = MecaCell::Vec;
   using Base = MecaCell::ConnectableCell<Cell<Controller, Config>,
                                          MecaCell::SpringBody>;
-  double originalRadius = 30.0;
-  double adhCoef = 25.0;
-  double contractRatio = 0.9;
-  double contractDuration = 0.4;
+  double adhCoef = 0.0;
   double theta = 0.0;
   double phi = 0.0;
   double usedEnergy = 0.0;
@@ -45,14 +40,10 @@ template <typename Controller, typename Config> class Cell
   std::vector<std::string> action_outputs = {"quiescence", "duplicate", "rotate"};
   Cell(const Vec& p, double th, double ph, const Controller& ct, Config& cfg)
     : Base(p), theta(th), phi(ph), ctrl(ct), config(cfg) {
-
-    originalRadius = config.originalRadius;
-    this->getBody().setRadius(originalRadius);
-    this->getBody().setStiffness(cellStiffness);
-    this->getBody().setMass(cellMass);
+    this->getBody().setRadius(config.originalRadius);
+    this->getBody().setStiffness(config.cellStiffness);
+    this->getBody().setMass(config.cellMass);
     adhCoef = config.adhCoef;
-    contractRatio = config.contractRatio;
-    contractDuration = config.contractDuration;
   }
 
   double getAdhesionWith(Cell*, MecaCell::Vec) { return adhCoef; }
@@ -61,7 +52,7 @@ template <typename Controller, typename Config> class Cell
     contractTime = 0.0;
     if (!contracting) {
       contracting = true;
-      this->getBody().setRadius(originalRadius * contractRatio);
+      this->getBody().setRadius(config.originalRadius * config.contractRatio);
     }
   }
 
@@ -107,7 +98,7 @@ template <typename Controller, typename Config> class Cell
           if (contracting) {
             contracting = false;
             contractTime = 0.0;
-            this->body.setRadius(originalRadius);
+            this->body.setRadius(config.originalRadius);
             usedEnergy += config.energyContraction;
           }
         }
@@ -145,10 +136,10 @@ template <typename Controller, typename Config> class Cell
     // contractions
     if (contracting) {
       contractTime += w.getDt();
-      if (contractTime > contractDuration) {
+      if (contractTime > config.contractDuration) {
         contracting = false;
         contractTime = 0.0;
-        this->body.setRadius(originalRadius);
+        this->body.setRadius(config.originalRadius);
       }
     }
   }

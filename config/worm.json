@@ -1,12 +1,14 @@
 {
     "simShape": "config/worm.shape",
-    "simDuration": 10.0,
-    "dt": 0.001,
+    "simDuration": 50.0,
+    "dt": 0.01,
     "originalRadius": 30.0,
+    "cellMass": 0.05,
+    "cellStiffness": 200,
     "divRadius": 20.0,
-    "adhCoef": 1000.0,
+    "adhCoef": 10.0,
     "contractRatio": 0.9,
-    "contractDuration": 0.01,
+    "contractDuration": 0.05,
     "minActionAge": 0,
     "energyDuplicate": 1.0,
     "energyRotate": 0.01,
@@ -17,8 +19,8 @@
     "maxCells": 0,
     "betaAge": 0.4,
     "betaPressure": 30.0,
-    "fluidDensity": 0.0001,
-    "controllerUpdate": 2,
+    "fluidDensity": 0.00005,
+    "controllerUpdate": 5,
     "devoSteps": 0,
     "seed": 0,
     "populationSize": 200,
@@ -32,6 +34,5 @@
     "speciationThreshold_base": 0.3,
     "speciationThreshold_increment": 0.3,
     "speciationThreshold_max": 0.8,
-    "speciationThreshold_min": 0.01,
-    "grnFile": "grns/worm.dna"
+    "speciationThreshold_min": 0.01
 }
