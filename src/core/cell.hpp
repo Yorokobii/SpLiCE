@@ -95,19 +95,21 @@ template <typename Controller, typename Config> class Cell
       std::string action = action_outputs[actionMax];
 
       if (action == "duplicate") {
-        // cell duplicate
-        Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
-        Vec child_pos = dpos * config.divRadius + this->getPosition();
-        Vec new_pos = this->getPosition() - dpos * config.divRadius;
-        this->getBody().moveTo(new_pos);
-        w.addCell(new Cell(child_pos, theta, phi, ctrl, config));
-        age = 0;
-        usedEnergy = config.energyDuplicate;
-        if (contracting) {
-          contracting = false;
-          contractTime = 0.0;
-          this->body.setRadius(originalRadius);
-          usedEnergy += config.energyContraction;
+        if (energy >= config.energyDuplicate) {
+          // cell duplicate
+          Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
+          Vec child_pos = dpos * config.divRadius + this->getPosition();
+          Vec new_pos = this->getPosition() - dpos * config.divRadius;
+          this->getBody().moveTo(new_pos);
+          w.addCell(new Cell(child_pos, theta, phi, ctrl, config));
+          age = 0;
+          usedEnergy = config.energyDuplicate;
+          if (contracting) {
+            contracting = false;
+            contractTime = 0.0;
+            this->body.setRadius(originalRadius);
+            usedEnergy += config.energyContraction;
+          }
         }
       } else if (action == "rotate") {
         // cell rotate

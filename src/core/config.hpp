@@ -19,7 +19,7 @@ struct Config {
   using json = nlohmann::json;
 
   // ---------   STATIC CONFIG  ----------
-	using CtrlType = GRNController;
+	using CtrlType = BaseController;
   using CellType = Cell<CtrlType, Config>;
   using scenario_t = Scenario<CellType, CtrlType, Config>;
 
