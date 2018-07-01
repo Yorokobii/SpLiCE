@@ -129,8 +129,10 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       }
     }
     if (setDevoPhase) {
-      MecaCell::Vec movement = comDevo - com;
-      fit = movement.length() / config.originalRadius;
+      if (((config.devoSteps > 0) && ncells > devCells) || (config.devoSteps == 0)) {
+        MecaCell::Vec movement = comDevo - com;
+        fit = movement.length() / config.originalRadius;
+      }
     }
     MecaCell::logger<MecaCell::DBG>(":S| ", currentTime, " ", worldAge, " ", energy, " ",
                                     world.cells.size(), " ", gcomm, " ", comDevo, " ",
