@@ -32,6 +32,18 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
  public:
   Scenario(cfg_t c) : config(c), gen(rd()) {}
 
+	std::vector<MecaCell::Vec> readCellCoordinates(std::string path) {
+		std::vector<MecaCell::Vec> res;
+		std::ifstream file(path);
+		if (!file.is_open()) throw std::runtime_error("Unable to open shape file");
+		std::string line;
+		while (std::getline(file, line)) {
+			auto vs = MecaCell::splitStr(line, ' ');
+			res.push_back(MecaCell::Vec(stod(vs[0]), stod(vs[1]), stod(vs[2])));
+		}
+		return res;
+	}
+
   void init() {
     gen.seed(config.seed);
     sfp.fluidDensity = config.fluidDensity;
@@ -47,8 +59,24 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       controller = ctrl_t(buffer.str());
     }
 
-    world.addCell(new cell_t(MecaCell::Vec::zero(), 0.0, 0.0, controller, config));
-    world.update();
+		MecaCell::logger<MecaCell::DBG>("Cell coords :: ", config.simShape);
+		auto cellsCoordinates = readCellCoordinates(config.simShape);
+
+		for (const auto& p : cellsCoordinates) {
+			cell_t* c = new cell_t(p, 0.0, 0.0, controller, config);
+			world.addCell(c);
+		}
+
+		MecaCell::logger<MecaCell::DBG>("Added cells");
+		world.update();
+		world.update();
+
+		// unbreakable initial bonds & no new adhesions, only collisions
+		for (auto& conn : world.cellPlugin.connections) conn.second->unbreakable = true;
+		for (auto& c : world.cells) c->adhCoef = 0.0;
+
+    // world.addCell(new cell_t(MecaCell::Vec::zero(), 0.0, 0.0, controller, config));
+    // world.update();
   }
 
   void controllerUpdate() {

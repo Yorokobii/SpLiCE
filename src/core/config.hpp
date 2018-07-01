@@ -25,6 +25,7 @@ struct Config {
 
   // --------    DYNAMIC CONFIG  ----------
   // params and their default values
+  std::string simShape = "";
   double simDuration = 1000.0;
   double dt = 0.01;
   double originalRadius = 30.0;
@@ -80,7 +81,8 @@ struct Config {
     buffer << t.rdbuf();
     auto o = json::parse(buffer.str());
     for (auto it = o.begin(); it != o.end(); ++it) {
-      CHKPARAM(simDuration);
+      CHKPARAM(simShape);
+      else CHKPARAM(simDuration);
       else CHKPARAM(dt);
       else CHKPARAM(originalRadius);
       else CHKPARAM(adhCoef);

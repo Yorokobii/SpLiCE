@@ -11,6 +11,8 @@ template <typename Controller, typename Config> class Cell
   : public MecaCell::ConnectableCell<Cell<Controller, Config>, MecaCell::SpringBody> {
   bool contracting = false;
   double contractTime = 0.0;
+  double cellMass = 0.05;
+  double cellStiffness = 1000;
 
  public:
 	using Vec = MecaCell::Vec;
@@ -46,7 +48,8 @@ template <typename Controller, typename Config> class Cell
 
     originalRadius = config.originalRadius;
     this->getBody().setRadius(originalRadius);
-    // this->getBody().setStiffness(config.springStiffness);
+    this->getBody().setStiffness(cellStiffness);
+    this->getBody().setMass(cellMass);
     adhCoef = config.adhCoef;
     contractRatio = config.contractRatio;
     contractDuration = config.contractDuration;
