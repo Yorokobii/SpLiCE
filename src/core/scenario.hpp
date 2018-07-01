@@ -148,11 +148,13 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     if (!setDevoPhase && (worldAge > config.devoSteps)) {
       setDevoPhase = true;
       comDevo = com;
-      for (auto& conn : world.cellPlugin.connections) conn.second->unbreakable = true;
       for (auto& c : world.cells) {
-        c->devoPhase = false;
         c->adhCoef = 0.0;
+        c->devoPhase = false;
         c->action_outputs = {"quiescence", "contraction"};
+        for (auto &conn : c->getBody().cellConnections) {
+          conn->unbreakable = true; conn->adhesionEnabled = false;
+        }
       }
     }
     if (worldAge % config.controllerUpdate == 0) controllerUpdate();
