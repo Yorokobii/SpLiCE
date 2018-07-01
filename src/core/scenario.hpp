@@ -71,8 +71,6 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       MecaCell::logger<MecaCell::DBG>("Added cells");
       world.update();
       world.update();
-      world.update();
-      world.update();
 
       // unbreakable initial bonds & no new adhesions, only collisions
       // for (auto& conn : world.cells.connections) conn.second->unbreakable = true;
