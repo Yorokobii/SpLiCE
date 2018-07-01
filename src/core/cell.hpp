@@ -33,7 +33,6 @@ template <typename Controller, typename Config> class Cell
   int worldAge = 0;
   double nage = 0.0;
   bool ctrl_update = false;
-  bool isNew = true;
   bool devoPhase = true;
   Controller ctrl;
   Config& config;
@@ -66,59 +65,58 @@ template <typename Controller, typename Config> class Cell
     ctrl.setInput("pressure", exp(-pressure / config.betaPressure));
     ctrl.setInput("energy", energy / config.energyInitial);
     ctrl.setInput("comdist", comdist);
+    ctrl.setInput("contracting", (double)contracting);
   }
 
   template <typename W> void updateOuputs(W& w) {
     dlcomm = ctrl.getDelta("dlcommPlus", "dlcommMinus");
     dgcomm = ctrl.getDelta("dgcommPlus", "dgcommMinus");
-    if (!isNew) {
-      std::vector<double> actions;
-      for (auto& astr : action_outputs) {
-        actions.push_back(ctrl.getOutput(astr));
-      }
-      int actionMax = 0; double actionMaxConc = 0.0;
-      for (auto i = 0; i < actions.size(); ++i) {
-        if (actions[i] > actionMaxConc) {
-          actionMax = i;
-          actionMaxConc = actions[i];
-        }
-      }
-      std::string action = action_outputs[actionMax];
-
-      if (action == "duplicate") {
-        if (energy >= config.energyDuplicate) {
-          // cell duplicate
-          Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
-          Vec child_pos = dpos * config.divRadius + this->getPosition();
-          Vec new_pos = this->getPosition() - dpos * config.divRadius;
-          this->getBody().moveTo(new_pos);
-          w.addCell(new Cell(child_pos, theta, phi, ctrl, config));
-          age = 0;
-          usedEnergy = config.energyDuplicate;
-          if (contracting) {
-            contracting = false;
-            contractTime = 0.0;
-            this->body.setRadius(config.originalRadius);
-            usedEnergy += config.energyContraction;
-          }
-        }
-      } else if (action == "rotate") {
-        // cell rotate
-        double dtheta = ctrl.getDelta("thetaPlus", "thetaMinus");
-        theta = min(max(theta + dtheta, 0.0), 2 * M_PI);
-        double dphi = ctrl.getDelta("phiPlus", "phiMinus");
-        phi = min(max(phi + dphi, 0.0), 2 * M_PI);
-        usedEnergy = config.energyRotate;
-      } else if (action == "contraction") {
-        // start a new contraction event
-        startContracting();
-        usedEnergy = config.energyContraction;
-      } else if (action == "quiescence") {
-        // do nothing
-        usedEnergy = config.energyQuiescence;
-      }
-      ctrl_update = false;
+    std::vector<double> actions;
+    for (auto& astr : action_outputs) {
+      actions.push_back(ctrl.getOutput(astr));
     }
+    int actionMax = 0; double actionMaxConc = 0.0;
+    for (auto i = 0; i < actions.size(); ++i) {
+      if (actions[i] > actionMaxConc) {
+        actionMax = i;
+        actionMaxConc = actions[i];
+      }
+    }
+    std::string action = action_outputs[actionMax];
+
+    if (action == "duplicate") {
+      if (energy >= config.energyDuplicate) {
+        // cell duplicate
+        Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
+        Vec child_pos = dpos * config.divRadius + this->getPosition();
+        Vec new_pos = this->getPosition() - dpos * config.divRadius;
+        this->getBody().moveTo(new_pos);
+        w.addCell(new Cell(child_pos, theta, phi, ctrl, config));
+        age = 0;
+        usedEnergy = config.energyDuplicate;
+        if (contracting) {
+          contracting = false;
+          contractTime = 0.0;
+          this->body.setRadius(config.originalRadius);
+          usedEnergy += config.energyContraction;
+        }
+      }
+    } else if (action == "rotate") {
+      // cell rotate
+      double dtheta = ctrl.getDelta("thetaPlus", "thetaMinus");
+      theta = min(max(theta + dtheta, 0.0), 2 * M_PI);
+      double dphi = ctrl.getDelta("phiPlus", "phiMinus");
+      phi = min(max(phi + dphi, 0.0), 2 * M_PI);
+      usedEnergy = config.energyRotate;
+    } else if (action == "contraction") {
+      // start a new contraction event
+      startContracting();
+      usedEnergy = config.energyContraction;
+    } else if (action == "quiescence") {
+      // do nothing
+      usedEnergy = config.energyQuiescence;
+    }
+    ctrl_update = false;
   }
 
   template <typename W> void updateBehavior(W& w) {

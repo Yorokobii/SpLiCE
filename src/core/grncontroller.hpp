@@ -19,6 +19,7 @@ struct GRNController {  // both controller and DNA
     g.addRandomProtein(ProteinType::input, "pressure");
     g.addRandomProtein(ProteinType::input, "energy");
     g.addRandomProtein(ProteinType::input, "comdist");
+    g.addRandomProtein(ProteinType::input, "contracting");
 
     g.addRandomProtein(ProteinType::output, "duplicate");
     g.addRandomProtein(ProteinType::output, "rotate");
@@ -37,6 +38,8 @@ struct GRNController {  // both controller and DNA
     g.randomReguls(5);  // start with one regul
     return GRNController(g);
   }
+
+  GRNController(const GRNController &c) : grn(c.grn) { reset(); }
 
   GRNController(GRN_t g) : grn(g) { reset(); }
 

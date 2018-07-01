@@ -13,7 +13,7 @@ struct BaseController {
   }
 
 	void setInput(const std::string &input, double val) {
-    // MecaCell::logger<MecaCell::DBG>("input: ", input, " ", val);
+    MecaCell::logger<MecaCell::DBG>("input: ", input, " ", val);
   }
 
 	double getOutput(const std::string &output) const {
@@ -29,6 +29,10 @@ struct BaseController {
       return (plus - minus) / div;
     }
     return 0.0;
+  }
+
+  BaseController(const BaseController &c) {
+    MecaCell::logger<MecaCell::DBG>("cloning");
   }
 
   BaseController(const string& s) {}  // unserialize

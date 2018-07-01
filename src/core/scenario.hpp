@@ -95,10 +95,9 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       energy -= c->usedEnergy;
       gcomm += c->dgcomm;
       c->nage = (double) c->age / (double) worldAge;
-      nconn = 0;
+      nconn = c->getBody().cellConnections.size();
       MecaCell::Vec pressure = MecaCell::Vec::zero();
       for (auto& con : c->getBody().cellConnections) {
-        nconn += 1;
         pressure += con->collision.computeForce(config.dt) * con->direction;
         con->cells.first->lcomm += con->cells.second->dlcomm;
       }
@@ -117,6 +116,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       maxComDist = max(maxComDist, c->comdist);
     }
     for (auto& c : world.cells) {
+      if ((c->nconn == 0) && world.cells.size() > 1) c->die();
       c->lcomm = min(max(c->lcomm, 0.0), 1.0);
       c->gcomm = gcomm;
       c->maxConn = maxConn;
@@ -124,11 +124,11 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       c->worldAge = worldAge;
       if (ncells > 1) c->comdist = c->comdist / maxComDist;
       c->ctrl_update = true;
-      if (c->isNew) {
-        c->theta = dis(gen);
-        c->phi= dis(gen);
-        c->isNew = false;
-      }
+      // if (c->isNew) {
+      //   c->theta = dis(gen);
+      //   c->phi= dis(gen);
+      //   c->isNew = false;
+      // }
     }
     if (setDevoPhase) {
       MecaCell::Vec movement = comDevo - com;
@@ -154,6 +154,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
           conn->unbreakable = true; conn->adhesionEnabled = false;
         }
       }
+      world.update();
     }
     if (worldAge % config.controllerUpdate == 0) controllerUpdate();
     world.update();
