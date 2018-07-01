@@ -13,7 +13,7 @@ struct BaseController {
   }
 
   void setInput(const std::string &input, double val) {
-    // MecaCell::logger<MecaCell::DBG>("input: ", input, " ", val);
+    MecaCell::logger<MecaCell::DBG>("input: ", input, " ", val);
   }
 
   double getOutput(const std::string &output) const {

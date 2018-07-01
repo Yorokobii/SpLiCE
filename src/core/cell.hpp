@@ -64,9 +64,9 @@ template <typename Controller, typename Config> class Cell
     ctrl.setInput("theta", theta / (2 * M_PI));
     ctrl.setInput("phi", phi / (2 * M_PI));
     ctrl.setInput("pressure", exp(-pressure / config.betaPressure));
-    ctrl.setInput("energy", energy / config.energyInitial);
+    ctrl.setInput("energy", max((energy / config.energyInitial), 0.0));
     ctrl.setInput("comdist", comdist);
-    ctrl.setInput("contracting", (double)contracting);
+    // ctrl.setInput("contracting", (double)contracting);
   }
 
   template <typename W> void updateOuputs(W& w) {
@@ -117,7 +117,7 @@ template <typename Controller, typename Config> class Cell
   }
 
   template <typename W> void updateBehavior(W& w) {
-    if (!isNew && ctrl_update) {
+    if (ctrl_update) {
       // set inputs
       updateInputs(w);
       // call the controller
@@ -129,14 +129,14 @@ template <typename Controller, typename Config> class Cell
     }
 
     // contractions
-    if (contracting) {
-      contractTime += w.getDt();
-      if (contractTime > config.contractDuration) {
-        contracting = false;
-        contractTime = 0.0;
-        this->getBody().setRadius(config.originalRadius);
-      }
-    }
+    // if (contracting) {
+    //   contractTime += w.getDt();
+    //   if (contractTime > config.contractDuration) {
+    //     contracting = false;
+    //     contractTime = 0.0;
+    //     this->getBody().setRadius(config.originalRadius);
+    //   }
+    // }
   }
 };
 #endif
