@@ -20,7 +20,7 @@
     "betaAge": 0.4,
     "betaPressure": 30.0,
     "fluidDensity": 0.0001,
-    "force": 2000.0,
+    "force": 600.0,
     "compressForce": true,
     "controllerUpdate": 2,
     "devoSteps": 200,

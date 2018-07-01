@@ -108,8 +108,15 @@ template <typename Controller, typename Config> class Cell
       // startContracting();
       Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
       for (auto &conn : this->getBody().cellConnections) {
-        this->getBody().receiveForce(config.force * dpos.dot(conn->direction),
-                                     conn->direction, config.compressForce);
+        double force = config.force * dpos.dot(conn->direction);
+        this->getBody().receiveForce(force, conn->direction, config.compressForce);
+        if (conn->cells.first == this) {
+          conn->cells.second->getBody().receiveForce(force, -conn->direction,
+                                                     config.compressForce);
+        } else {
+          conn->cells.first->getBody().receiveForce(force, -conn->direction,
+                                                    config.compressForce);
+        }
       }
       usedEnergy = config.energyContraction;
     } else if (action == "quiescence") {
