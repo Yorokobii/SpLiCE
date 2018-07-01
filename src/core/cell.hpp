@@ -105,7 +105,9 @@ template <typename Controller, typename Config> class Cell
       usedEnergy = config.energyRotate;
     } else if (action == "contraction") {
       // start a new contraction event
-      startContracting();
+      // startContracting();
+      Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
+      this->getBody().receiveForce(config.force, dpos, config.compressForce);
       usedEnergy = config.energyContraction;
     } else if (action == "quiescence") {
       // do nothing

@@ -19,7 +19,7 @@ struct Config {
   using json = nlohmann::json;
 
   // ---------   STATIC CONFIG  ----------
-	using CtrlType = GRNController;
+	using CtrlType = BaseController;
   using CellType = Cell<CtrlType, Config>;
   using scenario_t = Scenario<CellType, CtrlType, Config>;
 
@@ -46,6 +46,8 @@ struct Config {
   double betaAge = 0.4;
   double betaPressure = 30.0;
   double fluidDensity = 1e-4;
+  double force = 1.0;
+  bool compressForce = false;
   int controllerUpdate = 5;
   int devoSteps = 1000;
   int seed = 0;
@@ -104,6 +106,8 @@ struct Config {
       else CHKPARAM(betaAge);
       else CHKPARAM(betaPressure);
       else CHKPARAM(fluidDensity);
+      else CHKPARAM(force);
+      else CHKPARAM(compressForce);
       else CHKPARAM(controllerUpdate);
       else CHKPARAM(devoSteps);
       else CHKPARAM(seed);
