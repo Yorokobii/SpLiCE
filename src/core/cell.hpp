@@ -34,6 +34,7 @@ template <typename Controller, typename Config> class Cell
   double nage = 0.0;
   bool ctrl_update = false;
   bool devoPhase = true;
+  bool isNew = true;
   Controller ctrl;
   Config& config;
   std::vector<std::string> action_outputs = {"quiescence", "duplicate", "rotate"};
@@ -45,7 +46,7 @@ template <typename Controller, typename Config> class Cell
     adhCoef = config.adhCoef;
   }
 
-  double getAdhesionWith(Cell*, MecaCell::Vec) { return adhCoef; }
+  double getAdhesionWith(Cell* c, MecaCell::Vec) { return adhCoef; }
 
   void startContracting() {
     contractTime = 0.0;
@@ -94,12 +95,6 @@ template <typename Controller, typename Config> class Cell
         w.addCell(new Cell(child_pos, theta, phi, ctrl, config));
         age = 0;
         usedEnergy = config.energyDuplicate;
-        if (contracting) {
-          contracting = false;
-          contractTime = 0.0;
-          this->body.setRadius(config.originalRadius);
-          usedEnergy += config.energyContraction;
-        }
       }
     } else if (action == "rotate") {
       // cell rotate
@@ -120,7 +115,7 @@ template <typename Controller, typename Config> class Cell
   }
 
   template <typename W> void updateBehavior(W& w) {
-    if (ctrl_update) {
+    if (!isNew && ctrl_update) {
       // set inputs
       updateInputs(w);
       // call the controller
@@ -137,7 +132,7 @@ template <typename Controller, typename Config> class Cell
       if (contractTime > config.contractDuration) {
         contracting = false;
         contractTime = 0.0;
-        this->body.setRadius(config.originalRadius);
+        this->getBody().setRadius(config.originalRadius);
       }
     }
   }

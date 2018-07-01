@@ -6,20 +6,22 @@
 
 struct BaseController {
  public:
-	BaseController() {}
+  BaseController() {}
 
   static BaseController random() {
     return BaseController();
   }
 
-	void setInput(const std::string &input, double val) {
-    MecaCell::logger<MecaCell::DBG>("input: ", input, " ", val);
+  void setInput(const std::string &input, double val) {
+    // MecaCell::logger<MecaCell::DBG>("input: ", input, " ", val);
   }
 
-	double getOutput(const std::string &output) const {
-		std::uniform_real_distribution<> dis(0.0, 1.0);
-		return dis(MecaCell::Config::globalRand());
-	}
+  double getOutput(const std::string &output) const {
+    std::uniform_real_distribution<> dis(0.0, 1.0);
+    double r = dis(MecaCell::Config::globalRand());
+    if (output == "contraction") r *= 0.2;
+    return r;
+  }
 
   double getDelta(const std::string &o1, const std::string &o2) {
     double plus = getOutput(o1);
@@ -32,7 +34,7 @@ struct BaseController {
   }
 
   BaseController(const BaseController &c) {
-    MecaCell::logger<MecaCell::DBG>("cloning");
+    // MecaCell::logger<MecaCell::DBG>("cloning");
   }
 
   BaseController(const string& s) {}  // unserialize
