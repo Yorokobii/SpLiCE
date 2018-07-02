@@ -7,8 +7,8 @@ using namespace MecacellViewer;
 
 struct AutoStop {
 	template <typename R> void onLoad(R* r) {
-        // if(ACTION)
-	    //  r->getEngine()->quit();
+        if(r->getWorld()->getNbUpdates() > 1000)
+	     r->getEngine()->quit();
     }
 };
 
