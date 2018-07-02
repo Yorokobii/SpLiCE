@@ -9,6 +9,8 @@
 #include "viewerplugins/complugin.hpp"
 #include "viewerplugins/grid.hpp"
 #include "viewerplugins/screencapture.hpp"
+#include "viewerplugins/autostop.hpp"
+#include "viewerplugins/autostart.hpp"
 
 int main(int argc, char** argv) {
   Config cfg(argc, argv);
@@ -23,10 +25,12 @@ int main(int argc, char** argv) {
   GridViewerPlugin gvp;
   PointViewerPlugin pvp;
   ScreenCapturePlugin scp;
+  AutoStart astart;
+  AutoStop astop;
   MecacellViewer::Viewer<Config::scenario_t> v(scenario);
   v.setNbLoopsPerFrame(2);
   // v.registerPlugins(cmp, gvp, ccp, pvp, comp);
-  v.registerPlugins(cmp, gvp, ccp, comp, scp);
+  v.registerPlugins(cmp, gvp, ccp, comp, scp, astart, astop);
 
   return v.exec();
 }
