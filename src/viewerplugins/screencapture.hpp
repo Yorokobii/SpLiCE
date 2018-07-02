@@ -21,7 +21,9 @@ struct ScreenCapturePlugin {
 	int skippedFrame = 0;
 
 	template <typename R> void preLoad(R *renderer) {
-		QDir dir(path);
+		QDir dir;
+		dir.mkdir(path);
+		dir.setPath(path);
 		dir.setNameFilters(QStringList() << "capture_*");
 		dir.setFilter(QDir::Files);
 		foreach(QString dirFile, dir.entryList())
