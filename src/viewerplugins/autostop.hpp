@@ -6,9 +6,9 @@
 using namespace MecacellViewer;
 
 struct AutoStop {
-	template <typename R> void onLoad(R* r) {
-        if(r->getWorld()->getNbUpdates() > 1000)
-	     r->getEngine()->quit();
+	template <typename R> void preLoop(R* r) {
+        if(r->getScenario().getWorld().getNbUpdates() > 1000)
+	        r->getEngine()->quit();
     }
 };
 
