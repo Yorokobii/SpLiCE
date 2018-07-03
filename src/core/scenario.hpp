@@ -146,7 +146,6 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     worldAge += 1;
     if (!setDevoPhase && (worldAge > config.devoSteps)) {
       setDevoPhase = true;
-      comDevo = com;
       for (auto& c : world.cells) {
         c->devoPhase = false;
         c->getBody().setAngularVelocity(MecaCell::Vec::zero());
@@ -159,6 +158,12 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
         }
         c->adhCoef = 0.0;
       }
+      com = MecaCell::Vec::zero();
+      for (auto& c : world.cells) {
+        com += c->getPosition();
+      }
+      if (ncells > 0) com = com / ncells;
+      comDevo = com;
       world.update();
     }
     if (worldAge % config.controllerUpdate == 0) controllerUpdate();
