@@ -48,14 +48,6 @@ template <typename Controller, typename Config> class Cell
 
   double getAdhesionWith(Cell* c, MecaCell::Vec) { return adhCoef; }
 
-  void startContracting() {
-    contractTime = 0.0;
-    if (!contracting) {
-      contracting = true;
-      this->getBody().setRadius(config.originalRadius * config.contractRatio);
-    }
-  }
-
   template <typename W> void updateInputs(W& w) {
     ctrl.setInput("devoPhase", (double)devoPhase);
     ctrl.setInput("movementPhase", (double)!devoPhase);
@@ -86,7 +78,7 @@ template <typename Controller, typename Config> class Cell
     std::string action = action_outputs[actionMax];
 
     if (action == "duplicate") {
-      if (energy >= config.energyDuplicate) {
+      if (energy >= config.energyDuplicate && w.cells.size() < w.config.maxCells) {
         // cell duplicate
         Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
         Vec child_pos = dpos * config.divRadius + this->getPosition();
@@ -105,7 +97,7 @@ template <typename Controller, typename Config> class Cell
       usedEnergy = config.energyRotate;
     } else if (action == "contraction") {
       // start a new contraction event
-      // startContracting();
+      contracting = true;
       Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
       for (auto &conn : this->getBody().cellConnections) {
         if (conn->unbreakable) {
@@ -119,6 +111,9 @@ template <typename Controller, typename Config> class Cell
     } else if (action == "quiescence") {
       // do nothing
       usedEnergy = config.energyQuiescence;
+    }
+    else{
+      contracting = false;
     }
     ctrl_update = false;
   }
@@ -134,16 +129,6 @@ template <typename Controller, typename Config> class Cell
       usedEnergy = config.energyQuiescence;
       updateOuputs(w);
     }
-
-    // contractions
-    // if (contracting) {
-    //   contractTime += w.getDt();
-    //   if (contractTime > config.contractDuration) {
-    //     contracting = false;
-    //     contractTime = 0.0;
-    //     this->getBody().setRadius(config.originalRadius);
-    //   }
-    // }
   }
 };
 #endif
