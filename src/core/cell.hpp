@@ -37,7 +37,7 @@ template <typename Controller, typename Config> class Cell
   bool isNew = true;
   Controller ctrl;
   Config& config;
-  std::vector<std::string> action_outputs = {"quiescence", "duplicate", "rotate"};
+  std::vector<std::string> action_outputs = {"quiescence", "duplicate", "rotate", "contraction"};
   Cell(const Vec& p, double th, double ph, const Controller& ct, Config& cfg)
     : Base(p), theta(th), phi(ph), ctrl(ct), config(cfg) {
     this->getBody().setRadius(config.originalRadius);
@@ -66,7 +66,7 @@ template <typename Controller, typename Config> class Cell
     ctrl.setInput("pressure", exp(-pressure / config.betaPressure));
     ctrl.setInput("energy", max((energy / config.energyInitial), 0.0));
     ctrl.setInput("comdist", comdist);
-    // ctrl.setInput("contracting", (double)contracting);
+    ctrl.setInput("contracting", (double)contracting);
   }
 
   template <typename W> void updateOuputs(W& w) {
