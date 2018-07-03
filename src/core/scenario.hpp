@@ -80,7 +80,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
           conn->unbreakable = true; conn->adhesionEnabled = false;
         }
       }
-    } else {
+    } else if(world.cells.size() < config.maxCells){
       world.addCell(new cell_t(MecaCell::Vec::zero(), 0.0, 0.0, controller, config));
       world.update();
     }
@@ -144,7 +144,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
   void loop() {
     currentTime += world.getDt();
     worldAge += 1;
-    if (!setDevoPhase && (worldAge > config.devoSteps)) {
+    if (!setDevoPhase && (worldAge > config.devoSteps || world.cells.size() >= config.maxCells)) {
       setDevoPhase = true;
       comDevo = com;
       for (auto& c : world.cells) {
