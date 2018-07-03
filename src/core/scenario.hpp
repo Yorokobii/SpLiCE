@@ -162,7 +162,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       for (auto& c : world.cells) {
         com += c->getPosition();
       }
-      if (ncells > 0) com = com / ncells;
+      if (world.cells.size() > 0) com = com / world.cells.size();
       comDevo = com;
       world.update();
     }
