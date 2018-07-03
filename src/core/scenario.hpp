@@ -19,6 +19,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
   double energy = 0.0;
   double gcomm = 0.0;
   double fit = 0.0;
+  double shapefit = 0.0;
   int worldAge = 0;
   bool setDevoPhase = false;
   ctrl_t controller;
@@ -129,11 +130,14 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       }
     }
     if (setDevoPhase) {
-      if (((config.devoSteps > 0) && (ncells > config.devCells))
-          || (config.devoSteps == 0)) {
+      if ((((config.devoSteps > 0) && (ncells > config.devCells))
+          || (config.devoSteps == 0))) {
         MecaCell::Vec movement = comDevo - com;
         fit = movement.length() / config.originalRadius;
       }
+    }
+    else{
+      
     }
     MecaCell::logger<MecaCell::DBG>(":S| ", currentTime, " ", worldAge, " ", energy, " ",
                                     world.cells.size(), " ", gcomm, " ", comDevo, " ",
