@@ -17,6 +17,7 @@ int main(int argc, char** argv) {
         while (!scenario.finished()) scenario.loop();
 
         individual.fitnesses["DistanceEnergy"] = scenario.fit;
+        individual.fitnesses["ShapeEnergy"] = scenario.shapefit;
       },
       "DistanceEnergy");
 
