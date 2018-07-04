@@ -129,7 +129,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       c->worldAge = worldAge;
 
       c->deltcom = (com - prevCom).length();
-      
+
       if (ncells > 1) c->comdist = c->comdist / maxComDist;
       c->ctrl_update = true;
       if (c->isNew) {
@@ -189,6 +189,9 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       prevCom = com;
       world.update();
     }
+    else
+      for (auto& c : world.cells)
+        c->action_outputs = {"duplicate", "rotate"};
     if (worldAge % config.controllerUpdate == 0) controllerUpdate();
     world.update();
   }
