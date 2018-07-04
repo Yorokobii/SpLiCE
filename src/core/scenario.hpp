@@ -162,7 +162,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     currentTime += world.getDt();
     worldAge += 1;
     for (auto& c : world.cells)
-      if(c->nconn > 5)
+      if(c && c->nconn > 5)
         c->die();
     if (!setDevoPhase && (worldAge > config.devoSteps)) {
       setDevoPhase = true;
