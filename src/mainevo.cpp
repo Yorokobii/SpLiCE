@@ -27,6 +27,7 @@ int main(int argc, char** argv) {
   ga.setVerbosity(cfg.verbosity);
   ga.setNbThreads(cfg.nbThreads);
   ga.setSaveFolder("evos");
+  ga.setSaveParetoFront(true);
 
   if (cfg.speciation) {
     ga.enableSpeciation();
