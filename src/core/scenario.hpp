@@ -137,24 +137,14 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       }
     }
     else{
-      if(world.cells.size()>2){
-        MecaCell::Vec furthest = world.cells.at(0)->getPosition();
-        float dist = 0.0;
+        // MecaCell::Vec furthest = world.cells.at(0)->getPosition();
+        int connections_per_cell = 0;
         for (auto& c : world.cells) {
-          float newdist = (c->getPosition() - furthest).length() < 0 ?
-                            -(c->getPosition() - furthest).length() :
-                             (c->getPosition() - furthest).length();
-          if(newdist > dist){
-            dist = newdist;
-            furthest = c->getPosition();
-          }
+          connections_per_cell += c.nconn;
         }
+        connections_per_cell /= world.cells.size();
 
-        shapefit = 1.0 / (dist + 1.0);
-
-      }
-      else
-        shapefit = 0.0;
+        shapefit = connections_per_cell;
     }
 
     MecaCell::logger<MecaCell::DBG>(":S| ", currentTime, " ", worldAge, " ", energy, " ",
