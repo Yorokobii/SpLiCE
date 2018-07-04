@@ -140,7 +140,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
         // MecaCell::Vec furthest = world.cells.at(0)->getPosition();
         int connections_per_cell = 0;
         for (auto& c : world.cells) {
-          connections_per_cell += c.nconn;
+          connections_per_cell += c->nconn;
         }
         connections_per_cell /= world.cells.size();
 
