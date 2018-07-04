@@ -24,6 +24,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
   bool setDevoPhase = false;
   ctrl_t controller;
   MecaCell::Vec com = MecaCell::Vec::zero();
+  MecaCell::Vec prevCom = MecaCell::Vec::zero();
   MecaCell::Vec comDevo = MecaCell::Vec::zero();
 
  protected:
@@ -106,7 +107,12 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       maxConn = max(nconn, maxConn);
       com += c->getPosition();
     }
-    if (ncells > 0) com = com / ncells;
+    if (ncells > 0){
+      com = com / ncells;
+      //gain energy
+      energy += (com - prevCom).length();
+      prevCom = com;
+    }
     gcomm = min(max(gcomm, 0.0), 1.0);
     double maxComDist = 0.0;
     for (auto& c : world.cells) {
@@ -176,6 +182,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       }
       if (world.cells.size() > 0) com = com / world.cells.size();
       comDevo = com;
+      prevCom = com;
       world.update();
     }
     if (worldAge % config.controllerUpdate == 0) controllerUpdate();
