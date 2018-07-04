@@ -189,7 +189,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       prevCom = com;
       world.update();
     }
-    else
+    if(!setDevoPhase)
       for (auto& c : world.cells)
         c->action_outputs = {"duplicate", "rotate"};
     if (worldAge % config.controllerUpdate == 0) controllerUpdate();
