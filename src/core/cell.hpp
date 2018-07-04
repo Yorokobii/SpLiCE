@@ -11,6 +11,7 @@ template <typename Controller, typename Config> class Cell
   : public MecaCell::ConnectableCell<Cell<Controller, Config>, MecaCell::SpringBody> {
   bool contracting = false;
   double contractTime = 0.0;
+  double contractDuration = 0.0;
 
  public:
 	using Vec = MecaCell::Vec;
@@ -45,6 +46,7 @@ template <typename Controller, typename Config> class Cell
     this->getBody().setStiffness(config.cellStiffness);
     this->getBody().setMass(config.cellMass);
     adhCoef = config.adhCoef;
+    contractDuration = config.contractDuration;
   }
 
   double getAdhesionWith(Cell* c, MecaCell::Vec) { return adhCoef; }
@@ -98,18 +100,29 @@ template <typename Controller, typename Config> class Cell
       phi = min(max(phi + dphi, 0.0), 2 * M_PI);
       usedEnergy = config.energyRotate;
     } else if (action == "contraction") {
-      // start a new contraction event
-      contracting = true;
-      Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
-      for (auto &conn : this->getBody().cellConnections) {
-        if (conn->unbreakable) {
-          conn->cells.first->getBody().receiveForce(config.force, conn->direction,
-                                                    config.compressForce);
-          conn->cells.second->getBody().receiveForce(config.force, -conn->direction,
-                                                    config.compressForce);
+      if(contracting = false){
+        // start a new contraction event
+        contracting = true;
+        Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
+        for (auto &conn : this->getBody().cellConnections) {
+          if (conn->unbreakable) {
+            conn->cells.first->getBody().receiveForce(config.force, conn->direction,
+                                                      config.compressForce);
+            conn->cells.second->getBody().receiveForce(config.force, -conn->direction,
+                                                      config.compressForce);
+          }
+        }
+        usedEnergy = config.energyContraction;
+      }
+      else{
+        if(contractTime >= contractDuration){
+          contractTime = 0.0;
+          contracting = false;
+        }
+        else{
+          contractTime++;
         }
       }
-      usedEnergy = config.energyContraction;
     } else if (action == "quiescence") {
       // do nothing
       usedEnergy = config.energyQuiescence;
