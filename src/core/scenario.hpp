@@ -127,6 +127,9 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       c->maxConn = maxConn;
       c->energy = energy;
       c->worldAge = worldAge;
+
+      c->deltcom = (com - prevCom).length();
+      
       if (ncells > 1) c->comdist = c->comdist / maxComDist;
       c->ctrl_update = true;
       if (c->isNew) {
@@ -161,9 +164,6 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
   void loop() {
     currentTime += world.getDt();
     worldAge += 1;
-    for (auto& c : world.cells)
-      if(c && c->nconn > 5)
-        c->die();
     if (!setDevoPhase && (worldAge > config.devoSteps)) {
       setDevoPhase = true;
       for (auto& c : world.cells) {
@@ -177,6 +177,8 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
           conn->adhCoef = c->adhCoef;
         }
         c->adhCoef = 0.0;
+        if(c->nconn > 5)
+          c->action_outputs = {"quiescence"};
       }
       com = MecaCell::Vec::zero();
       for (auto& c : world.cells) {

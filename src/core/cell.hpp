@@ -27,6 +27,7 @@ template <typename Controller, typename Config> class Cell
   double pressure = 0.0;
   double energy = 0.0;
   double comdist = 0.0;
+  double deltcom = 0.0;
   int nconn = 0;
   int maxConn = 0;
   int age = 0;
@@ -59,6 +60,7 @@ template <typename Controller, typename Config> class Cell
     ctrl.setInput("energy", max((energy / config.energyInitial), 0.0));
     ctrl.setInput("comdist", comdist);
     ctrl.setInput("contracting", (double)contracting);
+    ctrl.setInput("deltcom", exp(deltcom / 10));
   }
 
   template <typename W> void updateOuputs(W& w) {
