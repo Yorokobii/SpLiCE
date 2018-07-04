@@ -103,7 +103,6 @@ template <typename Controller, typename Config> class Cell
       if(contracting = false){
         // start a new contraction event
         contracting = true;
-        Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
         for (auto &conn : this->getBody().cellConnections) {
           if (conn->unbreakable) {
             conn->cells.first->getBody().receiveForce(config.force, conn->direction,
@@ -126,9 +125,6 @@ template <typename Controller, typename Config> class Cell
     } else if (action == "quiescence") {
       // do nothing
       usedEnergy = config.energyQuiescence;
-    }
-    else{
-      contracting = false;
     }
     ctrl_update = false;
   }
