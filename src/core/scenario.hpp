@@ -150,7 +150,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
           }
         }
 
-        shapefit = 1.0 - 1.0 / (dist + 1.0);
+        shapefit = 1.0 - 10.0 / (dist + 10.0);
 
       }
       else
