@@ -110,7 +110,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     if (ncells > 0){
       com = com / ncells;
       //gain energy
-      energy += (com - prevCom).length();
+      energy += (com - prevCom).length()*20;
       prevCom = com;
     }
     gcomm = min(max(gcomm, 0.0), 1.0);
