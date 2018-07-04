@@ -152,7 +152,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
         }
         connections_per_cell /= world.cells.size();
 
-        shapefit = connections_per_cell*10;
+        shapefit = connections_per_cell*5;
     }
 
     MecaCell::logger<MecaCell::DBG>(":S| ", currentTime, " ", worldAge, " ", energy, " ",
