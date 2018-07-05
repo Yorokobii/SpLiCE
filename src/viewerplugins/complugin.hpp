@@ -24,10 +24,8 @@ struct CenterOfMassDrawer {
 	}
 
 	template <typename R> void call(R *r) {
-		if (r->getScenario().getWorld().getNbUpdates() % 20 == 0) {
-			QVector3D com(0, 0, 0);
-			for (auto &c : r->getScenario().getWorld().cells) com += toQV3D(c->getPosition());
-			com /= static_cast<double>(r->getScenario().getWorld().cells.size());
+		if (r->getScenario().getWorld().getNbUpdates() % 20 <= 1) {
+			QVector3D com = toQV3D(r->getScenario().com);
 			auto l = (com - prevcom).length();
 			if (l > 0) {
 				positions.push_back({prevcom, com});

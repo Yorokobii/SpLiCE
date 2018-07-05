@@ -121,7 +121,7 @@ template <typename Controller, typename Config> class Cell
           contracting = false;
         }
         else{
-          if(contractTime <= contractDuration/2){
+          if(contractTime <= contractDuration/4){
             for (auto &conn : this->getBody().cellConnections) {
               if (conn->unbreakable) {
                 conn->cells.first->getBody().receiveForce(config.force, conn->direction,

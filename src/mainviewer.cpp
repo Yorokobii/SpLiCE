@@ -26,11 +26,11 @@ int main(int argc, char** argv) {
   PointViewerPlugin pvp;
   ScreenCapturePlugin scp;
   AutoStart astart;
-  AutoStop astop;
+  // AutoStop astop;
   MecacellViewer::Viewer<Config::scenario_t> v(scenario);
   v.setNbLoopsPerFrame(2);
   // v.registerPlugins(cmp, gvp, ccp, pvp, comp);
-  v.registerPlugins(cmp, gvp, ccp, comp, scp, astart, astop);
+  v.registerPlugins(cmp, gvp, ccp, comp, scp, astart);
 
   return v.exec();
 }
