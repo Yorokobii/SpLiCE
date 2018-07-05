@@ -128,8 +128,11 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       if (ncells > 1) c->comdist = c->comdist / maxComDist;
       c->ctrl_update = true;
       if (c->isNew) {
-        c->theta = min(max(c->theta + dis(gen), 0.0), 2*M_PI);
-        c->phi = min(max(c->phi + dis(gen), 0.0), 2*M_PI);
+        // c->theta = min(max(c->theta + dis(gen), 0.0), 2*M_PI);
+        // c->phi = min(max(c->phi + dis(gen), 0.0), 2*M_PI);
+        std::uniform_real_distribution<> distmp(0.0, 2*M_PI);
+        c->theta = distmp(gen);
+        c->phi = distmp(gen);
         c->isNew = false;
       }
     }
