@@ -103,11 +103,13 @@ template <typename Controller, typename Config> class Cell
       if(contracting = false){
         // start a new contraction event
         contracting = true;
+        Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)}; 
         for (auto &conn : this->getBody().cellConnections) {
           if (conn->unbreakable) {
-            conn->cells.first->getBody().receiveForce(config.force, conn->direction,
+            double force = conn->direction.dot(dpos) * config.force;
+            conn->cells.first->getBody().receiveForce(force, conn->direction,
                                                       config.compressForce);
-            conn->cells.second->getBody().receiveForce(config.force, -conn->direction,
+            conn->cells.second->getBody().receiveForce(force, -conn->direction,
                                                       config.compressForce);
           }
         }

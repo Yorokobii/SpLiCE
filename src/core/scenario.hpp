@@ -172,7 +172,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
           }
           c->devoPhase = false;
           c->adhCoef = 0.0;
-          c->action_outputs = {"quiescence", "contraction"};
+          c->action_outputs = {"quiescence", "contraction", "rotate"};
         }
       }
       com = MecaCell::Vec::zero();
