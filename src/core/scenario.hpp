@@ -129,7 +129,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       c->ctrl_update = true;
       if (c->isNew) {
         c->theta = min(max(c->theta + dis(gen), 0.0), 2*M_PI);
-        c->phi = min(max(c->theta + dis(gen), 0.0), 2*M_PI);
+        c->phi = min(max(c->phi + dis(gen), 0.0), 2*M_PI);
         c->isNew = false;
       }
     }
