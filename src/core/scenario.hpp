@@ -114,7 +114,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       c->comdist = (c->getPosition() - com).length();
       maxComDist = max(maxComDist, c->comdist);
     }
-    std::uniform_real_distribution<> dis(-0.2, 0.2);
+    std::uniform_real_distribution<> dis(-1, 1);
     for (auto& c : world.cells) {
       if ((c->nconn == 0) && world.cells.size() > 1) c->die();
       c->lcomm = min(max(c->lcomm, 0.0), 1.0);
