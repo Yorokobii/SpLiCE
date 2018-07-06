@@ -5,7 +5,7 @@
 #include <gaga/gaga.hpp>
 #include "core/config.hpp"
 // #include "core/evaluators.hpp"
-#include "capture.hpp"
+#include "core/capture.hpp"
 
 int main(int argc, char** argv) {
   Config cfg(argc, argv);
