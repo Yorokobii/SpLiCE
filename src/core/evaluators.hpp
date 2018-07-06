@@ -81,7 +81,7 @@ template <class Scenario> struct ComplexMorphologyEvaluator {
 			ratioProj2 = longestProj2 / longestDist;
 			ratioProj3 = longestProj3 / longestDist;
 		}
-		return {normalizedNbCells, sphericity, ratioProj2, ratioProj3};
+		return {{normalizedNbCells, sphericity, ratioProj2, ratioProj3}};
 	}
 
 	template <typename Cell> MecaCell::Vec getLongestDistance(std::vector<Cell *> cells) {
