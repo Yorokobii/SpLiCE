@@ -30,10 +30,9 @@ int main(int argc, char** argv) {
         fp.push_back(nconn);
         fp.push_back(scenario.getWorld().cells.size()/10.0);
 
-        ComplexMorphologyEvaluator<Config::scenario_t> cme(argc, argv);
         // for(auto& v : cme.getFootprint(scenario))
         //   fp.push_back(v);
-        footprints.push_back(cme.getFootprint(scenario));
+        footprints.push_back(getFootprint(scenario));
 
         footprints.push_back(fp);
         individual.footprint = footprints;
