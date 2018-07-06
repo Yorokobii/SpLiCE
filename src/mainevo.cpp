@@ -34,7 +34,7 @@ int main(int argc, char** argv) {
         //   fp.push_back(v);
 
         if (scenario.getWorld().cells.size() == 0) {
-          return {{0, 0}};
+          return {0, 0};
         }
         auto clusters =
             ClusterTools::getClusters(scenario.getWorld().cells);
