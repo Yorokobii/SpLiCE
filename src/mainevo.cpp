@@ -3,7 +3,6 @@
 #define MECACELL_LOGGER_DBG_DISABLE
 #include <mecacell/mecacell.h>
 #include <gaga/gaga.hpp>
-#include "core/evaluators.hpp"
 #include "core/config.hpp"
 
 int main(int argc, char** argv) {
