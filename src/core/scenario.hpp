@@ -142,8 +142,8 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
         
         //compute biggest cell2cell distance
         float distc2c = 0.0;
-        for(auto& c1 ; world.cells)
-          for(auto& c2 ; world.cells)
+        for(auto& c1 : world.cells)
+          for(auto& c2 : world.cells)
             if((c1->getPosition() - c2->getPosition()).length() > distc2c)
               distc2c = (c1->getPosition() - c2->getPosition()).length();
 

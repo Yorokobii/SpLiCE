@@ -3,6 +3,7 @@
 #define MECACELL_LOGGER_DBG_DISABLE
 #include <mecacell/mecacell.h>
 #include <gaga/gaga.hpp>
+#include "core/evaluators.hpp"
 #include "core/config.hpp"
 
 int main(int argc, char** argv) {
@@ -16,6 +17,19 @@ int main(int argc, char** argv) {
         scenario.init();
         while (!scenario.finished()) scenario.loop();
 
+        std::vector<std::vector<double>> footprints;
+        scenario.terminate();
+
+        //compute footprint
+        float nconn;
+        for(auto& c : scenario.getWorld().cells){
+          nconn += c->nconn;
+        }
+        nconn /= scenario.getWorld().cells.size();
+
+        footprints.push_back({nconn});
+        ind.footprint = footprints;
+
         individual.fitnesses["DistanceEnergy"] = scenario.fit;
         // individual.fitnesses["ShapeEnergy"] = scenario.shapefit;
       },
@@ -27,6 +41,8 @@ int main(int argc, char** argv) {
   ga.setVerbosity(cfg.verbosity);
   ga.setNbThreads(cfg.nbThreads);
   ga.setSaveFolder("evos");
+  ga.enableNovelty();
+
   // ga.setSaveParetoFront(true);
 
   if (cfg.speciation) {
