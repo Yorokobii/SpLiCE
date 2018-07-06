@@ -44,7 +44,8 @@ int main(int argc, char** argv) {
               biggestClusterId = i;
             }
           }
-          footprints.push_back({static_cast<double>(biggestClusterSize), 0.0});
+          fp.push_back(static_cast<double>(biggestClusterSize));
+          fp.push_back(clusters.size());
         }
 
         footprints.push_back(fp);
