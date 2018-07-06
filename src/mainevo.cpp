@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
         nconn /= scenario.getWorld().cells.size();
 
         footprints.push_back({nconn});
-        ind.footprint = footprints;
+        individual.footprint = footprints;
 
         individual.fitnesses["DistanceEnergy"] = scenario.fit;
         // individual.fitnesses["ShapeEnergy"] = scenario.shapefit;
