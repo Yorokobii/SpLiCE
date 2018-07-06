@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
             nconn += (conn->adhCoef > 0.0) ? 1.0 : 0.0;
         nconn /= scenario.getWorld().cells.size();
 
-        footprints.push_back({nconn});
+        footprints.push_back({nconn, scenario.getWorld().cells.size()/10.0});
 
         //
 
