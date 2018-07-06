@@ -4,7 +4,7 @@
 #include <mecacell/mecacell.h>
 #include <gaga/gaga.hpp>
 #include "core/config.hpp"
-#include "evaluators.hpp"
+#include "core/evaluators.hpp"
 
 int main(int argc, char** argv) {
   Config cfg(argc, argv);
@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
         ComplexMorphologyEvaluator<Config::scenario_t> cme(argc, argv);
         for(auto& v : cme.getFootprint(scenario))
           fp.push_back(v);
-          
+
         footprints.push_back(fp);
         individual.footprint = footprints;
 
