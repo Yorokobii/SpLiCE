@@ -53,7 +53,7 @@ int main(int argc, char** argv) {
         }
 
         MecaCell::Grid<Config::CellType *> grid(cfg.originalRadius / 3.0);
-        for (auto &c : clust) grid.insert(c);
+        for (auto &c : clusters[biggestClusterId]) grid.insert(c);
         auto sphericity = grid.computeSphericity();
 
 
