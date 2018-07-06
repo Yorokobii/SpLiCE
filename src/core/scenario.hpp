@@ -139,8 +139,16 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     if (setDevoPhase) {
       if ((((config.devoSteps > 0) && (ncells > config.devCells))
           || (config.devoSteps == 0))) {
+        
+        //compute biggest cell2cell distance
+        float distc2c = 0.0;
+        for(auto& c1 ; world.cells)
+          for(auto& c2 ; world.cells)
+            if((c1->getPosition() - c2->getPosition()).length() > distc2c)
+              distc2c = (c1->getPosition() - c2->getPosition()).length();
+
         MecaCell::Vec movement = comDevo - com;
-        fit = movement.length() / config.originalRadius;
+        fit = movement.length() / distc2c;
       }
     }
     int connections_per_cell = 0;
@@ -178,8 +186,8 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       com = MecaCell::Vec::zero();
       for (auto& c : world.cells) {
         com += c->getPosition();
-        if(c->nconn > 5)
-          c->action_outputs = {"quiescence"};
+        // if(c->nconn > 5)
+        //   c->action_outputs = {"quiescence"};
       }
       if (world.cells.size() > 0) com = com / world.cells.size();
       comDevo = com;

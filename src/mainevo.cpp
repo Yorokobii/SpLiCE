@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
         while (!scenario.finished()) scenario.loop();
 
         individual.fitnesses["DistanceEnergy"] = scenario.fit;
-        individual.fitnesses["ShapeEnergy"] = scenario.shapefit;
+        // individual.fitnesses["ShapeEnergy"] = scenario.shapefit;
       },
       "DistanceEnergy");
 
@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
   ga.setVerbosity(cfg.verbosity);
   ga.setNbThreads(cfg.nbThreads);
   ga.setSaveFolder("evos");
-  ga.setSaveParetoFront(true);
+  // ga.setSaveParetoFront(true);
 
   if (cfg.speciation) {
     ga.enableSpeciation();
