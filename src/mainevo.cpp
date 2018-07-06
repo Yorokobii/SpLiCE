@@ -17,7 +17,6 @@ int main(int argc, char** argv) {
         while (!scenario.finished()) scenario.loop();
 
         std::vector<std::vector<double>> footprints;
-        scenario.terminate();
 
         //compute footprint
         float nconn;
