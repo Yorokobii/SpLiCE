@@ -8,9 +8,9 @@
 #include <unordered_set>
 
 struct ClusterTools {
-	template <typename Cell, typename CC>
+	template <typename Cell>
 	static std::vector<std::unordered_set<Cell *>> getClusters(
-	    const std::vector<Cell *> &cells, const CC &) {
+	    const std::vector<Cell *> &cells) {
 		std::unordered_set<Cell *> clusterizedCells;
 		std::vector<std::unordered_set<Cell *>> clusters;
 		for (auto &c : cells) {
@@ -82,11 +82,11 @@ struct ClusterTools {
 		auto a = lambda * lambda * x * x;
 		return a / (a + 1.0);
 	}
-	template <typename Cell, typename CC>
-	static vector<Cell *> getBiggestCluster(const vector<Cell *> &cells, const CC &cc) {
+	template <typename Cell>
+	static vector<Cell *> getBiggestCluster(const vector<Cell *> &cells) {
 		vector<Cell *> biggestCluster;
 		if (cells.size() > 0) {
-			auto clusters = getClusters(cells, cc);
+			auto clusters = getClusters(cells);
 			size_t biggestClusterId = 0;
 			size_t biggestClusterSize = clusters[biggestClusterId].size();
 			for (size_t i = 1; i < clusters.size(); ++i) {
