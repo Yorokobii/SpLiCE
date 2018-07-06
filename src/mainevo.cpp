@@ -4,6 +4,7 @@
 #include <mecacell/mecacell.h>
 #include <gaga/gaga.hpp>
 #include "core/config.hpp"
+#include "evaluators.hpp"
 
 int main(int argc, char** argv) {
   Config cfg(argc, argv);
@@ -17,6 +18,7 @@ int main(int argc, char** argv) {
         while (!scenario.finished()) scenario.loop();
 
         std::vector<std::vector<double>> footprints;
+        std::vector<double> fp;
 
         //compute nconn footprint
         float nconn;
@@ -24,12 +26,14 @@ int main(int argc, char** argv) {
           for(auto& conn : c->getBody().cellConnections)
             nconn += (conn->adhCoef > 0.0) ? 1.0 : 0.0;
         nconn /= scenario.getWorld().cells.size();
+        fp.push_back(nconn);
+        fp.push_back(scenario.getWorld().cells.size()/10.0);
 
-        footprints.push_back({nconn, scenario.getWorld().cells.size()/10.0});
-
-        //
-
-
+        ComplexMorphologyEvaluator<Config::scenario_t> cme(argc, argv);
+        for(auto& v : cme.getFootprint(scenario))
+          fp.push_back(v);
+          
+        footprints.push_back(fp);
         individual.footprint = footprints;
 
         individual.fitnesses["DistanceEnergy"] = scenario.fit;
