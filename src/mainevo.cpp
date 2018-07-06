@@ -18,14 +18,18 @@ int main(int argc, char** argv) {
 
         std::vector<std::vector<double>> footprints;
 
-        //compute footprint
+        //compute nconn footprint
         float nconn;
         for(auto& c : scenario.getWorld().cells){
-          nconn += c->nconn;
-        }
+          for(auto& conn : c->getBody().cellConnections)
+            nconn += conn->adhCoef > 0.0 ? 1.0 : 0.0;
         nconn /= scenario.getWorld().cells.size();
 
         footprints.push_back({nconn});
+
+        //
+
+
         individual.footprint = footprints;
 
         individual.fitnesses["DistanceEnergy"] = scenario.fit;
