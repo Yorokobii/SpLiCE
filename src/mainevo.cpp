@@ -20,9 +20,9 @@ int main(int argc, char** argv) {
 
         //compute nconn footprint
         float nconn;
-        for(auto& c : scenario.getWorld().cells){
+        for(auto& c : scenario.getWorld().cells)
           for(auto& conn : c->getBody().cellConnections)
-            nconn += conn->adhCoef > 0.0 ? 1.0 : 0.0;
+            nconn += (conn->adhCoef > 0.0) ? 1.0 : 0.0;
         nconn /= scenario.getWorld().cells.size();
 
         footprints.push_back({nconn});
