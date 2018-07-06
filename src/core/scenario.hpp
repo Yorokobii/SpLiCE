@@ -186,8 +186,8 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       com = MecaCell::Vec::zero();
       for (auto& c : world.cells) {
         com += c->getPosition();
-        // if(c->nconn > 5)
-        //   c->action_outputs = {"quiescence"};
+        if(c->nconn > 5)
+          c->action_outputs = {"quiescence"};
       }
       if (world.cells.size() > 0) com = com / world.cells.size();
       comDevo = com;
