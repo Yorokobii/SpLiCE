@@ -86,6 +86,13 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     com = MecaCell::Vec::zero();
     size_t ncells = world.cells.size();
     for (auto& c : world.cells) {
+      
+      //bone-like
+      if(c->nconn > 4){
+        c->getBody().setStiffness(999999);
+        c->action_outputs = {"quiescence", "rotate", "duplicate"};
+      }
+
       energy -= c->usedEnergy;
       gcomm += c->dgcomm;
       c->nage = (double) c->age / (double) worldAge;
@@ -162,13 +169,6 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
   void loop() {
     currentTime += world.getDt();
     worldAge += 1;
-
-    // for(auto& c : world.cells){
-    //   if(c->nconn > 4){
-    //     c->getBody().setStiffness(999999);
-    //     c->action_outputs = {"quiescence", "rotate", "duplicate"};
-    //   }
-    // }
 
     // if (!setDevoPhase) {
     //   if(worldAge > config.devoSteps){
