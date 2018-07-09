@@ -36,16 +36,6 @@ int main(int argc, char** argv) {
           fp.push_back(clusters.size());
         }
 
-        if(scenario.getWorld().cells.size() > 0){
-          int contractCount = 0;
-          for(auto& c : scenario.getWorld().cells){
-            contractCount += c->contractionCount;
-          }
-          contractCount /= scenario.getWorld().cells.size();
-          fp.push_back((double)contractCount);
-        }
-
-
         footprints.push_back(fp);
         individual.footprint = footprints;
 
