@@ -12,12 +12,12 @@ template <typename Controller, typename Config> class Cell
   bool contracting = false;
   double contractTime = 0.0;
   double contractDuration = 0.0;
-  int contractionCount = 0;
 
  public:
 	using Vec = MecaCell::Vec;
   using Base = MecaCell::ConnectableCell<Cell<Controller, Config>,
                                          MecaCell::SpringBody>;
+  int contractionCount = 0;
   double adhCoef = 0.0;
   double theta = 0.0;
   double phi = 0.0;
