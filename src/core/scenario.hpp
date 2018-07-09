@@ -154,7 +154,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     // }
 
     //compute com fitness
-    fit = MecaCell::Vec::zero();
+    fit = 0.0;
 
     int connections_per_cell = 0;
     for (auto& c : world.cells) {
