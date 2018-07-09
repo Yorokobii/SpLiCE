@@ -87,6 +87,10 @@ template <typename Controller, typename Config> class Cell
         this->getBody().moveTo(new_pos);
         w.addCell(new Cell(child_pos, theta, phi, ctrl, config));
         age = 0;
+        for (auto &conn : this->getBody().cellConnections) {
+          conn->unbreakable = true;
+          conn->adhCoef = this->adhCoef;
+        }
         usedEnergy = config.energyDuplicate;
       }
     } else if (action == "rotate") {

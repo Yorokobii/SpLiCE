@@ -30,9 +30,6 @@ int main(int argc, char** argv) {
         fp.push_back(nconn);
         fp.push_back(scenario.getWorld().cells.size()/10.0);
 
-        // for(auto& v : cme.getFootprint(scenario))
-        //   fp.push_back(v);
-
         if (scenario.getWorld().cells.size() != 0) {
           auto clusters =
               ClusterTools::getClusters(scenario.getWorld().cells);
