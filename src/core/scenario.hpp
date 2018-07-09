@@ -85,6 +85,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
   void controllerUpdate() {
     int nconn = 0;
     int maxConn = 0;
+    com = MecaCell::Vec::zero();
     size_t ncells = world.cells.size();
     for (auto& c : world.cells) {
       energy -= c->usedEnergy;
@@ -136,21 +137,25 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
         c->isNew = false;
       }
     }
-    if (setDevoPhase) {
-      if ((((config.devoSteps > 0) && (ncells > config.devCells))
-          || (config.devoSteps == 0))) {
+    // if (setDevoPhase) {
+    //   if ((((config.devoSteps > 0) && (ncells > config.devCells))
+    //       || (config.devoSteps == 0))) {
         
-        //compute biggest cell2cell distance
-        float distc2c = 0.0;
-        for(auto& c1 : world.cells)
-          for(auto& c2 : world.cells)
-            if((c1->getPosition() - c2->getPosition()).length() > distc2c)
-              distc2c = (c1->getPosition() - c2->getPosition()).length();
+    //     //compute biggest cell2cell distance
+    //     float distc2c = 0.0;
+    //     for(auto& c1 : world.cells)
+    //       for(auto& c2 : world.cells)
+    //         if((c1->getPosition() - c2->getPosition()).length() > distc2c)
+    //           distc2c = (c1->getPosition() - c2->getPosition()).length();
 
-        MecaCell::Vec movement = comDevo - com;
-        fit = movement.length() / distc2c;
-      }
-    }
+    //     MecaCell::Vec movement = comDevo - com;
+    //     fit = movement.length() / distc2c;
+    //   }
+    // }
+
+    //compute com fitness
+    fit = MecaCell::Vec::zero();
+
     int connections_per_cell = 0;
     for (auto& c : world.cells) {
       connections_per_cell += c->nconn;
@@ -167,32 +172,32 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
   void loop() {
     currentTime += world.getDt();
     worldAge += 1;
-    if (!setDevoPhase) {
-      if(worldAge > config.devoSteps){
-        setDevoPhase = true;
-        for (auto& c : world.cells) {
-          c->getBody().setAngularVelocity(MecaCell::Vec::zero());
-          c->getBody().setTorque(MecaCell::Vec::zero());
-          c->getBody().setVelocity(MecaCell::Vec::zero());
-          for (auto &conn : c->getBody().cellConnections) {
-            conn->unbreakable = true;
-            conn->adhCoef = c->adhCoef;
-          }
-          c->devoPhase = false;
-          c->adhCoef = 0.0;
-          c->action_outputs = {"quiescence", "contraction", "rotate"};
-        }
-      }
-      com = MecaCell::Vec::zero();
-      for (auto& c : world.cells) {
-        com += c->getPosition();
-        if(c->nconn > 5)
-          c->action_outputs = {"quiescence"};
-      }
-      if (world.cells.size() > 0) com = com / world.cells.size();
-      comDevo = com;
-      prevCom = com;
-    }
+    // if (!setDevoPhase) {
+    //   if(worldAge > config.devoSteps){
+    //     setDevoPhase = true;
+    //     for (auto& c : world.cells) {
+    //       c->getBody().setAngularVelocity(MecaCell::Vec::zero());
+    //       c->getBody().setTorque(MecaCell::Vec::zero());
+    //       c->getBody().setVelocity(MecaCell::Vec::zero());
+    //       for (auto &conn : c->getBody().cellConnections) {
+    //         conn->unbreakable = true;
+    //         conn->adhCoef = c->adhCoef;
+    //       }
+    //       c->devoPhase = false;
+    //       c->adhCoef = 0.0;
+    //       c->action_outputs = {"quiescence", "contraction", "rotate"};
+    //     }
+    //   }
+    //   com = MecaCell::Vec::zero();
+    //   for (auto& c : world.cells) {
+    //     com += c->getPosition();
+    //     if(c->nconn > 5)
+    //       c->action_outputs = {"quiescence"};
+    //   }
+    //   if (world.cells.size() > 0) com = com / world.cells.size();
+    //   comDevo = com;
+    //   prevCom = com;
+    // }
     if (worldAge % config.controllerUpdate == 0) controllerUpdate();
     world.update();
   }
