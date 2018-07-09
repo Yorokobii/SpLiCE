@@ -33,15 +33,6 @@ int main(int argc, char** argv) {
         if (scenario.getWorld().cells.size() != 0) {
           auto clusters =
               ClusterTools::getClusters(scenario.getWorld().cells);
-          size_t biggestClusterId = 0;
-          size_t biggestClusterSize = clusters[biggestClusterId].size();
-          for (size_t i = 1; i < clusters.size(); ++i) {
-            if (clusters[i].size() > biggestClusterSize) {
-              biggestClusterSize = clusters[i].size();
-              biggestClusterId = i;
-            }
-          }
-          fp.push_back(static_cast<double>(biggestClusterSize));
           fp.push_back(clusters.size());
         }
 
