@@ -35,7 +35,6 @@ template <typename Controller, typename Config> class Cell
   int worldAge = 0;
   double nage = 0.0;
   bool ctrl_update = false;
-  bool devoPhase = true;
   bool isNew = true;
   Controller ctrl;
   Config& config;
@@ -52,8 +51,6 @@ template <typename Controller, typename Config> class Cell
   double getAdhesionWith(Cell* c, MecaCell::Vec) { return adhCoef; }
 
   template <typename W> void updateInputs(W& w) {
-    ctrl.setInput("devoPhase", (double)devoPhase);
-    ctrl.setInput("movementPhase", (double)!devoPhase);
     ctrl.setInput("gcomm", gcomm);
     ctrl.setInput("lcomm", lcomm);
     ctrl.setInput("theta", theta / (2 * M_PI));

@@ -21,11 +21,9 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
   double fit = 0.0;
   double shapefit = 0.0;
   int worldAge = 0;
-  bool setDevoPhase = false;
   ctrl_t controller;
   MecaCell::Vec com = MecaCell::Vec::zero();
   MecaCell::Vec prevCom = MecaCell::Vec::zero();
-  MecaCell::Vec comDevo = MecaCell::Vec::zero();
 
  protected:
   double currentTime = 0;
@@ -105,8 +103,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     if (ncells > 0){
       com = com / ncells;
       //gain energy
-      // if(setDevoPhase)
-      //   energy += (com - prevCom).length()*20;
+      energy += (com - prevCom).length()*20;
       prevCom = com;
     }
     gcomm = min(max(gcomm, 0.0), 1.0);
@@ -137,21 +134,6 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
         c->isNew = false;
       }
     }
-    // if (setDevoPhase) {
-    //   if ((((config.devoSteps > 0) && (ncells > config.devCells))
-    //       || (config.devoSteps == 0))) {
-        
-    //     //compute biggest cell2cell distance
-    //     float distc2c = 0.0;
-    //     for(auto& c1 : world.cells)
-    //       for(auto& c2 : world.cells)
-    //         if((c1->getPosition() - c2->getPosition()).length() > distc2c)
-    //           distc2c = (c1->getPosition() - c2->getPosition()).length();
-
-    //     MecaCell::Vec movement = comDevo - com;
-    //     fit = movement.length() / distc2c;
-    //   }
-    // }
 
     //compute com fitness
     //compute biggest cell2cell distance

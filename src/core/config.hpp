@@ -41,7 +41,6 @@ struct Config {
   double energyContraction = 0.1;
   double energyQuiescence = 0.01;
   double energyInitial = 10.0;
-  double devCells = 20;
   double maxCells = 30;
   double betaAge = 0.4;
   double betaPressure = 30.0;
@@ -49,7 +48,6 @@ struct Config {
   double force = 1.0;
   bool compressForce = false;
   int controllerUpdate = 5;
-  int devoSteps = 1000;
   int seed = 0;
 
   size_t populationSize = 200;
@@ -101,7 +99,6 @@ struct Config {
       else CHKPARAM(energyContraction);
       else CHKPARAM(energyQuiescence);
       else CHKPARAM(energyInitial);
-      else CHKPARAM(devCells);
       else CHKPARAM(maxCells);
       else CHKPARAM(betaAge);
       else CHKPARAM(betaPressure);
@@ -109,7 +106,6 @@ struct Config {
       else CHKPARAM(force);
       else CHKPARAM(compressForce);
       else CHKPARAM(controllerUpdate);
-      else CHKPARAM(devoSteps);
       else CHKPARAM(seed);
       else CHKPARAM(populationSize);
       else CHKPARAM(mutationRate);
