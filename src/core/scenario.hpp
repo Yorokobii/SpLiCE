@@ -162,6 +162,14 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
   void loop() {
     currentTime += world.getDt();
     worldAge += 1;
+
+    for(auto& c : world.cells){
+      if(c->nconn > 4){
+        c->getBody().setStiffness(999999);
+        c->action_outputs = {"quiescence", "rotation", "duplicate"};
+      }
+    }
+
     // if (!setDevoPhase) {
     //   if(worldAge > config.devoSteps){
     //     setDevoPhase = true;
