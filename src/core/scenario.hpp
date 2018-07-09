@@ -167,15 +167,14 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     if (!setDevoPhase) {
       if(worldAge > config.devoSteps){
         setDevoPhase = true;
-    for (auto& c : world.cells) {
-      c->getBody().setAngularVelocity(MecaCell::Vec::zero());
-      c->getBody().setTorque(MecaCell::Vec::zero());
-      c->getBody().setVelocity(MecaCell::Vec::zero());
-      for (auto &conn : c->getBody().cellConnections) {
-        conn->unbreakable = true;
-        conn->adhCoef = c->adhCoef;
-      }
-    }
+        for (auto& c : world.cells) {
+          c->getBody().setAngularVelocity(MecaCell::Vec::zero());
+          c->getBody().setTorque(MecaCell::Vec::zero());
+          c->getBody().setVelocity(MecaCell::Vec::zero());
+          for (auto &conn : c->getBody().cellConnections) {
+            conn->unbreakable = true;
+            conn->adhCoef = c->adhCoef;
+          }
           c->devoPhase = false;
           c->adhCoef = 0.0;
           c->action_outputs = {"quiescence", "contraction", "rotate"};
