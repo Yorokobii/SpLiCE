@@ -89,7 +89,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       
       //bone-like
       if(c->nconn > 4){
-        c->getBody().setStiffness(60);
+        c->getBody().setStiffness(100);
         c->action_outputs = {"quiescence", "rotate", "duplicate"};
       }
 
