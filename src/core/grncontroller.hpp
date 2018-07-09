@@ -10,8 +10,8 @@ struct GRNController {  // both controller and DNA
 
 	static GRNController random() {
     GRN_t g;
-    // g.addRandomProtein(ProteinType::input, "devoPhase");
-    // g.addRandomProtein(ProteinType::input, "movementPhase");
+    g.addRandomProtein(ProteinType::input, "devoPhase");
+    g.addRandomProtein(ProteinType::input, "movementPhase");
     g.addRandomProtein(ProteinType::input, "gcomm");
     g.addRandomProtein(ProteinType::input, "lcomm");
     g.addRandomProtein(ProteinType::input, "theta");

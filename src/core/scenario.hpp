@@ -21,11 +21,11 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
   double fit = 0.0;
   double shapefit = 0.0;
   int worldAge = 0;
-  // bool setDevoPhase = false;
+  bool setDevoPhase = false;
   ctrl_t controller;
   MecaCell::Vec com = MecaCell::Vec::zero();
   MecaCell::Vec prevCom = MecaCell::Vec::zero();
-  // MecaCell::Vec comDevo = MecaCell::Vec::zero();
+  MecaCell::Vec comDevo = MecaCell::Vec::zero();
 
  protected:
   double currentTime = 0;
@@ -164,33 +164,33 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
   void loop() {
     currentTime += world.getDt();
     worldAge += 1;
-    // if (!setDevoPhase) {
-    //   if(worldAge > config.devoSteps){
-    //     setDevoPhase = true;
-    // for (auto& c : world.cells) {
-    //   c->getBody().setAngularVelocity(MecaCell::Vec::zero());
-    //   c->getBody().setTorque(MecaCell::Vec::zero());
-    //   c->getBody().setVelocity(MecaCell::Vec::zero());
-    //   for (auto &conn : c->getBody().cellConnections) {
-    //     conn->unbreakable = true;
-    //     conn->adhCoef = c->adhCoef;
-    //   }
-    // }
-    //       c->devoPhase = false;
-    //       c->adhCoef = 0.0;
-    //       c->action_outputs = {"quiescence", "contraction", "rotate"};
-    //     }
-    //   }
-    //   com = MecaCell::Vec::zero();
-    //   for (auto& c : world.cells) {
-    //     com += c->getPosition();
-    //     if(c->nconn > 5)
-    //       c->action_outputs = {"quiescence"};
-    //   }
-    //   if (world.cells.size() > 0) com = com / world.cells.size();
-    //   comDevo = com;
-    //   prevCom = com;
-    // }
+    if (!setDevoPhase) {
+      if(worldAge > config.devoSteps){
+        setDevoPhase = true;
+    for (auto& c : world.cells) {
+      c->getBody().setAngularVelocity(MecaCell::Vec::zero());
+      c->getBody().setTorque(MecaCell::Vec::zero());
+      c->getBody().setVelocity(MecaCell::Vec::zero());
+      for (auto &conn : c->getBody().cellConnections) {
+        conn->unbreakable = true;
+        conn->adhCoef = c->adhCoef;
+      }
+    }
+          c->devoPhase = false;
+          c->adhCoef = 0.0;
+          c->action_outputs = {"quiescence", "contraction", "rotate"};
+        }
+      }
+      com = MecaCell::Vec::zero();
+      for (auto& c : world.cells) {
+        com += c->getPosition();
+        if(c->nconn > 5)
+          c->action_outputs = {"quiescence"};
+      }
+      if (world.cells.size() > 0) com = com / world.cells.size();
+      comDevo = com;
+      prevCom = com;
+    }
     if (worldAge % config.controllerUpdate == 0) controllerUpdate();
     world.update();
   }
