@@ -12,6 +12,7 @@ template <typename Controller, typename Config> class Cell
   bool contracting = false;
   double contractTime = 0.0;
   double contractDuration = 0.0;
+  int contractionCount = 0;
 
  public:
 	using Vec = MecaCell::Vec;
@@ -101,10 +102,12 @@ template <typename Controller, typename Config> class Cell
       phi = min(max(phi + dphi, 0.0), 2 * M_PI);
       usedEnergy = config.energyRotate;
     } else if (action == "contraction") {
+      MecaCell::logger<MecaCell::DBG>("CONTRACTING");
       if(contracting = false){
         // start a new contraction event
         contracting = true;
-        Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)}; 
+        Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
+        contractionCount++;
         for (auto &conn : this->getBody().cellConnections) {
           if (conn->unbreakable) {
             double force = conn->direction.dot(dpos) * config.force;

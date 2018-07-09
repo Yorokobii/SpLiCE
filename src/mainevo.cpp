@@ -27,14 +27,24 @@ int main(int argc, char** argv) {
           for(auto& conn : c->getBody().cellConnections)
             nconn += (conn->adhCoef > 0.0) ? 1.0 : 0.0;
         nconn /= scenario.getWorld().cells.size();
-        fp.push_back(nconn);
+        // fp.push_back(nconn);
         fp.push_back(scenario.getWorld().cells.size()/10.0);
 
-        if (scenario.getWorld().cells.size() != 0) {
-          auto clusters =
-              ClusterTools::getClusters(scenario.getWorld().cells);
-          fp.push_back(clusters.size());
-        }
+        // if (scenario.getWorld().cells.size() != 0) {
+        //   auto clusters =
+        //       ClusterTools::getClusters(scenario.getWorld().cells);
+        //   fp.push_back(clusters.size());
+        // }
+
+        // if(scenario.getWorld().cells.size > 0){
+        //   int contractCount = 0;
+        //   for(auto& c : scenario.getWorld().cells){
+        //     contractCount += c->contractionCount;
+        //   }
+        //   contractCount /= scenario.getWorld().cells.size;
+        //   fp.push_back((double)contractCount);
+        // }
+
 
         footprints.push_back(fp);
         individual.footprint = footprints;
