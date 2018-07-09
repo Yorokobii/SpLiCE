@@ -85,6 +85,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
   void controllerUpdate() {
     int nconn = 0;
     int maxConn = 0;
+    com = MecaCell::Vec::zero();
     size_t ncells = world.cells.size();
     for (auto& c : world.cells) {
       energy -= c->usedEnergy;
@@ -104,8 +105,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     if (ncells > 0){
       com = com / ncells;
       //gain energy
-      // if(setDevoPhase)
-      //   energy += (com - prevCom).length()*20;
+      // energy += (com - prevCom).length()*20;
       prevCom = com;
     }
     gcomm = min(max(gcomm, 0.0), 1.0);
@@ -167,14 +167,15 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     // if (!setDevoPhase) {
     //   if(worldAge > config.devoSteps){
     //     setDevoPhase = true;
-    //     for (auto& c : world.cells) {
-    //       c->getBody().setAngularVelocity(MecaCell::Vec::zero());
-    //       c->getBody().setTorque(MecaCell::Vec::zero());
-    //       c->getBody().setVelocity(MecaCell::Vec::zero());
-    //       for (auto &conn : c->getBody().cellConnections) {
-    //         conn->unbreakable = true;
-    //         conn->adhCoef = c->adhCoef;
-    //       }
+    // for (auto& c : world.cells) {
+    //   c->getBody().setAngularVelocity(MecaCell::Vec::zero());
+    //   c->getBody().setTorque(MecaCell::Vec::zero());
+    //   c->getBody().setVelocity(MecaCell::Vec::zero());
+    //   for (auto &conn : c->getBody().cellConnections) {
+    //     conn->unbreakable = true;
+    //     conn->adhCoef = c->adhCoef;
+    //   }
+    // }
     //       c->devoPhase = false;
     //       c->adhCoef = 0.0;
     //       c->action_outputs = {"quiescence", "contraction", "rotate"};
