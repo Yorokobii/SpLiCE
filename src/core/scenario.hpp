@@ -166,7 +166,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     for(auto& c : world.cells){
       if(c->nconn > 4){
         c->getBody().setStiffness(999999);
-        c->action_outputs = {"quiescence", "rotation", "duplicate"};
+        c->action_outputs = {"quiescence", "rotate", "duplicate"};
       }
     }
 
