@@ -102,7 +102,6 @@ template <typename Controller, typename Config> class Cell
       phi = min(max(phi + dphi, 0.0), 2 * M_PI);
       usedEnergy = config.energyRotate;
     } else if (action == "contraction") {
-      MecaCell::logger<MecaCell::DBG>("CONTRACTING");
       if(contracting = false){
         // start a new contraction event
         contracting = true;
