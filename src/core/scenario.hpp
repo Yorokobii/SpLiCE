@@ -85,7 +85,6 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
   void controllerUpdate() {
     int nconn = 0;
     int maxConn = 0;
-    com = MecaCell::Vec::zero();
     size_t ncells = world.cells.size();
     for (auto& c : world.cells) {
       energy -= c->usedEnergy;
@@ -105,7 +104,8 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     if (ncells > 0){
       com = com / ncells;
       //gain energy
-      // energy += (com - prevCom).length()*20;
+      // if(setDevoPhase)
+      //   energy += (com - prevCom).length()*20;
       prevCom = com;
     }
     gcomm = min(max(gcomm, 0.0), 1.0);
@@ -136,18 +136,21 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
         c->isNew = false;
       }
     }
+    if (setDevoPhase) {
+      if ((((config.devoSteps > 0) && (ncells > config.devCells))
+          || (config.devoSteps == 0))) {
         
-    //compute biggest cell2cell distance
-    float distc2c = 0.0;
-    for(auto& c1 : world.cells)
-      for(auto& c2 : world.cells)
-        if((c1->getPosition() - c2->getPosition()).length() > distc2c)
-          distc2c = (c1->getPosition() - c2->getPosition()).length();
+        //compute biggest cell2cell distance
+        float distc2c = 0.0;
+        for(auto& c1 : world.cells)
+          for(auto& c2 : world.cells)
+            if((c1->getPosition() - c2->getPosition()).length() > distc2c)
+              distc2c = (c1->getPosition() - c2->getPosition()).length();
 
-    MecaCell::Vec movement = MecaCell::Vec::zero() - com;
-    fit = movement.length() / distc2c;
-
-    //nb of connection fitness
+        MecaCell::Vec movement = comDevo - com;
+        fit = movement.length() / distc2c;
+      }
+    }
     int connections_per_cell = 0;
     for (auto& c : world.cells) {
       connections_per_cell += c->nconn;
@@ -156,7 +159,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     shapefit = connections_per_cell*5;
 
     MecaCell::logger<MecaCell::DBG>(":S| ", currentTime, " ", worldAge, " ", energy, " ",
-                                    world.cells.size(), " ", gcomm, " ",
+                                    world.cells.size(), " ", gcomm, " ", comDevo, " ",
                                     com, " ", fit, " ");
 
   }
