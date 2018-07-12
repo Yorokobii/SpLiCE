@@ -41,7 +41,8 @@ struct Config {
   double energyContraction = 0.1;
   double energyQuiescence = 0.01;
   double energyInitial = 10.0;
-  double maxCells = 30;
+  double minCells = 100;
+  double maxCells = 150;
   double betaAge = 0.4;
   double betaPressure = 30.0;
   double fluidDensity = 1e-4;
@@ -99,6 +100,7 @@ struct Config {
       else CHKPARAM(energyContraction);
       else CHKPARAM(energyQuiescence);
       else CHKPARAM(energyInitial);
+      else CHKPARAM(minCells);
       else CHKPARAM(maxCells);
       else CHKPARAM(betaAge);
       else CHKPARAM(betaPressure);
