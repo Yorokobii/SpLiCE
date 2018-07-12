@@ -27,19 +27,19 @@ int main(int argc, char** argv) {
           for(auto& conn : c->getBody().cellConnections)
             nconn += (conn->adhCoef > 0.0) ? 1.0 : 0.0;
         nconn /= scenario.getWorld().cells.size();
-        fp.push_back(nconn);
-        fp.push_back(scenario.getWorld().cells.size()/10.0);
+        // fp.push_back(nconn);
+        fp.push_back(scenario.getWorld().cells.size());
 
-        if (scenario.getWorld().cells.size() != 0) {
-          auto clusters =
-              ClusterTools::getClusters(scenario.getWorld().cells);
-          fp.push_back(clusters.size());
-        }
+        // if (scenario.getWorld().cells.size() != 0) {
+        //   auto clusters =
+        //       ClusterTools::getClusters(scenario.getWorld().cells);
+        //   fp.push_back(clusters.size());
+        // }
 
         footprints.push_back(fp);
-        // individual.footprint = footprints;
+        individual.footprint = footprints;
 
-        individual.fitnesses["DistanceEnergy"] = scenario.fit;
+        individual.fitnesses["DistanceEnergy"] = scenario.getWorld().cells.size() < cfg.minCells ? 0.0 : scenario.fit;
         // individual.fitnesses["ShapeEnergy"] = scenario.shapefit;
       },
       "DistanceEnergy");
@@ -50,7 +50,19 @@ int main(int argc, char** argv) {
   ga.setVerbosity(cfg.verbosity);
   ga.setNbThreads(cfg.nbThreads);
   ga.setSaveFolder("evos");
-  // ga.enableNovelty();
+  ga.enableNovelty();
+  ga.setComputeFootprintDistanceFunction([](auto& f0, auto& f1){
+
+    assert(f0.size() == f1.size());
+		double d = 0;
+		for (size_t i = 0; i < f0.size(); ++i) {
+			for (size_t j = 0; j < f0[i].size(); ++j) {
+				d += std::pow(f0[i][j] - f1[i][j], 2);
+			}
+		}
+		return sqrt(d);
+
+  });
 
   // ga.setSaveParetoFront(true);
 
