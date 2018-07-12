@@ -22,12 +22,17 @@ int main(int argc, char** argv) {
         std::vector<double> fp;
 
         //compute nconn footprint
-        float nconn;
-        for(auto& c : scenario.getWorld().cells)
+        float nconn = 0.0;
+        float ncontr = 0.0;
+        for(auto& c : scenario.getWorld().cells){
           for(auto& conn : c->getBody().cellConnections)
             nconn += (conn->adhCoef > 0.0) ? 1.0 : 0.0;
+            ncontr += c->contractionCount;
+        }
         nconn /= scenario.getWorld().cells.size();
+        ncontr /= scenario.getWorld().cells.size();
         // fp.push_back(nconn);
+        fp.push_back(log(ncontr));
         fp.push_back(scenario.getWorld().cells.size());
 
         // if (scenario.getWorld().cells.size() != 0) {
