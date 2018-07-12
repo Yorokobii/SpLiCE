@@ -54,17 +54,17 @@ int main(int argc, char** argv) {
   ga.setVerbosity(cfg.verbosity);
   ga.setNbThreads(cfg.nbThreads);
   ga.setSaveFolder("evos");
-  ga.enableNovelty();
-  ga.setComputeFootprintDistanceFunction([](const auto& f0, const auto& f1) {
-    assert(f0.size() == f1.size());
-		double d = 0;
-		for (size_t i = 0; i < f0.size(); ++i) {
-			for (size_t j = 0; j < f0[i].size(); ++j) {
-				d += std::pow(f0[i][j] - f1[i][j], 2);
-			}
-		}
-		return sqrt(d);
-  });
+  // ga.enableNovelty();
+  // ga.setComputeFootprintDistanceFunction([](const auto& f0, const auto& f1) {
+  //   assert(f0.size() == f1.size());
+	// 	double d = 0;
+	// 	for (size_t i = 0; i < f0.size(); ++i) {
+	// 		for (size_t j = 0; j < f0[i].size(); ++j) {
+	// 			d += std::pow(f0[i][j] - f1[i][j], 2);
+	// 		}
+	// 	}
+	// 	return sqrt(d);
+  // });
 
   // ga.setSaveParetoFront(true);
 
