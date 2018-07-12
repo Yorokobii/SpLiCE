@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
   ga.setVerbosity(cfg.verbosity);
   ga.setNbThreads(cfg.nbThreads);
   ga.setSaveFolder("evos");
-  // ga.enableNovelty();
+  ga.enableNovelty();
   // ga.setComputeFootprintDistanceFunction([](const auto& f0, const auto& f1) {
   //   assert(f0.size() == f1.size());
 	// 	double d = 0;
