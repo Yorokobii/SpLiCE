@@ -80,7 +80,7 @@ template <typename Controller, typename Config> class Cell
     std::string action = action_outputs[actionMax];
 
     if (action == "duplicate") {
-      if (energy >= config.energyDuplicate && w.cells.size() < config.maxCells && nconn < 5) {
+      if (energy >= config.energyDuplicate && (config.maxCells != 0 ? w.cells.size() < config.maxCells : true) && nconn < 5) {
         // cell duplicate
         Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
         Vec child_pos = dpos * config.divRadius + this->getPosition();
@@ -102,7 +102,7 @@ template <typename Controller, typename Config> class Cell
       phi = min(max(phi + dphi, 0.0), 2 * M_PI);
       usedEnergy = config.energyRotate;
     } else if (action == "contraction") {
-      if(contracting = false){
+      if(contracting == false){
         // start a new contraction event
         contracting = true;
         Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};

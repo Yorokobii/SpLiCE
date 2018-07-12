@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
         }
 
         footprints.push_back(fp);
-        individual.footprint = footprints;
+        // individual.footprint = footprints;
 
         individual.fitnesses["DistanceEnergy"] = scenario.fit;
         // individual.fitnesses["ShapeEnergy"] = scenario.shapefit;
@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
   ga.setVerbosity(cfg.verbosity);
   ga.setNbThreads(cfg.nbThreads);
   ga.setSaveFolder("evos");
-  ga.enableNovelty();
+  // ga.enableNovelty();
 
   // ga.setSaveParetoFront(true);
 
