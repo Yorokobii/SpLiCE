@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
         while (!scenario.finished()) scenario.loop();
 
         std::vector<std::vector<double>> footprints;
-        std::vector<double> fp;
+        footprints.push_back(std::vector<double>());
 
         //compute nconn footprint
         float nconn = 0.0;
@@ -27,21 +27,20 @@ int main(int argc, char** argv) {
         for(auto& c : scenario.getWorld().cells){
           for(auto& conn : c->getBody().cellConnections)
             nconn += (conn->adhCoef > 0.0) ? 1.0 : 0.0;
-            ncontr += c->contractionCount;
+          ncontr += c->contractionCount;
         }
         nconn /= scenario.getWorld().cells.size();
         ncontr /= scenario.getWorld().cells.size();
-        // fp.push_back(nconn);
-        fp.push_back(log(ncontr));
-        fp.push_back(scenario.getWorld().cells.size());
+        // footprints[0].push_back(nconn);
+        // footprints[0].push_back(log(ncontr));
+        footprints[0].push_back(scenario.getWorld().cells.size());
 
         // if (scenario.getWorld().cells.size() != 0) {
         //   auto clusters =
         //       ClusterTools::getClusters(scenario.getWorld().cells);
-        //   fp.push_back(clusters.size());
+        //   footprints[0].push_back(clusters.size());
         // }
 
-        footprints.push_back(fp);
         individual.footprint = footprints;
 
         individual.fitnesses["DistanceEnergy"] = scenario.getWorld().cells.size() < cfg.minCells ? 0.0 : scenario.fit;
