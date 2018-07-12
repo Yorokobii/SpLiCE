@@ -51,8 +51,7 @@ int main(int argc, char** argv) {
   ga.setNbThreads(cfg.nbThreads);
   ga.setSaveFolder("evos");
   ga.enableNovelty();
-  ga.setComputeFootprintDistanceFunction([](auto& f0, auto& f1){
-
+  ga.setComputeFootprintDistanceFunction([](const auto& f0, const auto& f1) {
     assert(f0.size() == f1.size());
 		double d = 0;
 		for (size_t i = 0; i < f0.size(); ++i) {
@@ -61,7 +60,6 @@ int main(int argc, char** argv) {
 			}
 		}
 		return sqrt(d);
-
   });
 
   // ga.setSaveParetoFront(true);
