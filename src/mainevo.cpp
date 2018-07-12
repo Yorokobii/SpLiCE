@@ -32,8 +32,8 @@ int main(int argc, char** argv) {
         nconn /= scenario.getWorld().cells.size();
         ncontr /= scenario.getWorld().cells.size();
         // footprints[0].push_back(nconn);
-        // footprints[0].push_back(log(ncontr));
-        footprints[0].push_back(scenario.getWorld().cells.size());
+        footprints[0].push_back(log(ncontr));
+        // footprints[0].push_back(scenario.getWorld().cells.size());
 
         // if (scenario.getWorld().cells.size() != 0) {
         //   auto clusters =
