@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
         individual.footprint = footprints;
 
         // individual.fitnesses["DistanceEnergy"] = 1 - 1/(scenario.fit<1.0 ? 1.0 : scenario.fit);
-        individual.fitnesses["DistanceEnergy"] = (1 / (1 + exp(-(scenario.fit)))*2-1;
+        individual.fitnesses["DistanceEnergy"] = 1 / (1 + exp(-(scenario.fit)))*2-1;
       },
       "DistanceEnergy");
 
