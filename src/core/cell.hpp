@@ -128,7 +128,8 @@ template <typename Controller, typename Config> class Cell
           }
         }
         //more energy used for smaller systems
-        usedEnergy = (config.energyInitial/config.energyDuplicate)/ncells * config.energyContraction;
+        // usedEnergy = (config.energyInitial/config.energyDuplicate)/ncells * config.energyContraction;
+        usedEnergy = config.energyContraction;
       }
       else{
         if(contractTime >= contractDuration){
@@ -152,7 +153,8 @@ template <typename Controller, typename Config> class Cell
     } else if (action == "quiescence") {
       // do nothing
       //more energy used for smaller systems
-      usedEnergy = (config.energyInitial/config.energyDuplicate)/ncells * config.energyQuiescence;
+      // usedEnergy = (config.energyInitial/config.energyDuplicate)/ncells * config.energyQuiescence;
+      usedEnergy = config.energyQuiescence;
     }
     ctrl_update = false;
   }
