@@ -31,8 +31,8 @@ int main(int argc, char** argv) {
         }
         nconn /= scenario.getWorld().cells.size();
         ncontr /= scenario.getWorld().cells.size();
-        // footprints[0].push_back(nconn);
-        // footprints[0].push_back(1 - 1/(ncontr<1.0? 1.0 : ncontr));
+        footprints[0].push_back(1 - 1/max(nconn, 1.0));
+        footprints[0].push_back(1 - 1/max(ncontr, 1.0));
         footprints[0].push_back(1 - 1/scenario.getWorld().cells.size());
 
         if (scenario.getWorld().cells.size() != 0) {
@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
 
         individual.footprint = footprints;
 
-        individual.fitnesses["DistanceEnergy"] = 1 - 1/(scenario.fit<1.0 ? 1.0 : scenario.fit);
+        individual.fitnesses["DistanceEnergy"] = 1 - 1/max(scenario.fit, 1.0);
       },
       "DistanceEnergy");
 
