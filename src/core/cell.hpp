@@ -80,7 +80,6 @@ template <typename Controller, typename Config> class Cell
     //set bone-like 
     if(nconn>7){
       action_outputs = {"quiescence"};
-      this->getBody().setStiffness(100);
     }
 
     std::vector<double> actions;
