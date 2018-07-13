@@ -92,7 +92,7 @@ template <typename Controller, typename Config> class Cell
     std::string action = action_outputs[actionMax];
 
     if (action == "duplicate") {
-      if (energy >= config.energyDuplicate && (config.maxCells != 0 ? w.cells.size() < config.maxCells : true) && nconn < 5) {
+      if (energy >= config.energyDuplicate && (config.maxCells != 0 ? w.cells.size() < config.maxCells : true) && nconn < 7) {
         // cell duplicate
         Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
         Vec child_pos = dpos * config.divRadius + this->getPosition();
