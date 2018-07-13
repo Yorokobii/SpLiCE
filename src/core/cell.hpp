@@ -74,6 +74,9 @@ template <typename Controller, typename Config> class Cell
     if(ncells < config.minCells){
       action_outputs = {"quiescence", "duplicate", "rotate"};
     }
+    else{
+      action_outputs = {"quiescence", "duplicate", "rotate", "contract"};
+    }
     //set bone-like 
     if(nconn>7){
       action_outputs = {"quiescence"};
