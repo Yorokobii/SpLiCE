@@ -31,6 +31,7 @@ template <typename Controller, typename Config> class Cell
   double comdist = 0.0;
   double deltcom = 0.0;
   int nconn = 0;
+  int ncells = 0;
   int maxConn = 0;
   int age = 0;
   int worldAge = 0;
@@ -66,6 +67,17 @@ template <typename Controller, typename Config> class Cell
   template <typename W> void updateOuputs(W& w) {
     dlcomm = ctrl.getDelta("dlcommPlus", "dlcommMinus");
     dgcomm = ctrl.getDelta("dgcommPlus", "dgcommMinus");
+
+    //set forced dev
+    if(ncells < config.minCells){
+      action_outputs = {"quiescence", "duplicate", "rotate"};
+    }
+    //set bone-like 
+    if(nconn>7){
+      action_outputs = {"quiescence"};
+      this->getBody().setStiffness(100);
+    }
+
     std::vector<double> actions;
     for (auto& astr : action_outputs) {
       actions.push_back(ctrl.getOutput(astr));
@@ -116,7 +128,8 @@ template <typename Controller, typename Config> class Cell
                                                       config.compressForce);
           }
         }
-        usedEnergy = config.energyContraction;
+        //more energy used for smaller systems
+        usedEnergy = (config.energyInitial/config.energyDuplicate)/ncells * config.energyContraction;
       }
       else{
         if(contractTime >= contractDuration){
@@ -139,7 +152,8 @@ template <typename Controller, typename Config> class Cell
       }
     } else if (action == "quiescence") {
       // do nothing
-      usedEnergy = config.energyQuiescence;
+      //more energy used for smaller systems
+      usedEnergy = (config.energyInitial/config.energyDuplicate)/ncells * config.energyQuiescence;
     }
     ctrl_update = false;
   }

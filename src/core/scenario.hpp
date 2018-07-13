@@ -127,6 +127,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       c->maxConn = maxConn;
       c->energy = energy;
       c->worldAge = worldAge;
+      c->ncells = ncells;
 
       c->deltcom = (com - prevCom).length();
 
