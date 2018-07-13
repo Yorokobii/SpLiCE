@@ -32,19 +32,19 @@ int main(int argc, char** argv) {
         nconn /= scenario.getWorld().cells.size();
         ncontr /= scenario.getWorld().cells.size();
         // footprints[0].push_back(nconn);
-        footprints[0].push_back(1 - 1/(ncontr<1.0? 1.0 : ncontr));
+        // footprints[0].push_back(1 - 1/(ncontr<1.0? 1.0 : ncontr));
         footprints[0].push_back(1 - 1/scenario.getWorld().cells.size());
 
         // if (scenario.getWorld().cells.size() != 0) {
         //   auto clusters =
         //       ClusterTools::getClusters(scenario.getWorld().cells);
-        //   footprints[0].push_back(clusters.size());
+        //   footprints[0].push_back(1 - 1/clusters.size());
         // }
 
         individual.footprint = footprints;
 
-        // individual.fitnesses["DistanceEnergy"] = scenario.getWorld().cells.size() < cfg.minCells ? 0.0 : scenario.fit;
-        individual.fitnesses["DistanceEnergy"] = 1 - 1/(scenario.fit<1.0 ? 1.0 : scenario.fit);
+        // individual.fitnesses["DistanceEnergy"] = 1 - 1/(scenario.fit<1.0 ? 1.0 : scenario.fit);
+        individual.fitnesses["DistanceEnergy"] = (1 / (1 + exp(-(scenario.fit)))*2-1;
       },
       "DistanceEnergy");
 
