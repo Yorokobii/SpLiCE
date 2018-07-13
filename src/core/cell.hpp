@@ -50,7 +50,7 @@ template <typename Controller, typename Config> class Cell
     contractDuration = config.contractDuration;
   }
 
-  double getAdhesionWith(Cell* c, MecaCell::Vec) { return adhCoef; }
+  double getAdhesionWith(Cell* c, MecaCell::Vec) { return (this->isNew || c->isNew) ? adhCoef : 0.0; }
 
   template <typename W> void updateInputs(W& w) {
     ctrl.setInput("gcomm", gcomm);
@@ -99,11 +99,6 @@ template <typename Controller, typename Config> class Cell
         Vec new_pos = this->getPosition() - dpos * config.divRadius;
         this->getBody().moveTo(new_pos);
         w.addCell(new Cell(child_pos, theta, phi, ctrl, config));
-        age = 0;
-        for (auto &conn : this->getBody().cellConnections) {
-          conn->unbreakable = true;
-          conn->adhCoef = this->adhCoef;
-        }
         usedEnergy = config.energyDuplicate;
       }
     } else if (action == "rotate") {
@@ -166,6 +161,13 @@ template <typename Controller, typename Config> class Cell
       ctrl.update();
       // get outputs and control cell
       age += 1;
+      //passed a certain age the cell is not new anymore
+      if(age > config.newAge){
+        isNew = false;
+        for(auto& c : this->getBody().cellConnections){
+          c->unbreakable = true;
+        }
+      }
       usedEnergy = config.energyQuiescence;
       updateOuputs(w);
     }
