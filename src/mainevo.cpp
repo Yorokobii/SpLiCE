@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
         individual.footprint = footprints;
 
         // individual.fitnesses["DistanceEnergy"] = scenario.getWorld().cells.size() < cfg.minCells ? 0.0 : scenario.fit;
-        individual.fitnesses["DistanceEnergy"] = scenario.fit;
+        individual.fitnesses["DistanceEnergy"] = 10 - 10/(scenario.fit<1.0 ? 1.0 : scenario.fit);
       },
       "DistanceEnergy");
 
