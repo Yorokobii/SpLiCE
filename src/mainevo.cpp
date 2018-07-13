@@ -35,15 +35,16 @@ int main(int argc, char** argv) {
         // footprints[0].push_back(1 - 1/(ncontr<1.0? 1.0 : ncontr));
         footprints[0].push_back(1 - 1/scenario.getWorld().cells.size());
 
-        // if (scenario.getWorld().cells.size() != 0) {
-        //   auto clusters =
-        //       ClusterTools::getClusters(scenario.getWorld().cells);
-        //   footprints[0].push_back(1 - 1/clusters.size());
-        // }
+        if (scenario.getWorld().cells.size() != 0) {
+          auto clusters =
+              ClusterTools::getClusters(scenario.getWorld().cells);
+          footprints[0].push_back(1 - 1/clusters.size());
+        }
 
         individual.footprint = footprints;
 
-        individual.fitnesses["DistanceEnergy"] = 1 - 1/(scenario.fit<1.0 ? 1.0 : scenario.fit);      },
+        individual.fitnesses["DistanceEnergy"] = 1 - 1/(scenario.fit<1.0 ? 1.0 : scenario.fit);
+      },
       "DistanceEnergy");
 
   ga.setPopSize(cfg.populationSize);
