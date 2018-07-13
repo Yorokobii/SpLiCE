@@ -62,6 +62,8 @@ template <typename Controller, typename Config> class Cell
     ctrl.setInput("comdist", comdist);
     ctrl.setInput("contracting", (double)contracting);
     ctrl.setInput("deltcom", exp(deltcom / 10));
+    ctrl.setInput("ncells", (double)ncells);
+    ctrl.setInput("isNew", (double)isNew);
   }
 
   template <typename W> void updateOuputs(W& w) {
