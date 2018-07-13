@@ -43,8 +43,8 @@ int main(int argc, char** argv) {
 
         individual.footprint = footprints;
 
-        individual.fitnesses["DistanceEnergy"] = scenario.getWorld().cells.size() < cfg.minCells ? 0.0 : scenario.fit;
-        // individual.fitnesses["ShapeEnergy"] = scenario.shapefit;
+        // individual.fitnesses["DistanceEnergy"] = scenario.getWorld().cells.size() < cfg.minCells ? 0.0 : scenario.fit;
+        individual.fitnesses["DistanceEnergy"] = scenario.fit;
       },
       "DistanceEnergy");
 
