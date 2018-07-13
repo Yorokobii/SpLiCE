@@ -10,3 +10,9 @@
 [submodule "src/external/metaconfig"]
 	path = src/external/metaconfig
 	url = git@github.com:jdisset/metaconfig.git
+[submodule "src/external/mecacell_yoro"]
+	path = src/external/mecacell_yoro
+	url = http://github.com/Yorokobii/MecaCell.git
+[submodule "src/external/gaga_yoro"]
+	path = src/external/gaga_yoro
+	url = http://github.com/Yorokobii/gaga.git
