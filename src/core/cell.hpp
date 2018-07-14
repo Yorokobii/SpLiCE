@@ -71,11 +71,11 @@ template <typename Controller, typename Config> class Cell
     dgcomm = ctrl.getDelta("dgcommPlus", "dgcommMinus");
 
     //set forced dev
-    if(ncells < config.minCells){
+    if(ncells < config.minCells || isNew){
       action_outputs = {"quiescence", "duplicate", "rotate"};
     }
     else{
-      action_outputs = {"quiescence", "duplicate", "rotate", "contraction"};
+      action_outputs = {"quiescence", "contraction"};
     }
     //set bone-like 
     if(nconn>7){
