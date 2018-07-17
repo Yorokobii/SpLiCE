@@ -188,11 +188,13 @@ template <typename Controller, typename Config> class Cell
       // get outputs and control cell
       age += 1;
       //passed a certain age the cell is not new anymore
-      if(age > config.newAge){
-        isDuplicated = false;
+      if(age < config.newAge){
         for(auto& c : this->getBody().cellConnections){
           c->unbreakable = true;
         }
+      }
+      else{
+        isDuplicated = false;
       }
       usedEnergy = config.energyQuiescence;
       updateOuputs(w);
