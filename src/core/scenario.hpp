@@ -92,7 +92,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
 
       for (auto& c : world.cells)
         c->action_outputs = {"duplicate", "rotate", "quiescence", "contraction"};
-      world.cells[0]->root = true;
+      // world.cells[0]->root = true;
     } else {
       world.addCell(new cell_t(MecaCell::Vec::zero(), 0.0, 0.0, controller, config/*, true*/));
       world.update();
@@ -128,6 +128,15 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       com = com / ncells;
       //gain energy
       //energy += (com - prevCom).length()*20;
+      
+      
+      //TO REMOVE  
+      
+      prevCom = com;
+    
+    
+    
+    
     }
     gcomm = min(max(gcomm, 0.0), 1.0);
     double maxComDist = 0.0;
@@ -158,7 +167,13 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
         std::uniform_real_distribution<> distmp(0.0, 2*M_PI);
         c->theta = distmp(gen);
         c->phi = distmp(gen);
-        // c->isNew = false;
+
+
+        //TO REMOVE
+        c->isNew = false;
+      
+      
+      
       }
     }
 
@@ -176,7 +191,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     // fit = totalCom.length();
     fit = (MecaCell::Vec::zero() - com).length();
 
-    prevCom = com;
+    // prevCom = com;
 
     MecaCell::logger<MecaCell::DBG>(":S| ", currentTime, " ", worldAge, " ", energy, " ",
                                     world.cells.size(), " ", gcomm, " ",

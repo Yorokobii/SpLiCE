@@ -19,8 +19,8 @@ template <typename Controller, typename Config> class Cell
                                          MecaCell::SpringBody>;
 
   //Graph related
-  bool visited = false;
-  bool root = false;
+  // bool visited = false;
+  // bool root = false;
 
   int contractionCount = 0;
   double adhCoef = 0.0;
@@ -82,7 +82,7 @@ template <typename Controller, typename Config> class Cell
       action_outputs = {"quiescence", "duplicate", "rotate"};
     }
     else{
-      action_outputs = {"quiescence", "duplicate", "rotate", "contraction"};
+      action_outputs = {"quiescence",/* "duplicate", "rotate",*/ "contraction"};
     }
     //set bone-like 
     if(nconn>7){
