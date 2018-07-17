@@ -41,8 +41,11 @@ template <typename Controller, typename Config> class Cell
   int age = 0;
   int worldAge = 0;
   double nage = 0.0;
+
   Vec* com = NULL;
   Vec* prevCom = NULL;
+  bool duplicated = false;
+
   bool ctrl_update = false;
   bool isNew = true;
   bool isDuplicated = true;
@@ -77,6 +80,8 @@ template <typename Controller, typename Config> class Cell
   template <typename W> void updateOuputs(W& w) {
     dlcomm = ctrl.getDelta("dlcommPlus", "dlcommMinus");
     dgcomm = ctrl.getDelta("dgcommPlus", "dgcommMinus");
+
+    if(duplicated) duplicated = false;
 
     //set forced dev
     if(ncells < config.minCells || isDuplicated){
@@ -113,7 +118,9 @@ template <typename Controller, typename Config> class Cell
         // w.addCell(new Cell(child_pos, theta, phi, ctrl, config));
         w.addCell(new Cell(this->getPosition() + dpos * config.divRadius, theta, phi, ctrl, config));
 
-        w.update();
+        duplicated = true;
+
+        // w.update();
 
         // if(com){
         //   *com = Vec::zero(); 

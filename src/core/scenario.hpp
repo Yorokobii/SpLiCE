@@ -106,6 +106,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
   void controllerUpdate() {
     int nconn = 0;
     int maxConn = 0;
+    bool duplicated = false;
     com = MecaCell::Vec::zero();
     size_t ncells = world.cells.size();
 
@@ -160,6 +161,8 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
         c->phi = distmp(gen);
         c->isNew = false;
       }
+
+      if(c->duplicated) duplicated = true;
     }
 
     //compute com fitness
@@ -171,7 +174,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     //       if((c1->getPosition() - c2->getPosition()).length() > distc2c)
     //         distc2c = (c1->getPosition() - c2->getPosition()).length();
 
-    totalCom += (com - prevCom);
+    if(!duplicated) totalCom += (com - prevCom);
 
     fit = totalCom.length();
     // fit = (MecaCell::Vec::zero() - com).length();
