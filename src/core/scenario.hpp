@@ -107,7 +107,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     checkGraphConnection();
     for (auto& c : world.cells) {
       
-      if(!c->visited)
+      if(!c->visited && !c->root)
         c->die();
 
       energy -= c->usedEnergy;
