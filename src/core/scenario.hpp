@@ -49,27 +49,20 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     for(auto& c : world.cells)
       c->visited = false;
     for(auto& c : world.cells)
-      if(c->root){
-        MecaCell::logger<MecaCell::DBG>("root check");
+      if(c->root)
         checkNode(c);
-      }
   }
 
   void checkNode(cell_t* c){
-    MecaCell::logger<MecaCell::DBG>("node check");
     if(c){
-      MecaCell::logger<MecaCell::DBG>("node valid");
       c->visited = true;
-      for(auto& conn : c->getBody().cellConnections){
-        MecaCell::logger<MecaCell::DBG>("test connection -> unbreakable : " , conn->unbreakable, " firstvisit : ", conn->cells.first->visited, " second visit : ", conn->cells.second->visited);
+      for(auto& conn : c->getBody().cellConnections)
         if(conn->unbreakable && (conn->cells.first == c ?
                                 !conn->cells.second->visited :
-                                !conn->cells.first->visited)){
+                                !conn->cells.first->visited))
           checkNode(conn->cells.first == c ?
                       conn->cells.second :
                       conn->cells.first);
-        }
-      }
     }
   }
 
@@ -135,15 +128,6 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       com = com / ncells;
       //gain energy
       //energy += (com - prevCom).length()*20;
-      
-      
-      //TO REMOVE  
-      
-      // prevCom = com;
-    
-    
-    
-    
     }
     gcomm = min(max(gcomm, 0.0), 1.0);
     double maxComDist = 0.0;
@@ -161,8 +145,8 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       c->worldAge = worldAge;
       c->ncells = ncells;
 
-      // c->com = &com;
-      // c->prevCom = &prevCom;
+      c->com = &com;
+      c->prevCom = &prevCom;
 
       c->deltcom = (com - prevCom).length();
 
