@@ -108,12 +108,8 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     int maxConn = 0;
     com = MecaCell::Vec::zero();
     size_t ncells = world.cells.size();
-    checkGraphConnection();
-    for (auto& c : world.cells) {
-      
-      if(!c->visited && !c->root)
-        c->die();
 
+    for (auto& c : world.cells) {
       energy -= c->usedEnergy;
       gcomm += c->dgcomm;
       c->nage = (double) c->age / (double) worldAge;
@@ -202,6 +198,10 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     worldAge += 1;
 
     if (worldAge % config.controllerUpdate == 0) controllerUpdate();
+    checkGraphConnection();
+    for (auto& c : world.cells)
+      if(c && !c->visited && !c->root)
+        c->die();
     world.update();
   }
 
