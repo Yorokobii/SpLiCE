@@ -200,7 +200,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     if (worldAge % config.controllerUpdate == 0) controllerUpdate();
     checkGraphConnection();
     for (auto& c : world.cells)
-      if(c && !c->visited && !c->root)
+      if(c && !c->visited && !c->root && !c->isNew)
         c->die();
     world.update();
   }
