@@ -127,7 +127,6 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       com = com / ncells;
       //gain energy
       //energy += (com - prevCom).length()*20;
-      prevCom = com;
     }
     gcomm = min(max(gcomm, 0.0), 1.0);
     double maxComDist = 0.0;
@@ -144,6 +143,9 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       c->energy = energy;
       c->worldAge = worldAge;
       c->ncells = ncells;
+
+      c->com = &com;
+      c->prevCom = &prevCom;
 
       c->deltcom = (com - prevCom).length();
 
@@ -169,6 +171,8 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
             distc2c = (c1->getPosition() - c2->getPosition()).length();
 
     fit = (MecaCell::Vec::zero() - com).length();
+
+    prevCom = com;
 
     MecaCell::logger<MecaCell::DBG>(":S| ", currentTime, " ", worldAge, " ", energy, " ",
                                     world.cells.size(), " ", gcomm, " ",
