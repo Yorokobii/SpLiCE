@@ -17,6 +17,11 @@ template <typename Controller, typename Config> class Cell
 	using Vec = MecaCell::Vec;
   using Base = MecaCell::ConnectableCell<Cell<Controller, Config>,
                                          MecaCell::SpringBody>;
+
+  //Graph related
+  bool visited = false;
+  bool root = false;
+
   int contractionCount = 0;
   double adhCoef = 0.0;
   double theta = 0.0;
@@ -36,13 +41,15 @@ template <typename Controller, typename Config> class Cell
   int age = 0;
   int worldAge = 0;
   double nage = 0.0;
+  Vec* com = NULL;
+  Vec* prevCom = NULL;
   bool ctrl_update = false;
   bool isNew = true;
   Controller ctrl;
   Config& config;
   std::vector<std::string> action_outputs = {"quiescence", "duplicate", "rotate", "contraction"};
-  Cell(const Vec& p, double th, double ph, const Controller& ct, Config& cfg)
-    : Base(p), theta(th), phi(ph), ctrl(ct), config(cfg) {
+  Cell(const Vec& p, double th, double ph, const Controller& ct, Config& cfg, bool _root = false)
+    : Base(p), theta(th), phi(ph), ctrl(ct), config(cfg), root(_root) {
     this->getBody().setRadius(config.originalRadius);
     this->getBody().setStiffness(config.cellStiffness);
     this->getBody().setMass(config.cellMass);
@@ -75,7 +82,7 @@ template <typename Controller, typename Config> class Cell
       action_outputs = {"quiescence", "duplicate", "rotate"};
     }
     else{
-      action_outputs = {"quiescence", "contraction"};
+      action_outputs = {"quiescence", "duplicate", "rotate", "contraction"};
     }
     //set bone-like 
     if(nconn>7){
@@ -103,6 +110,16 @@ template <typename Controller, typename Config> class Cell
         Vec new_pos = this->getPosition() - dpos * config.divRadius;
         this->getBody().moveTo(new_pos);
         w.addCell(new Cell(child_pos, theta, phi, ctrl, config));
+
+        w.update();
+
+        // *com = Vec::zero(); 
+        // for(auto& c : w->cells){
+        //   *com += c->getPosition();
+        // }
+        // *com /= w->cells.size();
+        // *prevCom = *com;
+
         usedEnergy = config.energyDuplicate;
       }
     } else if (action == "rotate") {

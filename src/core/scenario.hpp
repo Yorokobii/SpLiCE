@@ -44,6 +44,23 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     return res;
   }
 
+  void checkGraphConnection(){
+    for(auto& c : world.cells)
+      c->visited = false;
+    for(auto& c : world.cells)
+      if(c->root)
+        checkNode(c);
+  }
+
+  void checkNode(cell_t* c){
+    c->visited = true;
+    for(auto& conn : c->getBody().cellConnections)
+      if(conn->unbreakable && (conn->cells.first == c ?
+                               !conn->cells.second->visited :
+                               !conn->cells.first->visited))
+        checkNode(c);
+  }
+
   void init() {
     gen.seed(config.seed);
     sfp.fluidDensity = config.fluidDensity;
@@ -74,8 +91,9 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
 
       for (auto& c : world.cells)
         c->action_outputs = {"duplicate", "rotate", "quiescence", "contraction"};
+      world.cells[0]->root = true;
     } else {
-      world.addCell(new cell_t(MecaCell::Vec::zero(), 0.0, 0.0, controller, config));
+      world.addCell(new cell_t(MecaCell::Vec::zero(), 0.0, 0.0, controller, config, true));
       world.update();
     }
   }
@@ -85,13 +103,11 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     int maxConn = 0;
     com = MecaCell::Vec::zero();
     size_t ncells = world.cells.size();
+    // checkGraphConnection();
     for (auto& c : world.cells) {
       
-      //bone-like
-      // if(c->nconn > 4){
-      //   c->getBody().setStiffness(100);
-      //   c->action_outputs = {"quiescence", "rotate", "duplicate"};
-      // }
+      if(!c->visited)
+        c->die();
 
       energy -= c->usedEnergy;
       gcomm += c->dgcomm;
