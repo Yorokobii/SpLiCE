@@ -173,8 +173,8 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
 
     totalCom += (com - prevCom);
 
-    fit = totalCom.length();
-    // fit = (MecaCell::Vec::zero() - com).length();
+    // fit = totalCom.length();
+    fit = (MecaCell::Vec::zero() - com).length();
 
     prevCom = com;
 
