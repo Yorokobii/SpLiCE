@@ -180,7 +180,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
 
     MecaCell::logger<MecaCell::DBG>(":S| ", currentTime, " ", worldAge, " ", energy, " ",
                                     world.cells.size(), " ", gcomm, " ",
-                                    totalCom, " ", fit, " ");
+                                    /*totalCom*/com, " ", fit, " ");
 
   }
 
