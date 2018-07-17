@@ -104,11 +104,11 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     int maxConn = 0;
     com = MecaCell::Vec::zero();
     size_t ncells = world.cells.size();
-    // checkGraphConnection();
+    checkGraphConnection();
     for (auto& c : world.cells) {
       
-      // if(!c->visited)
-      //   c->die();
+      if(!c->visited)
+        c->die();
 
       energy -= c->usedEnergy;
       gcomm += c->dgcomm;
