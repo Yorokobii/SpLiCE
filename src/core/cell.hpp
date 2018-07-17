@@ -111,14 +111,16 @@ template <typename Controller, typename Config> class Cell
         this->getBody().moveTo(new_pos);
         w.addCell(new Cell(child_pos, theta, phi, ctrl, config));
 
-        w.update();
+        // w.update();
 
-        // *com = Vec::zero(); 
-        // for(auto& c : w->cells){
-        //   *com += c->getPosition();
+        //if(com){
+        //   *com = Vec::zero(); 
+        //   for(auto& c : w->cells){
+        //     *com += c->getPosition();
+        //   }
+        //   *com /= w->cells.size();
+        //   *prevCom = *com;
         // }
-        // *com /= w->cells.size();
-        // *prevCom = *com;
 
         usedEnergy = config.energyDuplicate;
       }
