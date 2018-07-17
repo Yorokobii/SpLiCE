@@ -167,13 +167,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
         std::uniform_real_distribution<> distmp(0.0, 2*M_PI);
         c->theta = distmp(gen);
         c->phi = distmp(gen);
-
-
-        //TO REMOVE
         c->isNew = false;
-      
-      
-      
       }
     }
 

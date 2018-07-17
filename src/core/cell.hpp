@@ -45,6 +45,7 @@ template <typename Controller, typename Config> class Cell
   // Vec* prevCom = NULL;
   bool ctrl_update = false;
   bool isNew = true;
+  bool isDuplicated = true;
   Controller ctrl;
   Config& config;
   std::vector<std::string> action_outputs = {"quiescence", "duplicate", "rotate", "contraction"};
@@ -57,7 +58,7 @@ template <typename Controller, typename Config> class Cell
     contractDuration = config.contractDuration;
   }
 
-  double getAdhesionWith(Cell* c, MecaCell::Vec) { return (this->isNew || c->isNew) ? adhCoef : 0.0; }
+  double getAdhesionWith(Cell* c, MecaCell::Vec) { return (this->isDuplicated || c->isDuplicated) ? adhCoef : 0.0; }
 
   template <typename W> void updateInputs(W& w) {
     ctrl.setInput("gcomm", gcomm);
@@ -70,7 +71,7 @@ template <typename Controller, typename Config> class Cell
     ctrl.setInput("contracting", (double)contracting);
     ctrl.setInput("deltcom", exp(deltcom / 10));
     ctrl.setInput("ncells", (double)ncells);
-    ctrl.setInput("isNew", (double)isNew);
+    ctrl.setInput("isDuplicated", (double)isDuplicated);
   }
 
   template <typename W> void updateOuputs(W& w) {
@@ -78,7 +79,7 @@ template <typename Controller, typename Config> class Cell
     dgcomm = ctrl.getDelta("dgcommPlus", "dgcommMinus");
 
     //set forced dev
-    if(ncells < config.minCells || isNew){
+    if(ncells < config.minCells || isDuplicated){
       action_outputs = {"quiescence", "duplicate", "rotate"};
     }
     else{
@@ -188,7 +189,7 @@ template <typename Controller, typename Config> class Cell
       age += 1;
       //passed a certain age the cell is not new anymore
       if(age > config.newAge){
-        isNew = false;
+        isDuplicated = false;
         for(auto& c : this->getBody().cellConnections){
           c->unbreakable = true;
         }
