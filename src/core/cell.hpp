@@ -115,10 +115,10 @@ template <typename Controller, typename Config> class Cell
 
         if(com){
           *com = Vec::zero(); 
-          for(auto& c : w->cells){
+          for(auto& c : w.cells){
             *com += c->getPosition();
           }
-          *com /= w->cells.size();
+          *com /= w.cells.size();
           *prevCom = *com;
         }
 
