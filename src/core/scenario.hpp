@@ -45,22 +45,22 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     return res;
   }
 
-  // void checkGraphConnection(){
-  //   for(auto& c : world.cells)
-  //     c->visited = false;
-  //   for(auto& c : world.cells)
-  //     if(c->root)
-  //       checkNode(c);
-  // }
+  void checkGraphConnection(){
+    for(auto& c : world.cells)
+      c->visited = false;
+    for(auto& c : world.cells)
+      if(c->root)
+        checkNode(c);
+  }
 
-  // void checkNode(cell_t* c){
-  //   c->visited = true;
-  //   for(auto& conn : c->getBody().cellConnections)
-  //     if(conn->unbreakable && (conn->cells.first == c ?
-  //                              !conn->cells.second->visited :
-  //                              !conn->cells.first->visited))
-  //       checkNode(c);
-  // }
+  void checkNode(cell_t* c){
+    c->visited = true;
+    for(auto& conn : c->getBody().cellConnections)
+      if(conn->unbreakable && (conn->cells.first == c ?
+                               !conn->cells.second->visited :
+                               !conn->cells.first->visited))
+        checkNode(c);
+  }
 
   void init() {
     gen.seed(config.seed);
@@ -92,9 +92,9 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
 
       for (auto& c : world.cells)
         c->action_outputs = {"duplicate", "rotate", "quiescence", "contraction"};
-      // world.cells[0]->root = true;
+      world.cells[0]->root = true;
     } else {
-      world.addCell(new cell_t(MecaCell::Vec::zero(), 0.0, 0.0, controller, config/*, true*/));
+      world.addCell(new cell_t(MecaCell::Vec::zero(), 0.0, 0.0, controller, config, true));
       world.update();
     }
   }
