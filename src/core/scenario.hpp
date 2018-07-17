@@ -59,7 +59,9 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       if(conn->unbreakable && (conn->cells.first == c ?
                                !conn->cells.second->visited :
                                !conn->cells.first->visited))
-        checkNode(c);
+        checkNode(conn->cells.first == c ?
+                    conn->cells.second :
+                    conn->cells.first);
   }
 
   void init() {
