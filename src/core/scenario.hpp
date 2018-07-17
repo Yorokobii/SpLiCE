@@ -158,7 +158,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
         std::uniform_real_distribution<> distmp(0.0, 2*M_PI);
         c->theta = distmp(gen);
         c->phi = distmp(gen);
-        c->isNew = false;
+        // c->isNew = false;
       }
     }
 
@@ -173,7 +173,8 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
 
     totalCom += (com - prevCom);
 
-    fit = totalCom.length();
+    // fit = totalCom.length();
+    fit = (Vec::zero() - com).length();
 
     prevCom = com;
 
