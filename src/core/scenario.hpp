@@ -54,14 +54,16 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
   }
 
   void checkNode(cell_t* c){
-    c->visited = true;
-    for(auto& conn : c->getBody().cellConnections)
-      if(conn->unbreakable && (conn->cells.first == c ?
-                               !conn->cells.second->visited :
-                               !conn->cells.first->visited))
-        checkNode(conn->cells.first == c ?
-                    conn->cells.second :
-                    conn->cells.first);
+    if(c){
+      c->visited = true;
+      for(auto& conn : c->getBody().cellConnections)
+        if(conn->unbreakable && (conn->cells.first == c ?
+                                !conn->cells.second->visited :
+                                !conn->cells.first->visited))
+          checkNode(conn->cells.first == c ?
+                      conn->cells.second :
+                      conn->cells.first);
+    }
   }
 
   void init() {
