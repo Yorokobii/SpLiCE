@@ -132,7 +132,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       
       //TO REMOVE  
       
-      prevCom = com;
+      // prevCom = com;
     
     
     
