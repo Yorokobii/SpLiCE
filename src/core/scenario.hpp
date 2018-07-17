@@ -24,6 +24,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
   ctrl_t controller;
   MecaCell::Vec com = MecaCell::Vec::zero();
   MecaCell::Vec prevCom = MecaCell::Vec::zero();
+  MecaCell::Vec totalCom = MecaCell::Vec::zero();
 
  protected:
   double currentTime = 0;
@@ -103,11 +104,11 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     int maxConn = 0;
     com = MecaCell::Vec::zero();
     size_t ncells = world.cells.size();
-    // checkGraphConnection();
+    checkGraphConnection();
     for (auto& c : world.cells) {
       
-      // if(!c->visited)
-      //   c->die();
+      if(!c->visited)
+        c->die();
 
       energy -= c->usedEnergy;
       gcomm += c->dgcomm;
@@ -163,20 +164,22 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
 
     //compute com fitness
     //compute biggest cell2cell distance
-    float distc2c = 1.0;
-    if(world.cells.size() > 1)
-      for(auto& c1 : world.cells)
-        for(auto& c2 : world.cells)
-          if((c1->getPosition() - c2->getPosition()).length() > distc2c)
-            distc2c = (c1->getPosition() - c2->getPosition()).length();
+    // float distc2c = 1.0;
+    // if(world.cells.size() > 1)
+    //   for(auto& c1 : world.cells)
+    //     for(auto& c2 : world.cells)
+    //       if((c1->getPosition() - c2->getPosition()).length() > distc2c)
+    //         distc2c = (c1->getPosition() - c2->getPosition()).length();
 
-    fit = (MecaCell::Vec::zero() - com).length();
+    totalCom += (com - prevCom);
+
+    fit = totalCom.length();
 
     prevCom = com;
 
     MecaCell::logger<MecaCell::DBG>(":S| ", currentTime, " ", worldAge, " ", energy, " ",
                                     world.cells.size(), " ", gcomm, " ",
-                                    com, " ", fit, " ");
+                                    totalCom, " ", fit, " ");
 
   }
 
