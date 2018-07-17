@@ -115,14 +115,14 @@ template <typename Controller, typename Config> class Cell
 
         w.update();
 
-        if(com){
-          *com = Vec::zero(); 
-          for(auto& c : w.cells){
-            *com += c->getPosition();
-          }
-          *com /= w.cells.size();
-          *prevCom = *com;
-        }
+        // if(com){
+        //   *com = Vec::zero(); 
+        //   for(auto& c : w.cells){
+        //     *com += c->getPosition();
+        //   }
+        //   *com /= w.cells.size();
+        //   *prevCom = *com;
+        // }
 
         usedEnergy = config.energyDuplicate;
       }
