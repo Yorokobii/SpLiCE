@@ -24,7 +24,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
   ctrl_t controller;
   MecaCell::Vec com = MecaCell::Vec::zero();
   MecaCell::Vec prevCom = MecaCell::Vec::zero();
-  MecaCell::Vec totalCom = MecaCell::Vec::zero();
+  // MecaCell::Vec totalCom = MecaCell::Vec::zero();
 
  protected:
   double currentTime = 0;
@@ -45,22 +45,22 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     return res;
   }
 
-  void checkGraphConnection(){
-    for(auto& c : world.cells)
-      c->visited = false;
-    for(auto& c : world.cells)
-      if(c->root)
-        checkNode(c);
-  }
+  // void checkGraphConnection(){
+  //   for(auto& c : world.cells)
+  //     c->visited = false;
+  //   for(auto& c : world.cells)
+  //     if(c->root)
+  //       checkNode(c);
+  // }
 
-  void checkNode(cell_t* c){
-    c->visited = true;
-    for(auto& conn : c->getBody().cellConnections)
-      if(conn->unbreakable && (conn->cells.first == c ?
-                               !conn->cells.second->visited :
-                               !conn->cells.first->visited))
-        checkNode(c);
-  }
+  // void checkNode(cell_t* c){
+  //   c->visited = true;
+  //   for(auto& conn : c->getBody().cellConnections)
+  //     if(conn->unbreakable && (conn->cells.first == c ?
+  //                              !conn->cells.second->visited :
+  //                              !conn->cells.first->visited))
+  //       checkNode(c);
+  // }
 
   void init() {
     gen.seed(config.seed);
@@ -94,7 +94,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
         c->action_outputs = {"duplicate", "rotate", "quiescence", "contraction"};
       world.cells[0]->root = true;
     } else {
-      world.addCell(new cell_t(MecaCell::Vec::zero(), 0.0, 0.0, controller, config, true));
+      world.addCell(new cell_t(MecaCell::Vec::zero(), 0.0, 0.0, controller, config/*, true*/));
       world.update();
     }
   }
@@ -145,8 +145,8 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       c->worldAge = worldAge;
       c->ncells = ncells;
 
-      c->com = &com;
-      c->prevCom = &prevCom;
+      // c->com = &com;
+      // c->prevCom = &prevCom;
 
       c->deltcom = (com - prevCom).length();
 
@@ -171,7 +171,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     //       if((c1->getPosition() - c2->getPosition()).length() > distc2c)
     //         distc2c = (c1->getPosition() - c2->getPosition()).length();
 
-    totalCom += (com - prevCom);
+    // totalCom += (com - prevCom);
 
     // fit = totalCom.length();
     fit = (MecaCell::Vec::zero() - com).length();

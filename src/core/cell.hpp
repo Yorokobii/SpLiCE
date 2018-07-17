@@ -41,15 +41,15 @@ template <typename Controller, typename Config> class Cell
   int age = 0;
   int worldAge = 0;
   double nage = 0.0;
-  Vec* com = NULL;
-  Vec* prevCom = NULL;
+  // Vec* com = NULL;
+  // Vec* prevCom = NULL;
   bool ctrl_update = false;
   bool isNew = true;
   Controller ctrl;
   Config& config;
   std::vector<std::string> action_outputs = {"quiescence", "duplicate", "rotate", "contraction"};
-  Cell(const Vec& p, double th, double ph, const Controller& ct, Config& cfg, bool _root = false)
-    : Base(p), theta(th), phi(ph), ctrl(ct), config(cfg), root(_root) {
+  Cell(const Vec& p, double th, double ph, const Controller& ct, Config& cfg/*, bool _root = false*/)
+    : Base(p), theta(th), phi(ph), ctrl(ct), config(cfg)/*, root(_root)*/ {
     this->getBody().setRadius(config.originalRadius);
     this->getBody().setStiffness(config.cellStiffness);
     this->getBody().setMass(config.cellMass);
