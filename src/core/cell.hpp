@@ -107,10 +107,11 @@ template <typename Controller, typename Config> class Cell
       if (energy >= config.energyDuplicate && (config.maxCells != 0 ? w.cells.size() < config.maxCells : true) && nconn < 7) {
         // cell duplicate
         Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
-        Vec child_pos = dpos * config.divRadius + this->getPosition();
-        Vec new_pos = this->getPosition() - dpos * config.divRadius;
-        this->getBody().moveTo(new_pos);
-        w.addCell(new Cell(child_pos, theta, phi, ctrl, config));
+        // Vec child_pos = dpos * config.divRadius + this->getPosition();
+        // Vec new_pos = this->getPosition() - dpos * config.divRadius;
+        // this->getBody().moveTo(new_pos);
+        // w.addCell(new Cell(child_pos, theta, phi, ctrl, config));
+        w.addCell(new Cell(this->getPosition() + dpos * config.divRadius, theta, phi, ctrl, config));
 
         // w.update();
 
@@ -180,6 +181,15 @@ template <typename Controller, typename Config> class Cell
   }
 
   template <typename W> void updateBehavior(W& w) {
+    //passed a certain age the cell is not new anymore
+    if(age < config.newAge){
+      for(auto& c : this->getBody().cellConnections){
+        c->unbreakable = true;
+      }
+    }
+    else{
+      isDuplicated = false;
+    }
     if (!isNew && ctrl_update) {
       // set inputs
       updateInputs(w);
@@ -187,15 +197,6 @@ template <typename Controller, typename Config> class Cell
       ctrl.update();
       // get outputs and control cell
       age += 1;
-      //passed a certain age the cell is not new anymore
-      if(age < config.newAge){
-        for(auto& c : this->getBody().cellConnections){
-          c->unbreakable = true;
-        }
-      }
-      else{
-        isDuplicated = false;
-      }
       usedEnergy = config.energyQuiescence;
       updateOuputs(w);
     }

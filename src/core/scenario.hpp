@@ -49,20 +49,27 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     for(auto& c : world.cells)
       c->visited = false;
     for(auto& c : world.cells)
-      if(c->root)
+      if(c->root){
+        MecaCell::logger<MecaCell::DBG>("root check");
         checkNode(c);
+      }
   }
 
   void checkNode(cell_t* c){
+    MecaCell::logger<MecaCell::DBG>("node check");
     if(c){
+      MecaCell::logger<MecaCell::DBG>("node valid");
       c->visited = true;
-      for(auto& conn : c->getBody().cellConnections)
+      for(auto& conn : c->getBody().cellConnections){
+        MecaCell::logger<MecaCell::DBG>("test connection -> unbreakable : " , conn->unbreakable, " firstvisit : ", conn->cells.first->visited, " second visit : ", conn->cells.second->visited);
         if(conn->unbreakable && (conn->cells.first == c ?
                                 !conn->cells.second->visited :
-                                !conn->cells.first->visited))
+                                !conn->cells.first->visited)){
           checkNode(conn->cells.first == c ?
                       conn->cells.second :
                       conn->cells.first);
+        }
+      }
     }
   }
 
