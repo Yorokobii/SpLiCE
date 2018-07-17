@@ -41,8 +41,8 @@ template <typename Controller, typename Config> class Cell
   int age = 0;
   int worldAge = 0;
   double nage = 0.0;
-  // Vec* com = NULL;
-  // Vec* prevCom = NULL;
+  Vec* com = NULL;
+  Vec* prevCom = NULL;
   bool ctrl_update = false;
   bool isNew = true;
   bool isDuplicated = true;
@@ -112,16 +112,16 @@ template <typename Controller, typename Config> class Cell
         this->getBody().moveTo(new_pos);
         w.addCell(new Cell(child_pos, theta, phi, ctrl, config));
 
-        // w.update();
+        w.update();
 
-        // if(com){
-        //   *com = Vec::zero(); 
-        //   for(auto& c : w.cells){
-        //     *com += c->getPosition();
-        //   }
-        //   *com /= w.cells.size();
-        //   *prevCom = *com;
-        // }
+        if(com){
+          *com = Vec::zero(); 
+          for(auto& c : w.cells){
+            *com += c->getPosition();
+          }
+          *com /= w.cells.size();
+          *prevCom = *com;
+        }
 
         usedEnergy = config.energyDuplicate;
       }
