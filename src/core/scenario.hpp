@@ -146,9 +146,6 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       c->worldAge = worldAge;
       c->ncells = ncells;
 
-      c->com = &com;
-      c->prevCom = &prevCom;
-
       c->deltcom = (com - prevCom).length();
 
       if (ncells > 1) c->comdist = c->comdist / maxComDist;
