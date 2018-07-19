@@ -42,8 +42,8 @@ template <typename Controller, typename Config> class Cell
   int worldAge = 0;
   double nage = 0.0;
 
-  Vec* com = NULL;
-  Vec* prevCom = NULL;
+  // Vec* com = NULL;
+  // Vec* prevCom = NULL;
   bool duplicated = false;
 
   bool ctrl_update = false;
@@ -51,7 +51,7 @@ template <typename Controller, typename Config> class Cell
   bool isDuplicated = true;
   Controller ctrl;
   Config& config;
-  std::vector<std::string> action_outputs = {"quiescence", "duplicate", "rotate", "contraction"};
+  std::vector<std::string> action_outputs = {"quiescence", "duplicate", "rotate", "contraction", "apoptosis"};
   Cell(const Vec& p, double th, double ph, const Controller& ct, Config& cfg, bool _root = false)
     : Base(p), theta(th), phi(ph), ctrl(ct), config(cfg), root(_root) {
     this->getBody().setRadius(config.originalRadius);
@@ -85,15 +85,15 @@ template <typename Controller, typename Config> class Cell
 
     //set forced dev
     if(ncells < config.minCells || isDuplicated){
-      action_outputs = {"quiescence", "duplicate", "rotate"};
+      action_outputs = {"quiescence", "duplicate", "rotate", "apoptosis"};
     }
     else{
-      action_outputs = {"quiescence", "duplicate", "rotate", "contraction"};
+      action_outputs = {"quiescence", "duplicate", "rotate", "contraction", "apoptosis"};
     }
     //set bone-like 
-    if(nconn>7){
-      action_outputs = {"quiescence"};
-    }
+    // if(nconn>7){
+    //   action_outputs = {"quiescence"};
+    // }
 
     std::vector<double> actions;
     for (auto& astr : action_outputs) {
@@ -119,17 +119,6 @@ template <typename Controller, typename Config> class Cell
         w.addCell(new Cell(this->getPosition() + dpos * config.divRadius, theta, phi, ctrl, config));
 
         duplicated = true;
-
-        // w.update();
-
-        // if(com){
-        //   *com = Vec::zero(); 
-        //   for(auto& c : w.cells){
-        //     *com += c->getPosition();
-        //   }
-        //   *com /= w.cells.size();
-        //   *prevCom = *com;
-        // }
 
         usedEnergy = config.energyDuplicate;
       }
@@ -180,9 +169,10 @@ template <typename Controller, typename Config> class Cell
       }
     } else if (action == "quiescence") {
       // do nothing
-      //more energy used for smaller systems
-      // usedEnergy = (config.energyInitial/config.energyDuplicate)/ncells * config.energyQuiescence;
       usedEnergy = config.energyQuiescence;
+    } else if (action == "apoptosis") {
+      // do nothing
+      this->die();
     }
     ctrl_update = false;
   }
