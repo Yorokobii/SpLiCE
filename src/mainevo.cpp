@@ -31,9 +31,9 @@ int main(int argc, char** argv) {
         }
         nconn /= scenario.getWorld().cells.size();
         ncontr /= scenario.getWorld().cells.size();
-        footprints[0].push_back(1.0 - 1.0/max((double)nconn, 1.0));
-        footprints[0].push_back(1.0 - 1.0/max((double)ncontr, 1.0));
-        footprints[0].push_back(1.0 - 1.0/(double)scenario.getWorld().cells.size());
+        // footprints[0].push_back(1.0 - 1.0/max((double)nconn, 1.0));
+        // footprints[0].push_back(1.0 - 1.0/max((double)ncontr, 1.0));
+        // footprints[0].push_back(1.0 - 1.0/(double)scenario.getWorld().cells.size());
 
         if (scenario.getWorld().cells.size() != 0) {
           auto clusters =
