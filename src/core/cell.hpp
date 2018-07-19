@@ -172,7 +172,8 @@ template <typename Controller, typename Config> class Cell
       usedEnergy = config.energyQuiescence;
     } else if (action == "apoptosis") {
       // do nothing
-      this->die();
+      if(!this->root)
+        this->die();
     }
     ctrl_update = false;
   }
