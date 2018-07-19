@@ -51,7 +51,7 @@ template <typename Controller, typename Config> class Cell
   bool isDuplicated = true;
   Controller ctrl;
   Config& config;
-  std::vector<std::string> action_outputs = {"quiescence", "duplicate", "rotate", "contraction", "apoptosis"};
+  std::vector<std::string> action_outputs = {"quiescence", "duplicate", "rotate", "contraction"};
   Cell(const Vec& p, double th, double ph, const Controller& ct, Config& cfg, bool _root = false)
     : Base(p), theta(th), phi(ph), ctrl(ct), config(cfg), root(_root) {
     this->getBody().setRadius(config.originalRadius);
@@ -85,10 +85,10 @@ template <typename Controller, typename Config> class Cell
 
     //set forced dev
     if(ncells < config.minCells || isDuplicated){
-      action_outputs = {"quiescence", "duplicate", "rotate", "apoptosis"};
+      action_outputs = {"quiescence", "duplicate", "rotate"};
     }
     else{
-      action_outputs = {"quiescence", "duplicate", "rotate", "contraction", "apoptosis"};
+      action_outputs = {"quiescence", "duplicate", "rotate", "contraction"};
     }
     //set bone-like 
     // if(nconn>7){
@@ -171,7 +171,6 @@ template <typename Controller, typename Config> class Cell
       // do nothing
       usedEnergy = config.energyQuiescence;
     } else if (action == "apoptosis") {
-      // do nothing
       if(!this->root)
         this->die();
     }
