@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
         ncontr /= scenario.getWorld().cells.size();
         // footprints[0].push_back(1.0 - 1.0/max((double)nconn, 1.0));
         footprints[0].push_back(1.0 - 1.0/max((double)ncontr/100, 1.0));
-        footprints[0].push_back(1.0 - 1.0/max((double)nCellsContracted/10.0, 1.0));
+        footprints[0].push_back(1.0 - 1.0/max((double)nCellsContracted, 1.0));
         // footprints[0].push_back(1.0 - 1.0/(double)scenario.getWorld().cells.size());
 
         // if (scenario.getWorld().cells.size() != 0) {
