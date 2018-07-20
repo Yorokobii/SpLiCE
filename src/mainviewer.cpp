@@ -29,8 +29,8 @@ int main(int argc, char** argv) {
   AutoStop astop;
   MecacellViewer::Viewer<Config::scenario_t> v(scenario);
   v.setNbLoopsPerFrame(2);
-  // v.registerPlugins(cmp, gvp, ccp, comp, scp, astart, astop);
-  v.registerPlugins(cmp, gvp, ccp, comp, scp, astop);
+  v.registerPlugins(cmp, gvp, ccp, comp, scp, astart, astop);
+  // v.registerPlugins(cmp, gvp, ccp, comp, scp, astop);
 
   return v.exec();
 }
