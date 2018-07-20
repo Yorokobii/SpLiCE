@@ -21,6 +21,7 @@ struct GRNController {  // both controller and DNA
     g.addRandomProtein(ProteinType::input, "deltcom");
     g.addRandomProtein(ProteinType::input, "ncells");
     g.addRandomProtein(ProteinType::input, "isDuplicated");
+    g.addRandomProtein(ProteinType::input, "stiffness");
 
     g.addRandomProtein(ProteinType::output, "duplicate");
     g.addRandomProtein(ProteinType::output, "rotate");

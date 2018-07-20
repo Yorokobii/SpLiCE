@@ -75,6 +75,7 @@ template <typename Controller, typename Config> class Cell
     ctrl.setInput("deltcom", exp(deltcom / 10));
     ctrl.setInput("ncells", (double)ncells);
     ctrl.setInput("isDuplicated", (double)isDuplicated);
+    ctrl.setInput("stiffness", (double)this->getBody().stiffness);
   }
 
   template <typename W> void updateOuputs(W& w) {
@@ -93,7 +94,7 @@ template <typename Controller, typename Config> class Cell
     //set bone-like 
     if(nconn>7){
       action_outputs = {"quiescence"};
-      this->getBody().stiffness = 150;
+      this->getBody().stiffness = 200;
 
     }
 
