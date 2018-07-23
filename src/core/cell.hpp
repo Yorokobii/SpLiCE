@@ -110,6 +110,7 @@ template <typename Controller, typename Config> class Cell
       }
     }
     std::string action = action_outputs[actionMax];
+    contracting = false;
 
     if (action == "duplicate") {
       if (energy >= config.energyDuplicate
@@ -135,6 +136,7 @@ template <typename Controller, typename Config> class Cell
 
       Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
       contractionCount++;
+      contracting = true;
       for (auto &conn : this->getBody().cellConnections) {
         if (conn->unbreakable) {
           double force = conn->direction.dot(dpos) * config.force;
