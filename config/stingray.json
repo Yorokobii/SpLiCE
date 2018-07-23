@@ -1,6 +1,6 @@
 {
     "grnFile": "test.dna",
-    "simShape": "config/quadpus.shape",
+    "simShape": "config/stingray.shape",
     "simDuration": 0.0,
     "dt": 0.01,
     "originalRadius": 30.0,

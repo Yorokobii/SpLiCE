@@ -20,7 +20,7 @@
     "maxCells": 0,
     "newAge": 20,
     "betaPressure": 30.0,
-    "fluidDensity": 0.01,
+    "fluidDensity": 0.005,
     "force": 2000.0,
     "compressForce": true,
     "controllerUpdate": 2,
