@@ -137,7 +137,7 @@ template <typename Controller, typename Config> class Cell
       contractionCount++;
       for (auto &conn : this->getBody().cellConnections) {
         if (conn->unbreakable) {
-          double force = conn->direction.dot(dpos) * config.force/3;
+          double force = conn->direction.dot(dpos) * config.force;
           conn->cells.first->getBody().receiveForce(force, conn->direction,
                                                     config.compressForce);
           conn->cells.second->getBody().receiveForce(force, -conn->direction,
