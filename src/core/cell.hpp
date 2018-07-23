@@ -132,43 +132,59 @@ template <typename Controller, typename Config> class Cell
       phi = min(max(phi + dphi, 0.0), 2 * M_PI);
       usedEnergy = config.energyRotate;
     } else if (action == "contraction") {
-      if(contracting == false){
-        // start a new contraction event
-        contracting = true;
-        Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
-        contractionCount++;
-        for (auto &conn : this->getBody().cellConnections) {
-          if (conn->unbreakable) {
-            double force = conn->direction.dot(dpos) * config.force;
-            conn->cells.first->getBody().receiveForce(force, conn->direction,
-                                                      config.compressForce);
-            conn->cells.second->getBody().receiveForce(force, -conn->direction,
-                                                      config.compressForce);
-          }
-        }
-        //more energy used for smaller systems
-        // usedEnergy = (config.energyInitial/config.energyDuplicate)/ncells * config.energyContraction;
-        usedEnergy = config.energyContraction;
-      }
-      else{
-        if(contractTime >= contractDuration){
-          contractTime = 0.0;
-          contracting = false;
-        }
-        else{
-          if(contractTime <= contractDuration/4){
-            for (auto &conn : this->getBody().cellConnections) {
-              if (conn->unbreakable) {
-                conn->cells.first->getBody().receiveForce(config.force, conn->direction,
-                                                          config.compressForce);
-                conn->cells.second->getBody().receiveForce(config.force, -conn->direction,
-                                                          config.compressForce);
-              }
-            }
-          }
-          contractTime++;
+
+      Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
+      contractionCount++;
+      for (auto &conn : this->getBody().cellConnections) {
+        if (conn->unbreakable) {
+          double force = conn->direction.dot(dpos) * config.force/3;
+          conn->cells.first->getBody().receiveForce(force, conn->direction,
+                                                    config.compressForce);
+          conn->cells.second->getBody().receiveForce(force, -conn->direction,
+                                                    config.compressForce);
         }
       }
+      //more energy used for smaller systems
+      // usedEnergy = (config.energyInitial/config.energyDuplicate)/ncells * config.energyContraction;
+      usedEnergy = config.energyContraction;
+
+      // if(contracting == false){
+      //   // start a new contraction event
+      //   contracting = true;
+      //   Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
+      //   contractionCount++;
+      //   for (auto &conn : this->getBody().cellConnections) {
+      //     if (conn->unbreakable) {
+      //       double force = conn->direction.dot(dpos) * config.force;
+      //       conn->cells.first->getBody().receiveForce(force, conn->direction,
+      //                                                 config.compressForce);
+      //       conn->cells.second->getBody().receiveForce(force, -conn->direction,
+      //                                                 config.compressForce);
+      //     }
+      //   }
+      //   //more energy used for smaller systems
+      //   // usedEnergy = (config.energyInitial/config.energyDuplicate)/ncells * config.energyContraction;
+      //   usedEnergy = config.energyContraction;
+      // }
+      // else{
+      //   if(contractTime >= contractDuration){
+      //     contractTime = 0.0;
+      //     contracting = false;
+      //   }
+      //   else{
+      //     if(contractTime <= contractDuration/4){
+      //       for (auto &conn : this->getBody().cellConnections) {
+      //         if (conn->unbreakable) {
+      //           conn->cells.first->getBody().receiveForce(config.force, conn->direction,
+      //                                                     config.compressForce);
+      //           conn->cells.second->getBody().receiveForce(config.force, -conn->direction,
+      //                                                     config.compressForce);
+      //         }
+      //       }
+      //     }
+      //     contractTime++;
+      //   }
+      // }
     } else if (action == "quiescence") {
       // do nothing
       usedEnergy = config.energyQuiescence;
