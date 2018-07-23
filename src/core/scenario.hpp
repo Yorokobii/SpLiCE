@@ -94,8 +94,12 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       world.update();
       world.update();
 
-      for (auto& c : world.cells)
+      for (auto& c : world.cells){
         c->action_outputs = {"duplicate", "rotate", "quiescence", "contraction"};
+        com += c->getPosition();
+      }
+      com /= world.cells.size();
+      prevCom = com;
       world.cells[0]->root = true;
     } else {
       world.addCell(new cell_t(MecaCell::Vec::zero(), 0.0, 0.0, controller, config, true));
@@ -127,7 +131,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     }
     if (ncells > 0){
       com = com / ncells;
-      //gain energy
+      //energy reward
       //energy += (com - prevCom).length()*20;
     }
     gcomm = min(max(gcomm, 0.0), 1.0);
@@ -162,25 +166,14 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       if(c->duplicated) duplicated = true;
     }
 
-    //compute com fitness
-    //compute biggest cell2cell distance
-    // float distc2c = 1.0;
-    // if(world.cells.size() > 1)
-    //   for(auto& c1 : world.cells)
-    //     for(auto& c2 : world.cells)
-    //       if((c1->getPosition() - c2->getPosition()).length() > distc2c)
-    //         distc2c = (c1->getPosition() - c2->getPosition()).length();
-
     if(!duplicated) totalCom += (com - prevCom);
-
     fit = totalCom.length();
-    // fit = (MecaCell::Vec::zero() - com).length();
 
     prevCom = com;
 
     MecaCell::logger<MecaCell::DBG>(":S| ", currentTime, " ", worldAge, " ", energy, " ",
                                     world.cells.size(), " ", gcomm, " ",
-                                    totalCom/*com*/, " ", fit, " ");
+                                    totalCom, " ", fit, " ");
 
   }
 

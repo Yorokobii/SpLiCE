@@ -118,10 +118,6 @@ template <typename Controller, typename Config> class Cell
           && config.simShape == "") {
         // cell duplicate
         Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
-        // Vec child_pos = dpos * config.divRadius + this->getPosition();
-        // Vec new_pos = this->getPosition() - dpos * config.divRadius;
-        // this->getBody().moveTo(new_pos);
-        // w.addCell(new Cell(child_pos, theta, phi, ctrl, config));
         w.addCell(new Cell(this->getPosition() + dpos * config.divRadius, theta, phi, ctrl, config));
 
         duplicated = true;
