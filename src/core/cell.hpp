@@ -92,11 +92,11 @@ template <typename Controller, typename Config> class Cell
       action_outputs = {"quiescence", "duplicate", "rotate", "contraction"};
     }
     //set bone-like 
-    if(nconn>7){
-      action_outputs = {"quiescence"};
-      this->getBody().stiffness = 200;
+    // if(nconn>7){
+    //   action_outputs = {"quiescence"};
+    //   this->getBody().stiffness = 200;
 
-    }
+    // }
 
     std::vector<double> actions;
     for (auto& astr : action_outputs) {
