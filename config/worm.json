@@ -7,7 +7,7 @@
     "cellMass": 1,
     "cellStiffness": 50,
     "divRadius": 20.0,
-    "adhCoef": 5.0,
+    "adhCoef": 20.0,
     "contractRatio": 0.8,
     "contractDuration": 20,
     "minActionAge": 0,
