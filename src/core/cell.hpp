@@ -85,7 +85,7 @@ template <typename Controller, typename Config> class Cell
     if(duplicated) duplicated = false;
 
     //set forced dev
-    if(ncells < config.minCells || isDuplicated){
+    if((ncells < config.minCells || isDuplicated) && config.simShape == ""){
       action_outputs = {"quiescence", "duplicate", "rotate"};
     }
     else{
