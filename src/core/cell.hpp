@@ -37,7 +37,6 @@ template <typename Controller, typename Config> class Cell
   double deltcom = 0.0;
   int nconn = 0;
   int ncells = 0;
-  int maxConn = 0;
   int age = 0;
   int worldAge = 0;
   double nage = 0.0;

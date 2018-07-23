@@ -109,7 +109,6 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
 
   void controllerUpdate() {
     int nconn = 0;
-    int maxConn = 0;
     bool duplicated = false;
     com = MecaCell::Vec::zero();
     size_t ncells = world.cells.size();
@@ -118,15 +117,15 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       energy -= c->usedEnergy;
       gcomm += c->dgcomm;
       c->nage = (double) c->age / (double) worldAge;
-      nconn = c->getBody().cellConnections.size();
+
       MecaCell::Vec pressure = MecaCell::Vec::zero();
       for (auto& con : c->getBody().cellConnections) {
         pressure += con->collision.computeForce(config.dt) * con->direction;
         con->cells.first->lcomm += con->cells.second->dlcomm;
+        nconn++;
       }
       c->pressure = exp(-pressure.length() / config.betaPressure);
       c->nconn = nconn;
-      maxConn = max(nconn, maxConn);
       com += c->getPosition();
     }
     if (ncells > 0){
@@ -145,7 +144,6 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       if ((c->nconn == 0) && world.cells.size() > 1) c->die();
       c->lcomm = min(max(c->lcomm, 0.0), 1.0);
       c->gcomm = gcomm;
-      c->maxConn = maxConn;
       c->energy = energy;
       c->worldAge = worldAge;
       c->ncells = ncells;
