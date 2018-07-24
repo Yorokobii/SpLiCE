@@ -24,17 +24,21 @@ int main(int argc, char** argv) {
         //compute nconn footprint
         float nconn = 0.0;
         float ncontr = 0.0;
+        float next = 0.0;
         int nCellsContracted = 0.0;
         for(auto& c : scenario.getWorld().cells){
           for(auto& conn : c->getBody().cellConnections)
             nconn += (conn->adhCoef > 0.0) ? 1.0 : 0.0;
           ncontr += c->contractionCount;
+          next += c->extensionCount;
           if(c->contractionCount) nCellsContracted++;
         }
         nconn /= scenario.getWorld().cells.size();
         ncontr /= scenario.getWorld().cells.size();
+        next /= scenario.getWorld().cells.size();
         // footprints[0].push_back(1.0 - 1.0/max((double)nconn, 1.0));
         footprints[0].push_back(1.0 - 1.0/max((double)ncontr/100, 1.0));
+        footprints[0].push_back(1.0 - 1.0/max((double)next/100, 1.0));
         // footprints[0].push_back(1.0 - 1.0/max((double)nCellsContracted, 1.0));
         // footprints[0].push_back(1.0 - 1.0/(double)scenario.getWorld().cells.size());
 

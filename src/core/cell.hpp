@@ -23,6 +23,7 @@ template <typename Controller, typename Config> class Cell
   bool root = false;
 
   int contractionCount = 0;
+  int extensionCount = 0;
   double adhCoef = 0.0;
   double theta = 0.0;
   double phi = 0.0;
@@ -198,6 +199,7 @@ template <typename Controller, typename Config> class Cell
                                                     config.compressForce);
         }
       }
+      extensionCount++;
       usedEnergy = config.energyContraction;
 
     } else if (action == "quiescence") {
