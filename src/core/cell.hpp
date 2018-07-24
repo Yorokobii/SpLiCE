@@ -50,7 +50,7 @@ template <typename Controller, typename Config> class Cell
   bool isDuplicated = true;
   Controller ctrl;
   Config& config;
-  std::vector<std::string> action_outputs = {"quiescence", "duplicate", "rotate", "contraction"};
+  std::vector<std::string> action_outputs = {"quiescence", "duplicate", "rotate", "contraction", "extension"};
   Cell(const Vec& p, double th, double ph, const Controller& ct, Config& cfg, bool _root = false)
     : Base(p), theta(th), phi(ph), ctrl(ct), config(cfg), root(_root) {
     this->getBody().setRadius(config.originalRadius);
@@ -88,7 +88,7 @@ template <typename Controller, typename Config> class Cell
       action_outputs = {"quiescence", "duplicate", "rotate"};
     }
     else{
-      action_outputs = {"quiescence", "duplicate", "rotate", "contraction"};
+      action_outputs = {"quiescence", "duplicate", "rotate", "contraction", "extension"};
     }
     //set bone-like 
     // if(nconn>7){
@@ -186,6 +186,20 @@ template <typename Controller, typename Config> class Cell
       //     contractTime++;
       //   }
       // }
+    } else if (action == "extension") {
+
+      Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
+      for (auto &conn : this->getBody().cellConnections) {
+        if (conn->unbreakable) {
+          double force = conn->direction.dot(dpos) * config.force/2;
+          conn->cells.first->getBody().receiveForce(force, -conn->direction,
+                                                    config.compressForce);
+          conn->cells.second->getBody().receiveForce(force, conn->direction,
+                                                    config.compressForce);
+        }
+      }
+      usedEnergy = config.energyContraction;
+
     } else if (action == "quiescence") {
       // do nothing
       usedEnergy = config.energyQuiescence;
