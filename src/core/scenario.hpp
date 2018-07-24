@@ -25,6 +25,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
   MecaCell::Vec com = MecaCell::Vec::zero();
   MecaCell::Vec prevCom = MecaCell::Vec::zero();
   MecaCell::Vec totalCom = MecaCell::Vec::zero();
+  double deltCom = 0.0;
 
  protected:
   double currentTime = 0;
@@ -139,6 +140,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       c->comdist = (c->getPosition() - com).length();
       maxComDist = max(maxComDist, c->comdist);
     }
+
     std::uniform_real_distribution<> dis(-1, 1);
     for (auto& c : world.cells) {
       if ((c->nconn == 0) && world.cells.size() > 1) c->die();
@@ -147,7 +149,6 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       c->energy = energy;
       c->worldAge = worldAge;
       c->ncells = ncells;
-
       c->deltcom = (com - prevCom).length();
 
       if (ncells > 1) c->comdist = c->comdist / maxComDist;
@@ -165,7 +166,12 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     }
 
     if(!duplicated) totalCom += (com - prevCom);
-    fit = totalCom.length();
+    
+    if((com - prevCom).length() > deltCom){
+      deltCom = (com - prevCom).length();
+      fit++;
+    }
+    // fit = totalCom.length();
 
     prevCom = com;
 
