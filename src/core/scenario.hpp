@@ -167,7 +167,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
 
     if(!duplicated) totalCom += (com - prevCom);
     
-    if((com - prevCom).length() > deltCom*2){
+    if((com - prevCom).length() > deltCom){
       deltCom = (com - prevCom).length();
       fit++;
     }
