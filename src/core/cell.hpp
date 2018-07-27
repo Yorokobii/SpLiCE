@@ -104,7 +104,7 @@ template <typename Controller, typename Config> class Cell
 
     std::vector<double> actions;
     for (auto& astr : action_outputs) {
-      actions.push_back(ctrl.getOutput(astr, worldAge, rank, maxRank));
+      actions.push_back(ctrl.getOutput(astr, worldAge/*, rank, maxRank*/));
     }
     int actionMax = 0; double actionMaxConc = 0.0;
     for (auto i = 0; i < actions.size(); ++i) {
