@@ -31,7 +31,9 @@ template <typename Controller, typename Config> class Cell
   double gcomm = 0.0;
   double dgcomm = 0.0;
   double lcomm = 0.0;
+  double lcommunb = 0.0;
   double dlcomm = 0.0;
+  double dlcommunb = 0.0;
   double pressure = 0.0;
   double energy = 0.0;
   double comdist = 0.0;
@@ -70,6 +72,7 @@ template <typename Controller, typename Config> class Cell
   template <typename W> void updateInputs(W& w) {
     ctrl.setInput("gcomm", gcomm);
     ctrl.setInput("lcomm", lcomm);
+    ctrl.setInput("lcommunb", lcommunb);
     ctrl.setInput("theta", theta / (2 * M_PI));
     ctrl.setInput("phi", phi / (2 * M_PI));
     ctrl.setInput("pressure", exp(-pressure / config.betaPressure));
@@ -84,6 +87,7 @@ template <typename Controller, typename Config> class Cell
 
   template <typename W> void updateOuputs(W& w) {
     dlcomm = ctrl.getDelta("dlcommPlus", "dlcommMinus");
+    dlcommunb = ctrl.getDelta("dlcommunbPlus", "dlcommunbMinus");
     dgcomm = ctrl.getDelta("dgcommPlus", "dgcommMinus");
 
     if(duplicated) duplicated = false;
