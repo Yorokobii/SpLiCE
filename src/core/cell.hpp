@@ -46,12 +46,16 @@ template <typename Controller, typename Config> class Cell
   // Vec* prevCom = NULL;
   bool duplicated = false;
 
+  // sinusoidal controller variable
+  int rank = 0;
+  int maxRank = 0;
+
   bool ctrl_update = false;
   bool isNew = true;
   bool isDuplicated = true;
   Controller ctrl;
   Config& config;
-  std::vector<std::string> action_outputs = {"quiescence", "duplicate", "rotate", "contraction", "extension"};
+  std::vector<std::string> action_outputs = {"quiescence", "duplicate", "rotate", "contraction"};
   Cell(const Vec& p, double th, double ph, const Controller& ct, Config& cfg, bool _root = false)
     : Base(p), theta(th), phi(ph), ctrl(ct), config(cfg), root(_root) {
     this->getBody().setRadius(config.originalRadius);
@@ -89,7 +93,7 @@ template <typename Controller, typename Config> class Cell
       action_outputs = {"quiescence", "duplicate", "rotate"};
     }
     else{
-      action_outputs = {"quiescence", "duplicate", "rotate", "contraction", "extension"};
+      action_outputs = {"quiescence", "duplicate", "rotate", "contraction"};
     }
     //set bone-like 
     // if(nconn>7){
@@ -100,7 +104,7 @@ template <typename Controller, typename Config> class Cell
 
     std::vector<double> actions;
     for (auto& astr : action_outputs) {
-      actions.push_back(ctrl.getOutput(astr));
+      actions.push_back(ctrl.getOutput(astr, worldAge, rank, maxRank));
     }
     int actionMax = 0; double actionMaxConc = 0.0;
     for (auto i = 0; i < actions.size(); ++i) {
@@ -192,11 +196,11 @@ template <typename Controller, typename Config> class Cell
       Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
       for (auto &conn : this->getBody().cellConnections) {
         if (conn->unbreakable) {
-          double force = conn->direction.dot(dpos) * config.force/2;
+          double force = conn->direction.dot(dpos) * config.force;
           conn->cells.first->getBody().receiveForce(force, -conn->direction,
-                                                    config.compressForce);
+                                                    false);
           conn->cells.second->getBody().receiveForce(force, conn->direction,
-                                                    config.compressForce);
+                                                    false);
         }
       }
       extensionCount++;

@@ -8,6 +8,7 @@
 #include "scenario.hpp"
 #include "controller.hpp"
 #include "grncontroller.hpp"
+#include "sinuscontroller.hpp"
 
 #define CHKPARAM(paramName)         \
   if (it.key() == "" #paramName "") \
