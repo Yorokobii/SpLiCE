@@ -13,7 +13,6 @@ template <typename Controller, typename Config> class Cell
   double contractTime = 0.0;
   double contractDuration = 0.0;
 
-  double surroundContract = 0.0;
 
  public:
 	using Vec = MecaCell::Vec;
@@ -24,6 +23,7 @@ template <typename Controller, typename Config> class Cell
   bool visited = false;
   bool root = false;
 
+  double surroundContract = 0.0;
   int contractionCount = 0;
   int extensionCount = 0;
   double adhCoef = 0.0;
