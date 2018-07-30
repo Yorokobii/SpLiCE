@@ -9,15 +9,15 @@
 
 template <typename Controller, typename Config> class Cell
   : public MecaCell::ConnectableCell<Cell<Controller, Config>, MecaCell::SpringBody> {
-  bool contracting = false;
-  double contractTime = 0.0;
-  double contractDuration = 0.0;
 
 
  public:
 	using Vec = MecaCell::Vec;
   using Base = MecaCell::ConnectableCell<Cell<Controller, Config>,
                                          MecaCell::SpringBody>;
+  bool contracting = false;
+  double contractTime = 0.0;
+  double contractDuration = 0.0;
 
   //Graph related
   bool visited = false;
