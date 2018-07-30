@@ -13,6 +13,8 @@ template <typename Controller, typename Config> class Cell
   double contractTime = 0.0;
   double contractDuration = 0.0;
 
+  double surroundContract = 0.0;
+
  public:
 	using Vec = MecaCell::Vec;
   using Base = MecaCell::ConnectableCell<Cell<Controller, Config>,
@@ -75,14 +77,15 @@ template <typename Controller, typename Config> class Cell
     ctrl.setInput("lcommunb", lcommunb);
     ctrl.setInput("theta", theta / (2 * M_PI));
     ctrl.setInput("phi", phi / (2 * M_PI));
-    ctrl.setInput("pressure", exp(-pressure / config.betaPressure));
+    // ctrl.setInput("pressure", exp(-pressure / config.betaPressure));
+    ctrl.setInput("pressure", pressure);
     ctrl.setInput("energy", max((energy / config.energyInitial), 0.0));
     ctrl.setInput("comdist", comdist);
     ctrl.setInput("contracting", (double)contracting);
     ctrl.setInput("deltcom", exp(deltcom / 10));
     ctrl.setInput("ncells", (double)ncells);
     ctrl.setInput("isDuplicated", (double)isDuplicated);
-    ctrl.setInput("stiffness", (double)this->getBody().stiffness);
+    ctrl.setInput("surroundContract", surroundContract);
   }
 
   template <typename W> void updateOuputs(W& w) {

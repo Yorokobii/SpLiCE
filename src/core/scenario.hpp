@@ -130,6 +130,8 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     size_t ncells = world.cells.size();
 
     for (auto& c : world.cells) {
+      nconn = 0.0;
+      c->surroundContract = 0.0;
       energy -= c->usedEnergy;
       gcomm += c->dgcomm;
       c->nage = (double) c->age / (double) worldAge;
@@ -138,10 +140,13 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       for (auto& con : c->getBody().cellConnections) {
         pressure += con->collision.computeForce(config.dt) * con->direction;
         con->cells.first->lcomm += con->cells.second->dlcomm;
-        if(con->unbreakable)
-         con->cells.first->lcommunb += con->cells.second->dlcommunb;
-        nconn++;
+        if(con->unbreakable){
+          con->cells.first->lcommunb += con->cells.second->dlcommunb;
+          nconn++;
+          if(con->cells.second->contracting) con->cells.first->surroundContract++;
+        }
       }
+      c->surroundContract /= nconn;
       c->pressure = exp(-pressure.length() / config.betaPressure);
       c->nconn = nconn;
       com += c->getPosition();
