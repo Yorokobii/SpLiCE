@@ -10,17 +10,10 @@
 struct OffscreenPlugin {
 	GLuint fbo, render_buf;
 
-	// OffscreenPlugin(){
-	// 	std::cerr<<"test"<<std::endl;
-	// 	GL()->glGenFramebuffers(1,&fbo);
-	// 	GL()->glGenRenderbuffers(1,&render_buf);
-	// 	std::cerr<<"test"<<std::endl;
-	// }
-
-	// ~OffscreenPlugin(){
-	// 	GL()->glDeleteFramebuffers(1,&fbo);
-	// 	GL()->glDeleteRenderbuffers(1,&render_buf);
-	// }
+	~OffscreenPlugin(){
+		GL()->glDeleteFramebuffers(1,&fbo);
+		GL()->glDeleteRenderbuffers(1,&render_buf);
+	}
 
 	void saveImg(int W, int H, const QString &path) {
 		std::vector<GLubyte> pixels;
