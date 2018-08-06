@@ -5,6 +5,7 @@
 
 struct GRNController {  // both controller and DNA
   using GRN_t = GRN<RealCoords>;
+  static constexpr unsigned int nbMorphogens = 3;
   GRN_t grn;
   GRNController() {}
 
@@ -23,6 +24,8 @@ struct GRNController {  // both controller and DNA
     g.addRandomProtein(ProteinType::input, "ncells");
     g.addRandomProtein(ProteinType::input, "isDuplicated");
     g.addRandomProtein(ProteinType::input, "surroundContract");
+    for(auto i = 0u ; i < nbMorphogens; ++i)
+      g.addRandomProtein(ProteinType::input, "inputMorphogen" + std::to_string(i));
 
     g.addRandomProtein(ProteinType::output, "duplicate");
     g.addRandomProtein(ProteinType::output, "rotate");
@@ -40,6 +43,9 @@ struct GRNController {  // both controller and DNA
     g.addRandomProtein(ProteinType::output, "thetaMinus");
     g.addRandomProtein(ProteinType::output, "phiPlus");
     g.addRandomProtein(ProteinType::output, "phiMinus");
+    for(auto i = 0u ; i < nbMorphogens; ++i)
+      g.addRandomProtein(ProteinType::output, "outputMorphogen" + std::to_string(i));
+
 
     g.randomParams();   // Random Beta & Delta
     g.randomReguls(5);  // start with one regul

@@ -24,6 +24,8 @@ struct Config {
   using CellType = Cell<CtrlType, Config>;
   using scenario_t = Scenario<CellType, CtrlType, Config>;
 
+  static constexpr unsigned int NB_MORPHOGENS = 3;
+
   // --------    DYNAMIC CONFIG  ----------
   // params and their default values
   std::string simShape = "";

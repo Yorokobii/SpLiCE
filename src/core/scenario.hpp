@@ -208,6 +208,26 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     currentTime += world.getDt();
     worldAge += 1;
 
+    std::vector<std::array<std::pair<MecaCell::Vec, double>, cfg_t::NB_MORPHOGENS>>
+		    morphogens;
+		for (auto& c : world.cells) {
+			std::array<std::pair<MecaCell::Vec, double>, cfg_t::NB_MORPHOGENS> morphoCenters{};
+      for (auto i = 0u; i < cfg_t::NB_MORPHOGENS; ++i) {
+        morphoCenters[i].first += c->getPosition();
+        morphoCenters[i].second += c->morphogensProduction[i];
+      }
+			if (world.cells.size() > 0) {
+				for (auto i = 0u; i < cfg_t::NB_MORPHOGENS; ++i) {
+					morphoCenters[i].first /= static_cast<double>(world.cells.size());
+					morphoCenters[i].second /= static_cast<double>(world.cells.size());
+				}
+			}
+			morphogens.push_back(morphoCenters);
+		}
+
+    for(auto& c : world.cells)
+      c->updateSensedMorphogens(world, morphogens);
+
     if (worldAge % config.controllerUpdate == 0) controllerUpdate();
     checkGraphConnection();
     for (auto& c : world.cells)

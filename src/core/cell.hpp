@@ -15,9 +15,15 @@ template <typename Controller, typename Config> class Cell
 	using Vec = MecaCell::Vec;
   using Base = MecaCell::ConnectableCell<Cell<Controller, Config>,
                                          MecaCell::SpringBody>;
+  static const unsigned int NB_MORPHOGENS = 3;
+  using morphogrid =
+    std::vector<std::array<std::pair<MecaCell::Vec, double>, NB_MORPHOGENS>>;
   bool contracting = false;
   double contractTime = 0.0;
   double contractDuration = 0.0;
+
+  //Mophogenesis related
+  std::array<double, NB_MORPHOGENS> morphogensProduction{};
 
   //Graph related
   bool visited = false;
@@ -92,6 +98,12 @@ template <typename Controller, typename Config> class Cell
     dlcomm = ctrl.getDelta("dlcommPlus", "dlcommMinus");
     dlcommunb = ctrl.getDelta("dlcommunbPlus", "dlcommunbMinus");
     dgcomm = ctrl.getDelta("dgcommPlus", "dgcommMinus");
+
+    //update morphogens output
+    for(auto i = 0u; i < NB_MORPHOGENS; ++i){
+      auto o = ctrl.getOutput(std::string("outputMorphogen") + std::to_string(i));
+      morphogensProduction[i] = o > 0.0 ? o : 0.0;
+    }
 
     if(duplicated) duplicated = false;
 
@@ -221,6 +233,18 @@ template <typename Controller, typename Config> class Cell
         this->die();
     }
     ctrl_update = false;
+  }
+
+  template <typename W> void updateSensedMorphogens(W& w, const morphogrid& morphogens){
+    for (auto i = 0u; i < NB_MORPHOGENS; ++i) {
+      double sensedMorphogens = 0.0;
+      //for each cells in the morphogrid
+      for(const auto& c : morphogens){
+        auto sql = (c[i].first - this->getPosition()).sqlength();
+        sensedMorphogens += c[i].second / (sql + 1.0);
+      }
+      ctrl.setInput(std::string("inputMorphogen") + std::to_string(i), sensedMorphogens);
+    }
   }
 
   template <typename W> void updateBehavior(W& w) {
