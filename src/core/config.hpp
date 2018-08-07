@@ -51,6 +51,7 @@ struct Config {
   double fluidDensity = 1e-4;
   double force = 1.0;
   bool compressForce = false;
+  double diffusionCoeff = 10000;
   int controllerUpdate = 5;
   int seed = 0;
 

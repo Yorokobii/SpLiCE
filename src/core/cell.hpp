@@ -92,6 +92,9 @@ template <typename Controller, typename Config> class Cell
     ctrl.setInput("ncells", (double)ncells);
     ctrl.setInput("isDuplicated", (double)isDuplicated);
     ctrl.setInput("surroundContract", surroundContract);
+    //debug
+    for(auto i = 0u; i < NB_MORPHOGENS; ++i)
+      ctrl.getInput("inputMorphogen" + std::to_string(i), 3);
   }
 
   template <typename W> void updateOuputs(W& w) {
@@ -101,7 +104,7 @@ template <typename Controller, typename Config> class Cell
 
     //update morphogens output
     for(auto i = 0u; i < NB_MORPHOGENS; ++i){
-      auto o = ctrl.getOutput(std::string("outputMorphogen") + std::to_string(i));
+      auto o = ctrl.getOutput(std::string("outputMorphogen") + std::to_string(i), 3);
       morphogensProduction[i] = o > 0.0 ? o : 0.0;
     }
 
@@ -240,7 +243,7 @@ template <typename Controller, typename Config> class Cell
       double sensedMorphogens = 0.0;
       //for each cells in the morphogrid
       for(const auto& c : morphogens){
-        auto sql = (c[i].first - this->getPosition()).sqlength();
+        auto sql = (c[i].first - this->getPosition()).length() / config.diffusionCoeff;
         sensedMorphogens += c[i].second / (sql + 1.0);
       }
       ctrl.setInput(std::string("inputMorphogen") + std::to_string(i), sensedMorphogens);
