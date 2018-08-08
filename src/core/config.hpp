@@ -111,8 +111,8 @@ struct Config {
       else CHKPARAM(fluidDensity);
       else CHKPARAM(force);
       else CHKPARAM(compressForce);
-      else CHKPARAM(diffusionCoeff);
       else CHKPARAM(controllerUpdate);
+      else CHKPARAM(diffusionCoeff);
       else CHKPARAM(seed);
       else CHKPARAM(populationSize);
       else CHKPARAM(mutationRate);

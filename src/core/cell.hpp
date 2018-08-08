@@ -36,12 +36,6 @@ template <typename Controller, typename Config> class Cell
   double theta = 0.0;
   double phi = 0.0;
   double usedEnergy = 0.0;
-  double gcomm = 0.0;
-  double dgcomm = 0.0;
-  double lcomm = 0.0;
-  double lcommunb = 0.0;
-  double dlcomm = 0.0;
-  double dlcommunb = 0.0;
   double pressure = 0.0;
   double energy = 0.0;
   double comdist = 0.0;
@@ -78,9 +72,6 @@ template <typename Controller, typename Config> class Cell
   double getAdhesionWith(Cell* c, MecaCell::Vec) { return (this->isDuplicated || c->isDuplicated) ? adhCoef : 0.0; }
 
   template <typename W> void updateInputs(W& w) {
-    ctrl.setInput("gcomm", gcomm);
-    ctrl.setInput("lcomm", lcomm);
-    ctrl.setInput("lcommunb", lcommunb);
     ctrl.setInput("theta", theta / (2 * M_PI));
     ctrl.setInput("phi", phi / (2 * M_PI));
     // ctrl.setInput("pressure", exp(-pressure / config.betaPressure));
@@ -98,9 +89,6 @@ template <typename Controller, typename Config> class Cell
   }
 
   template <typename W> void updateOuputs(W& w) {
-    dlcomm = ctrl.getDelta("dlcommPlus", "dlcommMinus");
-    dlcommunb = ctrl.getDelta("dlcommunbPlus", "dlcommunbMinus");
-    dgcomm = ctrl.getDelta("dgcommPlus", "dgcommMinus");
 
     //update morphogens output
     for(auto i = 0u; i < NB_MORPHOGENS; ++i){
@@ -243,8 +231,8 @@ template <typename Controller, typename Config> class Cell
       double sensedMorphogens = 0.0;
       //for each cells in the morphogrid
       for(const auto& c : morphogens){
-        auto sql = (c[i].first - this->getPosition()).length() / config.diffusionCoeff;
-        sensedMorphogens += c[i].second / (sql + 1.0);
+        auto l = (c[i].first - this->getPosition()).length() / config.diffusionCoeff;
+        sensedMorphogens += c[i].second / (l + 1.0);
       }
       ctrl.setInput(std::string("inputMorphogen") + std::to_string(i), sensedMorphogens);
     }

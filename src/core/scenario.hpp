@@ -17,7 +17,6 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
   std::mt19937 gen;
   double duration = 0.0;
   double energy = 0.0;
-  double gcomm = 0.0;
   double fit = 0.0;
   double shapefit = 0.0;
   int worldAge = 0;
@@ -133,15 +132,12 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       nconn = 0.0;
       c->surroundContract = 0.0;
       energy -= c->usedEnergy;
-      gcomm += c->dgcomm;
       c->nage = (double) c->age / (double) worldAge;
 
       MecaCell::Vec pressure = MecaCell::Vec::zero();
       for (auto& con : c->getBody().cellConnections) {
         pressure += con->collision.computeForce(config.dt) * con->direction;
-        con->cells.first->lcomm += con->cells.second->dlcomm;
         if(con->unbreakable){
-          con->cells.first->lcommunb += con->cells.second->dlcommunb;
           nconn++;
           if(con->cells.second->contracting) con->cells.first->surroundContract++;
         }
@@ -156,7 +152,6 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       //energy reward
       //energy += (com - prevCom).length()*20;
     }
-    gcomm = min(max(gcomm, 0.0), 1.0);
     double maxComDist = 0.0;
     for (auto& c : world.cells) {
       c->comdist = (c->getPosition() - com).length();
@@ -166,9 +161,6 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     std::uniform_real_distribution<> dis(-1, 1);
     for (auto& c : world.cells) {
       if ((c->nconn == 0) && world.cells.size() > 1) c->die();
-      c->lcomm = min(max(c->lcomm, 0.0), 1.0);
-      c->lcommunb = min(max(c->lcommunb, 0.0), 1.0);
-      c->gcomm = gcomm;
       c->energy = energy;
       c->worldAge = worldAge;
       c->ncells = ncells;
@@ -199,7 +191,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     prevCom = com;
 
     MecaCell::logger<MecaCell::DBG>(":S| ", currentTime, " ", worldAge, " ", energy, " ",
-                                    world.cells.size(), " ", gcomm, " ",
+                                    world.cells.size(), " ",
                                     totalCom, " ", fit, " ");
 
   }

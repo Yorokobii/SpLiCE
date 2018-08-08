@@ -11,9 +11,6 @@ struct GRNController {  // both controller and DNA
 
 	static GRNController random() {
     GRN_t g;
-    g.addRandomProtein(ProteinType::input, "gcomm");
-    g.addRandomProtein(ProteinType::input, "lcomm");
-    g.addRandomProtein(ProteinType::input, "lcommunb");
     g.addRandomProtein(ProteinType::input, "theta");
     g.addRandomProtein(ProteinType::input, "phi");
     g.addRandomProtein(ProteinType::input, "pressure");
@@ -33,12 +30,6 @@ struct GRNController {  // both controller and DNA
     g.addRandomProtein(ProteinType::output, "contraction");
     g.addRandomProtein(ProteinType::output, "extension");
     g.addRandomProtein(ProteinType::output, "apoptosis");
-    g.addRandomProtein(ProteinType::output, "dlcommPlus");
-    g.addRandomProtein(ProteinType::output, "dlcommMinus");
-    g.addRandomProtein(ProteinType::output, "dlcommunbPlus");
-    g.addRandomProtein(ProteinType::output, "dlcommunbMinus");
-    g.addRandomProtein(ProteinType::output, "dgcommPlus");
-    g.addRandomProtein(ProteinType::output, "dgcommMinus");
     g.addRandomProtein(ProteinType::output, "thetaPlus");
     g.addRandomProtein(ProteinType::output, "thetaMinus");
     g.addRandomProtein(ProteinType::output, "phiPlus");
