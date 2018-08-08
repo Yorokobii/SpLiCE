@@ -59,8 +59,8 @@ struct GRNController {  // both controller and DNA
   void update() { grn.step(); }
 
   void setInput(const std::string &input, double val, const int& verb = 1) {
-    if(verb >= 3) MecaCell::logger<MecaCell::DBG>("input: ", input, " ", val);
     grn.setProteinConcentration(input, ProteinType::input, val);
+    if(verb >= 3) MecaCell::logger<MecaCell::DBG>("input: ", input, " ", val);
   }
 
   double getOutput(const std::string &output, const int& verb = 1) const {
