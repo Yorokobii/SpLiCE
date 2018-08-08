@@ -106,11 +106,9 @@ template <typename Controller, typename Config> class Cell
       action_outputs = {"quiescence", "duplicate", "rotate", "contraction"};
     }
     //set bone-like 
-    // if(nconn>7){
-    //   action_outputs = {"quiescence"};
-    //   this->getBody().stiffness = 200;
-
-    // }
+    if(nconn>7){
+      action_outputs = {"quiescence"};
+    }
 
     std::vector<double> actions;
     for (auto& astr : action_outputs) {
@@ -208,9 +206,9 @@ template <typename Controller, typename Config> class Cell
         if (conn->unbreakable) {
           double force = conn->direction.dot(dpos) * config.force;
           conn->cells.first->getBody().receiveForce(force, -conn->direction,
-                                                    false);
+                                                    config.compressForce);
           conn->cells.second->getBody().receiveForce(force, conn->direction,
-                                                    false);
+                                                    config.compressForce);
         }
       }
       extensionCount++;
