@@ -49,7 +49,8 @@ struct Config {
   double newAge = 0.4;
   double betaPressure = 30.0;
   double fluidDensity = 1e-4;
-  double force = 1.0;
+  double minContractForce = 3000.0;
+  double maxContractForce = 7000.0;
   bool compressForce = false;
   double diffusionCoeff = 10000;
   int controllerUpdate = 5;
@@ -109,7 +110,8 @@ struct Config {
       else CHKPARAM(newAge);
       else CHKPARAM(betaPressure);
       else CHKPARAM(fluidDensity);
-      else CHKPARAM(force);
+      else CHKPARAM(minContractForce);
+      else CHKPARAM(maxContractForce);
       else CHKPARAM(compressForce);
       else CHKPARAM(controllerUpdate);
       else CHKPARAM(diffusionCoeff);

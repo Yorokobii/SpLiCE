@@ -23,6 +23,7 @@ struct GRNController {  // both controller and DNA
     g.addRandomProtein(ProteinType::input, "surroundContract");
     for(auto i = 0u ; i < nbMorphogens; ++i)
       g.addRandomProtein(ProteinType::input, "inputMorphogen" + std::to_string(i));
+    g.addRandomProtein(ProteinType::input, "contractForceInput");
 
     g.addRandomProtein(ProteinType::output, "duplicate");
     g.addRandomProtein(ProteinType::output, "rotate");
@@ -36,6 +37,7 @@ struct GRNController {  // both controller and DNA
     g.addRandomProtein(ProteinType::output, "phiMinus");
     for(auto i = 0u ; i < nbMorphogens; ++i)
       g.addRandomProtein(ProteinType::output, "outputMorphogen" + std::to_string(i));
+    g.addRandomProtein(ProteinType::output, "contractForceOutput");
 
 
     g.randomParams();   // Random Beta & Delta

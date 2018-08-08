@@ -45,6 +45,7 @@ template <typename Controller, typename Config> class Cell
   int age = 0;
   int worldAge = 0;
   double nage = 0.0;
+  double contractForce = 6000.0;
 
   // Vec* com = NULL;
   // Vec* prevCom = NULL;
@@ -83,18 +84,25 @@ template <typename Controller, typename Config> class Cell
     ctrl.setInput("ncells", (double)ncells);
     ctrl.setInput("isDuplicated", (double)isDuplicated);
     ctrl.setInput("surroundContract", surroundContract);
+    ctrl.setInput("contractForce", contractForce, 3);
     //debug
     for(auto i = 0u; i < NB_MORPHOGENS; ++i)
-      ctrl.getInput("inputMorphogen" + std::to_string(i), 3);
+      ctrl.getInput("inputMorphogen" + std::to_string(i), config.verbosity);
   }
 
   template <typename W> void updateOuputs(W& w) {
 
     //update morphogens output
     for(auto i = 0u; i < NB_MORPHOGENS; ++i){
-      auto o = ctrl.getOutput(std::string("outputMorphogen") + std::to_string(i), 3);
+      auto o = ctrl.getOutput(std::string("outputMorphogen") + std::to_string(i), config.verbosity);
       morphogensProduction[i] = o > 0.0 ? o : 0.0;
     }
+
+    //update contraction force
+    contractForce = (ctrl.getOutput(std::string("contractForceOutput"), 3) *
+                    (config.maxContractForce - config.minContractForce)) +
+                    config.minContractForce;
+
 
     if(duplicated) duplicated = false;
 
@@ -151,7 +159,7 @@ template <typename Controller, typename Config> class Cell
       contracting = true;
       for (auto &conn : this->getBody().cellConnections) {
         if (conn->unbreakable) {
-          double force = conn->direction.dot(dpos) * config.force;
+          double force = conn->direction.dot(dpos) * contractForce;
           conn->cells.first->getBody().receiveForce(force, conn->direction,
                                                     config.compressForce);
           conn->cells.second->getBody().receiveForce(force, -conn->direction,
@@ -159,52 +167,14 @@ template <typename Controller, typename Config> class Cell
         }
       }
       //more energy used for smaller systems
-      // usedEnergy = (config.energyInitial/config.energyDuplicate)/ncells * config.energyContraction;
       usedEnergy = config.energyContraction;
 
-      // if(contracting == false){
-      //   // start a new contraction event
-      //   contracting = true;
-      //   Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
-      //   contractionCount++;
-      //   for (auto &conn : this->getBody().cellConnections) {
-      //     if (conn->unbreakable) {
-      //       double force = conn->direction.dot(dpos) * config.force;
-      //       conn->cells.first->getBody().receiveForce(force, conn->direction,
-      //                                                 config.compressForce);
-      //       conn->cells.second->getBody().receiveForce(force, -conn->direction,
-      //                                                 config.compressForce);
-      //     }
-      //   }
-      //   //more energy used for smaller systems
-      //   // usedEnergy = (config.energyInitial/config.energyDuplicate)/ncells * config.energyContraction;
-      //   usedEnergy = config.energyContraction;
-      // }
-      // else{
-      //   if(contractTime >= contractDuration){
-      //     contractTime = 0.0;
-      //     contracting = false;
-      //   }
-      //   else{
-      //     if(contractTime <= contractDuration/4){
-      //       for (auto &conn : this->getBody().cellConnections) {
-      //         if (conn->unbreakable) {
-      //           conn->cells.first->getBody().receiveForce(config.force, conn->direction,
-      //                                                     config.compressForce);
-      //           conn->cells.second->getBody().receiveForce(config.force, -conn->direction,
-      //                                                     config.compressForce);
-      //         }
-      //       }
-      //     }
-      //     contractTime++;
-      //   }
-      // }
     } else if (action == "extension") {
 
       Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
       for (auto &conn : this->getBody().cellConnections) {
         if (conn->unbreakable) {
-          double force = conn->direction.dot(dpos) * config.force;
+          double force = conn->direction.dot(dpos) * contractForce;
           conn->cells.first->getBody().receiveForce(force, -conn->direction,
                                                     config.compressForce);
           conn->cells.second->getBody().receiveForce(force, conn->direction,
