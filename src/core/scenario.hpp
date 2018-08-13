@@ -186,7 +186,11 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     //   deltCom = (com - prevCom).length();
     //   fit++;
     // }
-    fit = totalCom.length();
+
+    // fit = totalCom.length();
+
+    //velocity fitness
+    fit = (com - prevCom).length();
 
     prevCom = com;
 
