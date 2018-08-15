@@ -182,21 +182,22 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
 
     if(!duplicated) totalCom += (com - prevCom);
     
-    // if((com - prevCom).length() > deltCom*2.0){
-    //   deltCom = (com - prevCom).length();
-    //   fit++;
-    // }
+    if((com - prevCom).length() > deltCom*2.0){
+      deltCom = (com - prevCom).length();
+      fit++;
+    }
 
-    fit = totalCom.length();
+    // fit = totalCom.length();
 
     //velocity fitness
-    // fit = (com - prevCom).length();
+    float velocity = (com - prevCom).length();
+    // fit = velocity;
 
     prevCom = com;
 
     MecaCell::logger<MecaCell::DBG>(":S| ", currentTime, " ", worldAge, " ", energy, " ",
                                     world.cells.size(), " ",
-                                    totalCom, " ", fit, " ");
+                                    totalCom, " ", fit, " ", velocity);
 
   }
 

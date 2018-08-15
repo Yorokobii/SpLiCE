@@ -84,8 +84,8 @@ template <typename Controller, typename Config> class Cell
     ctrl.setInput("ncells", (double)ncells);
     ctrl.setInput("isDuplicated", (double)isDuplicated);
     ctrl.setInput("surroundContract", surroundContract);
-    ctrl.setInput("contractForceInput", contractForce, 3);
-    ctrl.setInput("velocity", this->getBody().getVelocity().length(), 3);
+    ctrl.setInput("contractForceInput", contractForce);
+    ctrl.setInput("velocity", this->getBody().getVelocity().length());
     //debug
     for(auto i = 0u; i < NB_MORPHOGENS; ++i)
       ctrl.getInput("inputMorphogen" + std::to_string(i), config.verbosity);
@@ -100,7 +100,7 @@ template <typename Controller, typename Config> class Cell
     }
 
     //update contraction force
-    contractForce = ctrl.getOutput(std::string("contractForceOutput"), 3);
+    contractForce = ctrl.getOutput(std::string("contractForceOutput"));
 
     if(duplicated) duplicated = false;
 
