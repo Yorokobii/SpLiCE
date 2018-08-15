@@ -60,7 +60,7 @@ template <typename Controller, typename Config> class Cell
   bool isDuplicated = true;
   Controller ctrl;
   Config& config;
-  std::vector<std::string> action_outputs = {"quiescence", "duplicate", "rotate", "contraction"};
+  std::vector<std::string> action_outputs = {"quiescence", "duplicate", "rotate", "contraction", "extension"};
   Cell(const Vec& p, double th, double ph, const Controller& ct, Config& cfg, bool _root = false)
     : Base(p), theta(th), phi(ph), ctrl(ct), config(cfg), root(_root) {
     this->getBody().setRadius(config.originalRadius);
@@ -85,6 +85,7 @@ template <typename Controller, typename Config> class Cell
     ctrl.setInput("isDuplicated", (double)isDuplicated);
     ctrl.setInput("surroundContract", surroundContract);
     ctrl.setInput("contractForceInput", contractForce, 3);
+    ctrl.setInput("velocity", this->getBody().getVelocity().length(), 3);
     //debug
     for(auto i = 0u; i < NB_MORPHOGENS; ++i)
       ctrl.getInput("inputMorphogen" + std::to_string(i), config.verbosity);
@@ -108,7 +109,7 @@ template <typename Controller, typename Config> class Cell
       action_outputs = {"quiescence", "duplicate", "rotate"};
     }
     else{
-      action_outputs = {"quiescence", "duplicate", "rotate", "contraction"};
+      action_outputs = {"quiescence", "duplicate", "rotate", "contraction", "extension"};
     }
     //set bone-like 
     if(nconn>7){
@@ -165,8 +166,7 @@ template <typename Controller, typename Config> class Cell
                                                     config.compressForce);
         }
       }
-      //more energy used for smaller systems
-      usedEnergy = config.energyContraction;
+      usedEnergy = config.energyContraction * contractForce;
 
     } else if (action == "extension") {
 
@@ -174,7 +174,7 @@ template <typename Controller, typename Config> class Cell
       for (auto &conn : this->getBody().cellConnections) {
         if (conn->unbreakable) {
           double force = conn->direction.dot(dpos) * ((contractForce *
-                                                    (config.maxContractForce - config.minContractForce)) +
+                                                    (config.maxContractForce/2 - config.minContractForce)) +
                                                     config.minContractForce);
           conn->cells.first->getBody().receiveForce(force, -conn->direction,
                                                     config.compressForce);
@@ -183,7 +183,7 @@ template <typename Controller, typename Config> class Cell
         }
       }
       extensionCount++;
-      usedEnergy = config.energyContraction;
+      usedEnergy = config.energyContraction * contractForce;
 
     } else if (action == "quiescence") {
       // do nothing

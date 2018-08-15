@@ -102,7 +102,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       for (auto& c : world.cells){
         c->maxRank = maxRank;
         c->visited = false; //after rank
-        c->action_outputs = {"duplicate", "rotate", "quiescence", "contraction"};
+        c->action_outputs = {"duplicate", "rotate", "quiescence", "contraction", "extension"};
         com += c->getPosition();
       }
       com /= world.cells.size();
@@ -187,10 +187,10 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     //   fit++;
     // }
 
-    // fit = totalCom.length();
+    fit = totalCom.length();
 
     //velocity fitness
-    fit = (com - prevCom).length();
+    // fit = (com - prevCom).length();
 
     prevCom = com;
 

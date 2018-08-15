@@ -40,11 +40,11 @@ int main(int argc, char** argv) {
         next /= scenario.getWorld().cells.size();
         avgForce /= scenario.getWorld().cells.size();
         // footprints[0].push_back(1.0 - 1.0/max((double)nconn, 1.0));
-        // footprints[0].push_back(1.0 - 1.0/max((double)ncontr/100, 1.0));
-        // footprints[0].push_back(1.0 - 1.0/max((double)next/100, 1.0));
-        // footprints[0].push_back(1.0 - 1.0/max((double)nCellsContracted, 1.0));
+        footprints[0].push_back(1.0 - 1.0/max((double)ncontr/100, 1.0));
+        footprints[1].push_back(1.0 - 1.0/max((double)next/100, 1.0));
+        footprints[2].push_back(1.0 - 1.0/max((double)nCellsContracted, 1.0));
         // footprints[0].push_back(1.0 - 1.0/(double)scenario.getWorld().cells.size());
-        footprints[0].push_back(avgForce);
+        footprints[3].push_back(avgForce);
 
         // if (scenario.getWorld().cells.size() != 0) {
         //   auto clusters =

@@ -24,6 +24,7 @@ struct GRNController {  // both controller and DNA
     for(auto i = 0u ; i < nbMorphogens; ++i)
       g.addRandomProtein(ProteinType::input, "inputMorphogen" + std::to_string(i));
     g.addRandomProtein(ProteinType::input, "contractForceInput");
+    g.addRandomProtein(ProteinType::input, "velocity");
 
     g.addRandomProtein(ProteinType::output, "duplicate");
     g.addRandomProtein(ProteinType::output, "rotate");
