@@ -182,16 +182,19 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
 
     if(!duplicated) totalCom += (com - prevCom);
     
-    if((com - prevCom).length() > deltCom*(deltCom<1.0 ? 10.0 : 2.0)){
-      deltCom = (com - prevCom).length();
-      fit++;
-    }
+    // if((com - prevCom).length() > deltCom*(deltCom<1.0 ? 10.0 : 2.0)){
+    //   deltCom = (com - prevCom).length();
+    //   fit++;
+    // }
 
     // fit = totalCom.length();
 
     //velocity fitness
     float velocity = (com - prevCom).length();
     // fit = velocity;
+    if(velocity > fit)
+      fit = velocity;
+
 
     prevCom = com;
 

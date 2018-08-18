@@ -100,7 +100,7 @@ template <typename Controller, typename Config> class Cell
     }
 
     //update contraction force
-    contractForce = ctrl.getOutput(std::string("contractForceOutput"));
+    contractForce = ctrl.getOutput(std::string("contractForceOutput"), config.verbosity);
 
     if(duplicated) duplicated = false;
 
@@ -118,7 +118,7 @@ template <typename Controller, typename Config> class Cell
 
     std::vector<double> actions;
     for (auto& astr : action_outputs) {
-      actions.push_back(ctrl.getOutput(astr/*, worldAge, rank, maxRank*/));
+      actions.push_back(ctrl.getOutput(astr, config.verbosity));
     }
     int actionMax = 0; double actionMaxConc = 0.0;
     for (auto i = 0; i < actions.size(); ++i) {
