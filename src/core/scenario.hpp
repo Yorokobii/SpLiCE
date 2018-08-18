@@ -195,7 +195,6 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     if(velocity > fit)
       fit = velocity;
 
-
     prevCom = com;
 
     MecaCell::logger<MecaCell::DBG>(":S| ", currentTime, " ", worldAge, " ", energy, " ",
