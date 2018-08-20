@@ -66,7 +66,7 @@ int main(int argc, char** argv) {
   ga.setVerbosity(cfg.verbosity);
   ga.setNbThreads(cfg.nbThreads);
   ga.setSaveFolder("evos");
-  ga.enableNovelty();
+  // ga.enableNovelty();
   // ga.setKNN(cfg.populationSize);
   ga.setKNN(cfg.populationSize/10);
   ga.setComputeFootprintDistanceFunction([](const auto& f0, const auto& f1) {
