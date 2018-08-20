@@ -49,7 +49,6 @@ template <typename Controller, typename Config> class Cell
 
   // Vec* com = NULL;
   // Vec* prevCom = NULL;
-  bool duplicated = false;
 
   // sinusoidal controller variable
   int rank = 0;
@@ -102,8 +101,6 @@ template <typename Controller, typename Config> class Cell
     //update contraction force
     contractForce = ctrl.getOutput(std::string("contractForceOutput"), config.verbosity);
 
-    if(duplicated) duplicated = false;
-
     //set forced dev
     if((ncells < config.minCells || isDuplicated) && config.simShape == ""){
       action_outputs = {"quiescence", "duplicate", "rotate"};
@@ -132,14 +129,12 @@ template <typename Controller, typename Config> class Cell
 
     if (action == "duplicate") {
       if (energy >= config.energyDuplicate
-          && (config.maxCells != 0 ? w.cells.size() < config.maxCells : true)
+          /*&& (config.maxCells != 0 ? w.cells.size() < config.maxCells : true)*/
           && nconn < 7
           && config.simShape == "") {
         // cell duplicate
         Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
         w.addCell(new Cell(this->getPosition() + dpos * config.divRadius, theta, phi, ctrl, config));
-
-        duplicated = true;
 
         usedEnergy = config.energyDuplicate;
       }

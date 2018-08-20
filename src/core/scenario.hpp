@@ -177,10 +177,15 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
         c->isNew = false;
       }
 
-      if(c->duplicated) duplicated = true;
+      if(c->isDuplicated) duplicated = true;
     }
 
-    if(!duplicated) totalCom += (com - prevCom);
+    if(!duplicated)
+      sfp.fluidDensity = 0.0;
+    else
+      sfp.fluidDensity = config.fluidDensity;
+    
+    totalCom += (com - prevCom);
     
     // if((com - prevCom).length() > deltCom*(deltCom<1.0 ? 10.0 : 2.0)){
     //   deltCom = (com - prevCom).length();
