@@ -39,18 +39,18 @@ int main(int argc, char** argv) {
         ncontr /= scenario.getWorld().cells.size();
         next /= scenario.getWorld().cells.size();
         avgForce /= scenario.getWorld().cells.size();
-        // footprints[0].push_back(1.0 - 1.0/max((double)nconn, 1.0));
+        footprints[0].push_back(1.0 - 1.0/max((double)nconn, 1.0));
         footprints[0].push_back(1.0 - 1.0/max((double)ncontr/100, 1.0));
         footprints[0].push_back(1.0 - 1.0/max((double)next/100, 1.0));
         footprints[0].push_back(1.0 - 1.0/max((double)nCellsContracted, 1.0));
-        // footprints[0].push_back(1.0 - 1.0/(double)scenario.getWorld().cells.size());
+        footprints[0].push_back(1.0 - 1.0/(double)scenario.getWorld().cells.size());
         footprints[0].push_back(avgForce);
 
-        // if (scenario.getWorld().cells.size() != 0) {
-        //   auto clusters =
-        //       ClusterTools::getClusters(scenario.getWorld().cells);
-        //   footprints[0].push_back(1.0 - 1.0/(double)clusters.size());
-        // }
+        if (scenario.getWorld().cells.size() != 0) {
+          auto clusters =
+              ClusterTools::getClusters(scenario.getWorld().cells);
+          footprints[0].push_back(1.0 - 1.0/(double)clusters.size());
+        }
 
         individual.footprint = footprints;
 
@@ -67,7 +67,8 @@ int main(int argc, char** argv) {
   ga.setNbThreads(cfg.nbThreads);
   ga.setSaveFolder("evos");
   ga.enableNovelty();
-  ga.setKNN(cfg.populationSize);
+  // ga.setKNN(cfg.populationSize);
+  ga.setKNN(cfg.populationSize/10);
   ga.setComputeFootprintDistanceFunction([](const auto& f0, const auto& f1) {
     assert(f0.size() == f1.size());
 		double d = 0;
