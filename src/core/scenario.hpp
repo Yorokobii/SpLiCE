@@ -229,7 +229,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
   }
 
   world_t& getWorld() { return world; }
-  bool finished() { return ((duration==0 ? currentTime > 1000 : currentTime > duration) || energy <= 0.0 ||
+  bool finished() { return ((duration < 1 ? currentTime > 1000 : currentTime > duration) || energy <= 0.0 ||
                             world.cells.size() == 0); }
 };
 
