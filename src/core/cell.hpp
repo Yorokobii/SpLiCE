@@ -50,10 +50,6 @@ template <typename Controller, typename Config> class Cell
   // Vec* com = NULL;
   // Vec* prevCom = NULL;
 
-  // sinusoidal controller variable
-  int rank = 0;
-  int maxRank = 0;
-
   bool ctrl_update = false;
   bool isNew = true;
   bool isDuplicated = true;
@@ -102,12 +98,16 @@ template <typename Controller, typename Config> class Cell
     contractForce = ctrl.getOutput(std::string("contractForceOutput"), config.verbosity);
 
     //set forced dev
-    if((ncells < config.minCells || isDuplicated) && config.simShape == ""){
-      action_outputs = {"quiescence", "duplicate", "rotate"};
+    if(config.simShape == ""){
+      if(ncells < config.minCells || isDuplicated){
+        action_outputs = {"quiescence", "duplicate", "rotate"};
+      }
+      else{
+        action_outputs = {"quiescence", "duplicate", "rotate", "contraction", "extension"};
+      }
     }
-    else{
-      action_outputs = {"quiescence", "duplicate", "rotate", "contraction", "extension"};
-    }
+    else
+      action_outputs = {"quiescence", "rotate", "contraction", "extension"};
     //set bone-like 
     if(nconn>7){
       action_outputs = {"quiescence"};
@@ -212,7 +212,7 @@ template <typename Controller, typename Config> class Cell
     else{
       isDuplicated = false;
     }
-    if (!isNew && ctrl_update) {
+    if (/*!isNew && */ctrl_update) {
       // set inputs
       updateInputs(w);
       // call the controller

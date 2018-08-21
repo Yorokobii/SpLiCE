@@ -6,25 +6,26 @@
 
 struct SinController {
  public:
-  double* step;
-  SinController() {
-    step = new double;
-    *step = 0.0;
-  }
+  SinController() {}
 
   static SinController random() {
     return SinController();
+  }
+
+  double getInput(const std::string &input, const int& verb = 1) const {
+    return 0.0;
   }
 
   void setInput(const std::string &input, double val) {
     MecaCell::logger<MecaCell::DBG>("input: ", input, " ", val);
   }
 
-  double getOutput(const std::string &output, const int& step = 0, const int& rank = 0, const int& maxrank = 0) const {
+  double getOutput(const std::string &output, const int& verb = 1, const int& step = 0) const {
     double r = 0.0;
-    if ((sin((step/50)/*-(2*M_PI*rank/maxrank)*/) > 0.5 && output == "contraction")
+    if ((sin((step/50)) > 0.5 && output == "contract")
         /*|| (sin(step/100) <= 0 && output == "extension")*/)
         r = 1.0;
+    if(verb >= 3) MecaCell::logger<MecaCell::DBG>("output: ", output, " ", r);
     return r;
   }
 

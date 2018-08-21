@@ -26,8 +26,6 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
   MecaCell::Vec totalCom = MecaCell::Vec::zero();
   double deltCom = 0.0;
 
-  //maxrank for sinus controller
-  int maxRank = 0;
 
  protected:
   double currentTime = 0;
@@ -97,11 +95,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       world.update();
       world.update();
 
-      rankCells(world.cells[0], 0);
-
       for (auto& c : world.cells){
-        c->maxRank = maxRank;
-        c->visited = false; //after rank
         c->action_outputs = {"duplicate", "rotate", "quiescence", "contraction", "extension"};
         com += c->getPosition();
       }
@@ -112,14 +106,6 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       world.addCell(new cell_t(MecaCell::Vec::zero(), 0.0, 0.0, controller, config, true));
       world.update();
     }
-  }
-
-  void rankCells(cell_t* c, int _rank){
-    if(_rank > maxRank) maxRank = _rank;
-    c->rank = _rank;
-    c->visited = true;
-    for(auto& conn : c->getBody().cellConnections)
-      if(!conn->cells.second->visited) rankCells(conn->cells.second, _rank+1);
   }
 
   void controllerUpdate() {
