@@ -12,15 +12,19 @@ struct BaseController {
     return BaseController();
   }
 
-  void setInput(const std::string &input, double val) {
+  void setInput(const std::string &input, double val, const int& verb = 1) {
     MecaCell::logger<MecaCell::DBG>("input: ", input, " ", val);
   }
 
-  double getOutput(const std::string &output) const {
+  double getOutput(const std::string &output, const int& verb = 1) const {
     std::uniform_real_distribution<> dis(0.0, 1.0);
     double r = dis(MecaCell::Config::globalRand());
-    if (output == "contraction") r *= 0.2;
+    // if (output == "contraction") r *= 0.2;
     return r;
+  }
+
+  double getInput(const std::string &input, const int& verb = 1) const {
+    return 0.0;
   }
 
   double getDelta(const std::string &o1, const std::string &o2) {
