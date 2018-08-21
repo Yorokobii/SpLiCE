@@ -129,7 +129,7 @@ template <typename Controller, typename Config> class Cell
 
     if (action == "duplicate") {
       if (energy >= config.energyDuplicate
-          /*&& (config.maxCells != 0 ? w.cells.size() < config.maxCells : true)*/
+          && (config.maxCells != 0 ? w.cells.size() < config.maxCells : true)
           && nconn < 7
           && config.simShape == "") {
         // cell duplicate
