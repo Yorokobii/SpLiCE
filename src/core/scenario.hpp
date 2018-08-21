@@ -98,6 +98,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       for (auto& c : world.cells){
         c->action_outputs = {"duplicate", "rotate", "quiescence", "contraction", "extension"};
         com += c->getPosition();
+        c->isDuplicated = true;
       }
       com /= world.cells.size();
       prevCom = com;
@@ -166,14 +167,14 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       if(c->isDuplicated) duplicated = true;
     }
 
-    // if(duplicated)
-    //   sfp.fluidDensity = 0.0;
-    // else{
-    //   sfp.fluidDensity = config.fluidDensity;
-    //   totalCom += (com - prevCom);
-    // }
+    if(duplicated)
+      sfp.fluidDensity = 0.0;
+    else{
+      sfp.fluidDensity = config.fluidDensity;
+      totalCom += (com - prevCom);
+    }
     
-    totalCom += (com - prevCom);
+    // totalCom += (com - prevCom);
     
     // if((com - prevCom).length() > deltCom*(deltCom<1.0 ? 10.0 : 2.0)){
     //   deltCom = (com - prevCom).length();
