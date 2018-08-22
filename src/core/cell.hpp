@@ -169,7 +169,7 @@ template <typename Controller, typename Config> class Cell
       for (auto &conn : this->getBody().cellConnections) {
         if (conn->unbreakable) {
           double force = conn->direction.dot(dpos) * ((contractForce *
-                                                    (config.maxContractForce/2 - config.minContractForce)) +
+                                                    (config.maxContractForce - config.minContractForce)) +
                                                     config.minContractForce);
           conn->cells.first->getBody().receiveForce(force, -conn->direction,
                                                     config.compressForce);

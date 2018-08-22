@@ -183,13 +183,13 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     //   		fit++;
     // 	}
 
-    // fit = totalCom.length();
+    fit = totalCom.length();
 
     //velocity fitness
     float velocity = (com - prevCom).length();
-    sumVelocity += velocity;
+    // sumVelocity += velocity;
 
-    fit = sumVelocity / (double)worldAge;
+    // fit = sumVelocity / (double)worldAge;
     
     // fit = velocity;
 
