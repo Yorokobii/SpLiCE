@@ -7,6 +7,7 @@
 #include "viewerplugins/camera.hpp"
 #include "viewerplugins/colors.hpp"
 #include "viewerplugins/complugin.hpp"
+#include "viewerplugins/comlineplugin.hpp"
 #include "viewerplugins/grid.hpp"
 #include "viewerplugins/screencapture.hpp"
 #include "viewerplugins/autostop.hpp"
@@ -21,6 +22,7 @@ int main(int argc, char** argv) {
 
   ColorModePlugins cmp;
   CenterOfMassPlugin comp;
+  CenterOfMassLinePlugin comlp;
   CenteredCameraPlugin ccp;
   GridViewerPlugin gvp;
   PointViewerPlugin pvp;
@@ -29,7 +31,7 @@ int main(int argc, char** argv) {
   AutoStop astop;
   MecacellViewer::Viewer<Config::scenario_t> v(scenario);
   v.setNbLoopsPerFrame(2);
-  v.registerPlugins(cmp, gvp, ccp, comp, scp, astart, astop);
+  v.registerPlugins(cmp, gvp, ccp, comp, comlp, scp, astart, astop);
   // v.registerPlugins(cmp, gvp, ccp, comp, scp, astop);
 
   return v.exec();
