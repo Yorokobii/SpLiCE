@@ -189,7 +189,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     float velocity = (com - prevCom).length();
     sumVelocity += velocity;
 
-    fit = sumVelocity / worldAge;
+    fit = sumVelocity / (double)worldAge;
     
     // fit = velocity;
 
