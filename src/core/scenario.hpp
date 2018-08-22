@@ -25,6 +25,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
   MecaCell::Vec prevCom = MecaCell::Vec::zero();
   MecaCell::Vec totalCom = MecaCell::Vec::zero();
   double deltCom = 0.0;
+  double sumVelocity = 0.0;
 
 
  protected:
@@ -176,19 +177,21 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     
     // totalCom += (com - prevCom);
     
-    if(!duplicated)
-    	if((com - prevCom).length() > deltCom*(deltCom<1.0 ? 10.0 : 2.0)){
-      		deltCom = (com - prevCom).length();
-      		fit++;
-    	}
+    // if(!duplicated)
+    // 	if((com - prevCom).length() > deltCom*(deltCom<1.0 ? 10.0 : 2.0)){
+    //   		deltCom = (com - prevCom).length();
+    //   		fit++;
+    // 	}
 
     // fit = totalCom.length();
 
     //velocity fitness
     float velocity = (com - prevCom).length();
+    sumVelocity += velocity;
+
+    fit = sumVelocity / worldAge;
+    
     // fit = velocity;
-    // if(velocity > fit)
-    //   fit = velocity;
 
     prevCom = com;
 
