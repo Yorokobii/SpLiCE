@@ -64,9 +64,9 @@ class CenterOfMassLinePlugin {
 		cmd.load(renderer);
 		comtrace.onToggled = [&](R *r, MenuElement<R> *me) {
 			if (me->isChecked())
-				r->addPaintStepsMethods(40, [&](R *r2) { cmd.call(r2); });
+				r->addPaintStepsMethods(156, [&](R *r2) { cmd.call(r2); });
 			else
-				r->erasePaintStepsMethods(40);
+				r->erasePaintStepsMethods(156);
 		};
 		nativeDisplayMenu->at("Cells").add(comtrace);
 	}
