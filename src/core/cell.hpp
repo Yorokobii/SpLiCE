@@ -109,7 +109,7 @@ template <typename Controller, typename Config> class Cell
     else
       action_outputs = {"quiescence", "rotate", "contraction", "extension"};
     //set bone-like 
-    if(nconn>8){
+    if(nconn>10){
       action_outputs = {"quiescence"};
     }
 
