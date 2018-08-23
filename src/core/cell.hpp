@@ -150,17 +150,11 @@ template <typename Controller, typename Config> class Cell
       Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
       contractionCount++;
       contracting = true;
-      for (auto &conn : this->getBody().cellConnections) {
-        if (conn->unbreakable) {
-          double force = conn->direction.dot(dpos) * ((contractForce *
-                                                    (config.maxContractForce - config.minContractForce)) +
-                                                    config.minContractForce);
-          conn->cells.first->getBody().receiveForce(force, conn->direction,
-                                                    config.compressForce);
-          conn->cells.second->getBody().receiveForce(force, -conn->direction,
-                                                    config.compressForce);
-        }
-      }
+      for (auto &conn : this->getBody().cellConnections)
+        if (conn->unbreakable)
+          conn->adhCoef = adhCoef*((contractForce *
+                                  (config.maxContractForce - config.minContractForce)) +
+                                  config.minContractForce);
       usedEnergy = config.energyContraction * contractForce;
 
     } else if (action == "quiescence") {
@@ -170,6 +164,10 @@ template <typename Controller, typename Config> class Cell
       if(!this->root)
         this->die();
     }
+    if(action != "contraction")
+      for (auto &conn : this->getBody().cellConnections)
+        if (conn->unbreakable)
+          conn->adhCoef = adhCoef;
     ctrl_update = false;
   }
 
