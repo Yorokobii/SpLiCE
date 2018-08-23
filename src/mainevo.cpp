@@ -28,11 +28,8 @@ int main(int argc, char** argv) {
           totalContr += c->contractionCount;
         }
         if(coc.length() != 0){
-          cout << "\n\n\n1 " << coc.x() << " " <<coc.y() << " " << coc.z() << "\n\n\n";
           coc /= totalContr;
-          cout << "\n\n\n2 " << coc.x() << " " <<coc.y() << " " << coc.z() << "\n\n\n";
           coc -= com;
-          cout << "\n\n\n3 " << coc.x() << " " <<coc.y() << " " << coc.z() << "\n\n\n";
           coc.normalize();
         }
 
@@ -40,12 +37,11 @@ int main(int argc, char** argv) {
         footprints[0].push_back(coc.x());
         footprints[0].push_back(coc.y());
         footprints[0].push_back(coc.z());
-        cout << "\n\n\n4 " << coc.x() << " " <<coc.y() << " " << coc.z() << "\n\n\n";
         com.normalize();
-        // footprints.push_back(std::vector<double>());
-        // footprints[1].push_back(com.x());
-        // footprints[1].push_back(com.y());
-        // footprints[1].push_back(com.z());
+        footprints.push_back(std::vector<double>());
+        footprints[1].push_back(com.x());
+        footprints[1].push_back(com.y());
+        footprints[1].push_back(com.z());
 
         //compute nconn footprint
         // float nconn = 0.0;
