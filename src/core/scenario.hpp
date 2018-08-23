@@ -184,7 +184,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     // 	}
 
     // fit = totalCom.length();
-    fit = com;
+    fit = com.length();
 
     //velocity fitness
     float velocity = (com - prevCom).length();
