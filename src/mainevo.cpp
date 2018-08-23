@@ -36,10 +36,10 @@ int main(int argc, char** argv) {
         footprints[0].push_back(coc.y());
         footprints[0].push_back(coc.z());
         com.normalize();
-        footprints.push_back(std::vector<double>());
-        footprints[1].push_back(com.x());
-        footprints[1].push_back(com.y());
-        footprints[1].push_back(com.z());
+        // footprints.push_back(std::vector<double>());
+        // footprints[1].push_back(com.x());
+        // footprints[1].push_back(com.y());
+        // footprints[1].push_back(com.z());
 
         //compute nconn footprint
         // float nconn = 0.0;
@@ -83,7 +83,7 @@ int main(int argc, char** argv) {
   ga.setVerbosity(cfg.verbosity);
   ga.setNbThreads(cfg.nbThreads);
   ga.setSaveFolder("evos");
-  // ga.enableNovelty();
+  ga.enableNovelty();
   // ga.setKNN(cfg.populationSize);
   ga.setKNN(cfg.populationSize/10);
   ga.setComputeFootprintDistanceFunction([](const auto& f0, const auto& f1) {
