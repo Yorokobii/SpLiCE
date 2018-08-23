@@ -45,6 +45,7 @@ template <typename Controller, typename Config> class Cell
   int worldAge = 0;
   double nage = 0.0;
   double contractForce = 1.0;
+  double contractionTimer = 0.0;
 
   // Vec* com = NULL;
   // Vec* prevCom = NULL;
@@ -154,6 +155,7 @@ template <typename Controller, typename Config> class Cell
           conn->adhCoef = adhCoef*((contractForce *
                                   (config.maxContractForce - config.minContractForce)) +
                                   config.minContractForce);
+      contractionTimer = age + config.contractDuration;
       usedEnergy = config.energyContraction * contractForce;
 
     } else if (action == "quiescence") {
@@ -163,7 +165,7 @@ template <typename Controller, typename Config> class Cell
       if(!this->root)
         this->die();
     }
-    if(action != "contraction")
+    if(action != "contraction" && contractionTimer < age)
       for (auto &conn : this->getBody().cellConnections)
         if (conn->unbreakable)
           conn->adhCoef = adhCoef;
