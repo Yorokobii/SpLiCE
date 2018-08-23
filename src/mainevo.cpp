@@ -31,9 +31,15 @@ int main(int argc, char** argv) {
         coc -= com;
         coc.normalize();
 
-        footprints.push_back({coc.x, coc.y, coc.z});
+        footprints.push_back(std::vector<double>());
+        footprints[0].push_back(coc.x);
+        footprints[0].push_back(coc.y);
+        footprints[0].push_back(coc.z);
         com.normalize();
-        footprints.push_back({com.x, com.y, com.z});
+        footprints.push_back(std::vector<double>());
+        footprints[1].push_back(com.x);
+        footprints[1].push_back(com.y);
+        footprints[1].push_back(com.z);
 
         //compute nconn footprint
         // float nconn = 0.0;
