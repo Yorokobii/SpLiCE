@@ -31,7 +31,6 @@ template <typename Controller, typename Config> class Cell
 
   double surroundContract = 0.0;
   int contractionCount = 0;
-  int extensionCount = 0;
   double adhCoef = 0.0;
   double theta = 0.0;
   double phi = 0.0;
