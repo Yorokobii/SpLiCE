@@ -68,16 +68,16 @@ template <typename Controller, typename Config> class Cell
   double getAdhesionWith(Cell* c, MecaCell::Vec) { return (this->isDuplicated || c->isDuplicated) ? adhCoef : 0.0; }
 
   template <typename W> void updateInputs(W& w) {
-    ctrl.setInput("theta", theta / (2 * M_PI));
-    ctrl.setInput("phi", phi / (2 * M_PI));
+    // ctrl.setInput("theta", theta / (2 * M_PI));
+    // ctrl.setInput("phi", phi / (2 * M_PI));
     // ctrl.setInput("pressure", exp(-pressure / config.betaPressure));
     ctrl.setInput("pressure", pressure);
-    ctrl.setInput("energy", max((energy / config.energyInitial), 0.0));
+    // ctrl.setInput("energy", max((energy / config.energyInitial), 0.0));
     ctrl.setInput("comdist", comdist);
     ctrl.setInput("contracting", (double)contracting);
     ctrl.setInput("deltcom", exp(deltcom / 10));
-    ctrl.setInput("ncells", (double)ncells);
-    ctrl.setInput("isDuplicated", (double)isDuplicated);
+    // ctrl.setInput("ncells", (double)ncells);
+    // ctrl.setInput("isDuplicated", (double)isDuplicated);
     ctrl.setInput("surroundContract", surroundContract);
     ctrl.setInput("contractForceInput", contractForce);
     ctrl.setInput("velocity", this->getBody().getVelocity().length());

@@ -11,15 +11,15 @@ struct GRNController {  // both controller and DNA
 
 	static GRNController random() {
     GRN_t g;
-    g.addRandomProtein(ProteinType::input, "theta");
-    g.addRandomProtein(ProteinType::input, "phi");
+    // g.addRandomProtein(ProteinType::input, "theta");
+    // g.addRandomProtein(ProteinType::input, "phi");
     g.addRandomProtein(ProteinType::input, "pressure");
-    g.addRandomProtein(ProteinType::input, "energy");
+    // g.addRandomProtein(ProteinType::input, "energy");
     g.addRandomProtein(ProteinType::input, "comdist");
     g.addRandomProtein(ProteinType::input, "contracting");
     g.addRandomProtein(ProteinType::input, "deltcom");
-    g.addRandomProtein(ProteinType::input, "ncells");
-    g.addRandomProtein(ProteinType::input, "isDuplicated");
+    // g.addRandomProtein(ProteinType::input, "ncells");
+    // g.addRandomProtein(ProteinType::input, "isDuplicated");
     g.addRandomProtein(ProteinType::input, "surroundContract");
     for(auto i = 0u ; i < nbMorphogens; ++i)
       g.addRandomProtein(ProteinType::input, "inputMorphogen" + std::to_string(i));
