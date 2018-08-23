@@ -27,15 +27,18 @@ int main(int argc, char** argv) {
           coc += c->contractionCount * c->getPosition();
           totalContr += c->contractionCount;
         }
+        cout << "\n\n\n1 " << coc.x() << " " <<coc.y() << " " << coc.z() << "\n\n\n";
         coc /= totalContr;
+        cout << "\n\n\n2 " << coc.x() << " " <<coc.y() << " " << coc.z() << "\n\n\n";
         coc -= com;
+        cout << "\n\n\n3 " << coc.x() << " " <<coc.y() << " " << coc.z() << "\n\n\n";
         coc.normalize();
 
         footprints.push_back(std::vector<double>());
         footprints[0].push_back(coc.x());
         footprints[0].push_back(coc.y());
         footprints[0].push_back(coc.z());
-        cout << "\n\n\n" << coc.x() << " " <<coc.y() << " " << coc.z() << "\n\n\n";
+        cout << "\n\n\n4 " << coc.x() << " " <<coc.y() << " " << coc.z() << "\n\n\n";
         com.normalize();
         // footprints.push_back(std::vector<double>());
         // footprints[1].push_back(com.x());
