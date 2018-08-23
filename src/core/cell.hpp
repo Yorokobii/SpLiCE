@@ -92,7 +92,7 @@ template <typename Controller, typename Config> class Cell
     //update morphogens output
     for(auto i = 0u; i < NB_MORPHOGENS; ++i){
       auto o = ctrl.getOutput(std::string("outputMorphogen") + std::to_string(i), config.verbosity);
-      morphogensProduction[i] = o > 0.0 ? o : 0.0;
+      morphogensProduction[i] = o;
     }
 
     //update contraction force
@@ -177,10 +177,10 @@ template <typename Controller, typename Config> class Cell
       double sensedMorphogens = 0.0;
       //for each cells in the morphogrid
       for(const auto& c : morphogens){
-        auto l = (c[i].first - this->getPosition()).length() / config.diffusionCoeff;
+        auto l = (c[i].first - this->getPosition()).length() / config.originalRadius;
         sensedMorphogens += c[i].second / (l + 1.0);
       }
-      ctrl.setInput(std::string("inputMorphogen") + std::to_string(i), sensedMorphogens);
+      ctrl.setInput(std::string("inputMorphogen") + std::to_string(i), min(sensedMorphogens, 1.0));
       sm[i] = sensedMorphogens;
     }
   }

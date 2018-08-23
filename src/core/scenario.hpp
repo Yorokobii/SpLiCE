@@ -211,15 +211,9 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
 		for (auto& c : world.cells) {
 			std::array<std::pair<MecaCell::Vec, double>, cfg_t::NB_MORPHOGENS> morphoCenters{};
       for (auto i = 0u; i < cfg_t::NB_MORPHOGENS; ++i) {
-        morphoCenters[i].first += c->getPosition();
+        morphoCenters[i].first = c->getPosition();
         morphoCenters[i].second += c->morphogensProduction[i];
       }
-			if (world.cells.size() > 0) {
-				for (auto i = 0u; i < cfg_t::NB_MORPHOGENS; ++i) {
-					morphoCenters[i].first /= static_cast<double>(world.cells.size());
-					morphoCenters[i].second /= static_cast<double>(world.cells.size());
-				}
-			}
 			morphogens.push_back(morphoCenters);
 		}
 
