@@ -22,17 +22,6 @@ struct CenterOfMassDrawer {
 		for (auto &c : r->getScenario().getWorld().cells) prevcom += toQV3D(c->getPosition());
 		prevcom /= static_cast<double>(r->getScenario().getWorld().cells.size());
 	}
-	
-	template <typename R> void preBehaviorUpdate(R *r) {
-		if (r->getScenario().getWorld().getNbUpdates() % 20 <= 1) {
-			QVector3D com = toQV3D(r->getScenario().com);
-			auto l = (com - prevcom).length();
-			if (l > 0) {
-				positions.push_back({prevcom, com});
-				prevcom = com;
-			}
-		}
-	}
 
 	template <typename R> void call(R *r) {
 
@@ -81,6 +70,17 @@ class CenterOfMassPlugin {
 				r->erasePaintStepsMethods(40);
 		};
 		nativeDisplayMenu->at("Cells").add(comtrace);
+	}
+
+	template <typename R> void preDraw(R *r) {
+		if (r->getScenario().getWorld().getNbUpdates() % 20 <= 1) {
+			QVector3D com = toQV3D(r->getScenario().com);
+			auto l = (com - cmd.prevcom).length();
+			if (l > 0) {
+				cmd.positions.push_back({cmd.prevcom, com});
+				cmd.prevcom = com;
+			}
+		}
 	}
 };
 
