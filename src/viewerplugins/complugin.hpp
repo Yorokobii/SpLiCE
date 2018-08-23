@@ -22,8 +22,8 @@ struct CenterOfMassDrawer {
 		for (auto &c : r->getScenario().getWorld().cells) prevcom += toQV3D(c->getPosition());
 		prevcom /= static_cast<double>(r->getScenario().getWorld().cells.size());
 	}
-
-	template <typename R> void call(R *r) {
+	
+	template <typename R> void preBehaviorUpdate(R *r) {
 		if (r->getScenario().getWorld().getNbUpdates() % 20 <= 1) {
 			QVector3D com = toQV3D(r->getScenario().com);
 			auto l = (com - prevcom).length();
@@ -32,6 +32,9 @@ struct CenterOfMassDrawer {
 				prevcom = com;
 			}
 		}
+	}
+
+	template <typename R> void call(R *r) {
 
 		const QMatrix4x4 &view = r->getViewMatrix();
 		const QMatrix4x4 &projection = r->getProjectionMatrix();
@@ -69,7 +72,7 @@ class CenterOfMassPlugin {
  public:
 	template <typename R> void onLoad(R *renderer) {
 		MenuElement<R> *nativeDisplayMenu = renderer->getDisplayMenu();
-		MenuElement<R> comtrace = {"COM trace", false};
+		MenuElement<R> comtrace = {"COM trace", true};
 		cmd.load(renderer);
 		comtrace.onToggled = [&](R *r, MenuElement<R> *me) {
 			if (me->isChecked())
