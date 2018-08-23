@@ -9,9 +9,8 @@ struct ColorModePlugins {
 		template <typename W> void postBehaviorUpdate(W* w) {
 			if (enabled) {
 				for (auto& c : w->cells) {
-					double f = c->getBody().getForce().length();
-					std::cerr << "f = " << f << std::endl;
-					c->setColorHSV(f * 10.0, 0.8, 0.8);
+					double d = sqrt(c->sm[0]*c->sm[0] + c->sm[1]*c->sm[1] + c->sm[2]*c->sm[2]);
+					c->setColorRGB(c->sm[0]/d*255, c->sm[1]/d*255, c->sm[2]/d*255);
 				}
 			}
 		}
@@ -24,7 +23,7 @@ struct ColorModePlugins {
 		MenuElement<R> color = {"Cell coloration",
 		                        elementType::exclusiveGroup,
 		                        {
-		                            {"Red", true}, {"Blue", false}, {"Forces", false},
+		                            {"Red", true}, {"Blue", false}, {"Morphogens", false},
 		                        }};
 
 		color.onToggled = [&](auto* r, auto* me) {
@@ -33,7 +32,7 @@ struct ColorModePlugins {
 			} else if (me->at("Blue").isChecked()) {
 				for (auto& c : r->getScenario().getWorld().cells) c->setColorRGB(10, 160, 200);
 			}
-			if (me->at("Forces").isChecked())
+			if (me->at("Morphogens").isChecked())
 				ccp.enabled = true;
 			else
 				ccp.enabled = false;

@@ -24,6 +24,7 @@ template <typename Controller, typename Config> class Cell
 
   //Mophogenesis related
   std::array<double, NB_MORPHOGENS> morphogensProduction{};
+  std::array<double, NB_MORPHOGENS> sm{};
 
   //Graph related
   bool visited = false;
@@ -180,6 +181,7 @@ template <typename Controller, typename Config> class Cell
         sensedMorphogens += c[i].second / (l + 1.0);
       }
       ctrl.setInput(std::string("inputMorphogen") + std::to_string(i), sensedMorphogens);
+      sm[i] = sensedMorphogens;
     }
   }
 
