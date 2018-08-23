@@ -18,7 +18,7 @@ template <typename Controller, typename Config> class Cell
   static const unsigned int NB_MORPHOGENS = 3;
   using morphogrid =
     std::vector<std::array<std::pair<MecaCell::Vec, double>, NB_MORPHOGENS>>;
-  bool contracting = false;
+  double contracting = false;
   double contractTime = 0.0;
   double contractDuration = 0.0;
 
@@ -74,7 +74,7 @@ template <typename Controller, typename Config> class Cell
     ctrl.setInput("pressure", pressure);
     // ctrl.setInput("energy", max((energy / config.energyInitial), 0.0));
     ctrl.setInput("comdist", comdist);
-    ctrl.setInput("contracting", (double)contracting);
+    ctrl.setInput("contracting", contracting);
     ctrl.setInput("deltcom", exp(deltcom / 10));
     // ctrl.setInput("ncells", (double)ncells);
     // ctrl.setInput("isDuplicated", (double)isDuplicated);
@@ -125,7 +125,6 @@ template <typename Controller, typename Config> class Cell
       }
     }
     std::string action = action_outputs[actionMax];
-    contracting = false;
 
     if (action == "duplicate") {
       if (energy >= config.energyDuplicate
@@ -149,7 +148,6 @@ template <typename Controller, typename Config> class Cell
 
       Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
       contractionCount++;
-      contracting = true;
       for (auto &conn : this->getBody().cellConnections)
         if (conn->unbreakable)
           conn->adhCoef = adhCoef*((contractForce *
@@ -165,6 +163,7 @@ template <typename Controller, typename Config> class Cell
       if(!this->root)
         this->die();
     }
+    contracting = max(0.0, contractionTimer - age);
     if(action != "contraction" && contractionTimer < age)
       for (auto &conn : this->getBody().cellConnections)
         if (conn->unbreakable)

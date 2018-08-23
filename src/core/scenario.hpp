@@ -127,7 +127,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
         pressure += con->collision.computeForce(config.dt) * con->direction;
         if(con->unbreakable){
           nconn++;
-          if(con->cells.second->contracting) con->cells.first->surroundContract++;
+          if(con->cells.second->contracting > 0) con->cells.first->surroundContract++;
         }
       }
       c->surroundContract /= nconn;
