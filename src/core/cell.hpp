@@ -180,8 +180,8 @@ template <typename Controller, typename Config> class Cell
         auto l = (c[i].first - this->getPosition()).length() / config.originalRadius;
         sensedMorphogens += c[i].second / (l/config.diffusionCoeff + 1.0);
       }
-      ctrl.setInput(std::string("inputMorphogen") + std::to_string(i), min(sensedMorphogens, 1.0));
-      sm[i] = sensedMorphogens;
+      sm[i] = min((1.0-config.absorption) * sm[i] + config.diffusionMax * config.absorption * sensedMorphogens, 1.0);
+      ctrl.setInput(std::string("inputMorphogen") + std::to_string(i), sm[i]);
     }
   }
 

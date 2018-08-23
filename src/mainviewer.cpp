@@ -1,10 +1,12 @@
 #define MECACELL_TERMINAL_COLORS
 #define MECACELL_LOGGER_WARN_DISABLE
+#define MECACELL_LOGGER_DBG_DISABLE
 #include <mecacell/mecacell.h>
 #include <mecacellviewer/viewer.h>
 #include <mecacellviewer/plugins/meshviewerplugin.hpp>
 #include "core/config.hpp"
 #include "viewerplugins/camera.hpp"
+#include "viewerplugins/smoothcameramovements.hpp"
 #include "viewerplugins/colors.hpp"
 #include "viewerplugins/complugin.hpp"
 #include "viewerplugins/comlineplugin.hpp"
@@ -24,6 +26,7 @@ int main(int argc, char** argv) {
   CenterOfMassPlugin comp;
   CenterOfMassLinePlugin comlp;
   CenteredCameraPlugin ccp;
+  SmoothMoveAroundTargetPlugin rcp;
   GridViewerPlugin gvp;
   PointViewerPlugin pvp;
   ScreenCapturePlugin scp;
@@ -31,7 +34,8 @@ int main(int argc, char** argv) {
   AutoStop astop;
   MecacellViewer::Viewer<Config::scenario_t> v(scenario);
   v.setNbLoopsPerFrame(2);
-  v.registerPlugins(cmp, gvp, ccp, comp, comlp, scp, astart, astop);
+  
+  v.registerPlugins(cmp, gvp, ccp, comp, comlp, scp, astart);
   // v.registerPlugins(cmp, gvp, ccp, comp, scp, astop);
 
   return v.exec();

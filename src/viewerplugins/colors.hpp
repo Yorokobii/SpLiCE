@@ -9,8 +9,8 @@ struct ColorModePlugins {
 		template <typename W> void postBehaviorUpdate(W* w) {
 			if (enabled) {
 				for (auto& c : w->cells) {
-					double d = sqrt(c->sm[0]*c->sm[0] + c->sm[1]*c->sm[1] + c->sm[2]*c->sm[2]);
-					c->setColorRGB(c->sm[0]/d*255, c->sm[1]/d*255, c->sm[2]/d*255);
+					//double d = sqrt(c->sm[0]*c->sm[0] + c->sm[1]*c->sm[1] + c->sm[2]*c->sm[2]);
+					c->setColorRGB(c->sm[0]*200, c->sm[1]*200, c->sm[2]*200);
 				}
 			}
 		}

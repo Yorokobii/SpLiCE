@@ -53,6 +53,8 @@ struct Config {
   double maxContractForce = 7000.0;
   bool compressForce = false;
   double diffusionCoeff = 10000;
+  double absorption = 0.1;
+  double diffusionMax = 0.01;
   int controllerUpdate = 5;
   int seed = 0;
 
@@ -115,6 +117,8 @@ struct Config {
       else CHKPARAM(compressForce);
       else CHKPARAM(controllerUpdate);
       else CHKPARAM(diffusionCoeff);
+      else CHKPARAM(absorption);
+      else CHKPARAM(diffusionMax);
       else CHKPARAM(seed);
       else CHKPARAM(populationSize);
       else CHKPARAM(mutationRate);
