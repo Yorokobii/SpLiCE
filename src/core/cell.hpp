@@ -178,7 +178,7 @@ template <typename Controller, typename Config> class Cell
       //for each cells in the morphogrid
       for(const auto& c : morphogens){
         auto l = (c[i].first - this->getPosition()).length() / config.originalRadius;
-        sensedMorphogens += c[i].second / (l + 1.0);
+        sensedMorphogens += c[i].second / (l/config.diffusionCoeff + 1.0);
       }
       ctrl.setInput(std::string("inputMorphogen") + std::to_string(i), min(sensedMorphogens, 1.0));
       sm[i] = sensedMorphogens;
