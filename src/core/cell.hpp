@@ -109,9 +109,9 @@ template <typename Controller, typename Config> class Cell
     else
       action_outputs = {"quiescence", "rotate", "contraction"};
     //set bone-like 
-    if(nconn>10){
-      action_outputs = {"quiescence"};
-    }
+    // if(nconn>10){
+    //   action_outputs = {"quiescence"};
+    // }
 
     std::vector<double> actions;
     for (auto& astr : action_outputs) {
