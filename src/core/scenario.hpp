@@ -97,7 +97,7 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       world.update();
 
       for (auto& c : world.cells){
-        c->action_outputs = {"duplicate", "rotate", "quiescence", "contraction", "extension"};
+        c->action_outputs = {"duplicate", "rotate", "quiescence", "contraction"};
         com += c->getPosition();
         c->isDuplicated = true;
       }

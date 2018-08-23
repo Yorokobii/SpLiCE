@@ -30,7 +30,6 @@ struct GRNController {  // both controller and DNA
     g.addRandomProtein(ProteinType::output, "rotate");
     g.addRandomProtein(ProteinType::output, "quiescence");
     g.addRandomProtein(ProteinType::output, "contraction");
-    g.addRandomProtein(ProteinType::output, "extension");
     g.addRandomProtein(ProteinType::output, "apoptosis");
     g.addRandomProtein(ProteinType::output, "thetaPlus");
     g.addRandomProtein(ProteinType::output, "thetaMinus");
