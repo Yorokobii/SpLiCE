@@ -151,9 +151,7 @@ template <typename Controller, typename Config> class Cell
       contractionCount++;
       for (auto &conn : this->getBody().cellConnections)
         if (conn->unbreakable)
-          conn->adhCoef = adhCoef*((contractForce *
-                                  (config.maxContractForce - config.minContractForce)) +
-                                  config.minContractForce);
+          conn->adhCoef = adhCoef;
       contractionTimer = age + config.contractDuration;
       usedEnergy = config.energyContraction * contractForce;
 
@@ -168,7 +166,9 @@ template <typename Controller, typename Config> class Cell
     if(action != "contraction" && contractionTimer < age)
       for (auto &conn : this->getBody().cellConnections)
         if (conn->unbreakable)
-          conn->adhCoef = adhCoef;
+          conn->adhCoef = adhCoef*((contractForce *
+                                  (config.maxContractForce - config.minContractForce)) +
+                                  config.minContractForce);
     ctrl_update = false;
   }
 
