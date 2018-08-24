@@ -1,6 +1,5 @@
 #define MECACELL_TERMINAL_COLORS
 #define MECACELL_LOGGER_WARN_DISABLE
-#define MECACELL_LOGGER_DBG_DISABLE
 #include <mecacell/mecacell.h>
 #include <mecacellviewer/viewer.h>
 #include <mecacellviewer/plugins/meshviewerplugin.hpp>

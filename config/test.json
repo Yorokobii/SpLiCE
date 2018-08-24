@@ -1,6 +1,6 @@
 {
-    "grnFile": "test.dna",
-    "simShape": "config/worm40.shape",
+    "grnFile": "",
+    "simShape": "config/quadpus40.shape",
     "simDuration": 0.0,
     "dt": 0.01,
     "originalRadius": 45.0,
@@ -31,7 +31,7 @@
     "mutationRate": 0.9,
     "crossoverRate": 0.1,
     "nbGenerations": 5000,
-    "verbosity": 3,
+    "verbosity": 1,
     "nbThreads": 40,
     "speciation": true,
     "minSpecieSize": 10,

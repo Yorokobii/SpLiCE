@@ -21,6 +21,9 @@ set(MECACELL_VIEWER_DIR ${MECACELL_DIR}/mecacellviewer)
 add_executable(console ${SRC} src/mainconsole.cpp)
 target_include_directories(console PUBLIC ${MECACELL_DIR} src/external)
 
+add_executable(shapes ${SRC} src/mainspherepacking.cpp)
+target_include_directories(shapes PUBLIC ${MECACELL_DIR} src/external)
+
 add_executable(evo ${SRC} src/mainevo.cpp)
 target_include_directories(evo PUBLIC ${MECACELL_DIR} src/external)
 
