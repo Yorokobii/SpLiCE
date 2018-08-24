@@ -33,7 +33,7 @@
     "mutationRate": 0.9,
     "crossoverRate": 0.1,
     "nbGenerations": 5000,
-    "verbosity": 3,
+    "verbosity": 1,
     "nbThreads": 40,
     "speciation": true,
     "minSpecieSize": 10,
