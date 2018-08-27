@@ -6,6 +6,7 @@
 #include "core/config.hpp"
 // #include "core/evaluators.hpp"
 #include "core/capture.hpp"
+#include <cstdio>
 
 int main(int argc, char** argv) {
   Config cfg(argc, argv);
@@ -29,6 +30,8 @@ int main(int argc, char** argv) {
         scenario.controller = Config::CtrlType(individual.dna);
         scenario.init();
         while (!scenario.finished()) scenario.loop();
+
+        std::remove(fileName.str().c_str());
 
         std::vector<std::vector<double>> footprints;
 
