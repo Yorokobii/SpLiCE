@@ -13,7 +13,7 @@ int main(int argc, char** argv) {
 
   GAGA::GA<Config::CtrlType> ga(argc, argv);
 
-  mkdir("../pop/", 0777);
+  mkdir("pop/", 0777);
 
   ga.setEvaluator([cfg](auto& individual, int k) {
 
