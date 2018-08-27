@@ -12,7 +12,17 @@ int main(int argc, char** argv) {
 
   GAGA::GA<Config::CtrlType> ga(argc, argv);
 
-  ga.setEvaluator([cfg](auto& individual, int) {
+  ga.setEvaluator([cfg](auto& individual, int k) {
+
+        std::stringstream fileName;
+        fileName << "../pop/" << k << ".dna";
+        std::ofstream fs(fileName.str());
+        if (!fs) {
+          cerr << "Cannot open the output file." << endl;
+        }
+        fs << individual.dna.serialize();
+        fs.close();
+
         Config::scenario_t scenario(cfg);
         scenario.controller = Config::CtrlType(individual.dna);
         scenario.init();
