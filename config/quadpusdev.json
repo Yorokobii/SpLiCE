@@ -22,7 +22,7 @@
     "betaPressure": 30.0,
     "fluidDensity": 0.0005,
     "minContractForce": 4.0,
-    "maxContractForce": 7.0,
+    "maxContractForce": 5.0,
     "compressForce": true,
     "controllerUpdate": 2,
     "diffusionCoeff": 0.2,

@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
   ga.setEvaluator([cfg](auto& individual, int k) {
 
         std::stringstream fileName;
-        fileName << "../pop/" << k << ".dna";
+        fileName << "pop/" << k << ".dna";
         std::ofstream fs(fileName.str());
         if (!fs) {
           cerr << "Cannot open the output file." << endl;
@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
         if(coc.length() != 0){
           coc /= totalContr;
           coc -= com;
-          coc.normalize();
+          //coc.normalize();
         }
 
         footprints.push_back(std::vector<double>());
@@ -53,10 +53,10 @@ int main(int argc, char** argv) {
         footprints[0].push_back(coc.y());
         footprints[0].push_back(coc.z());
         com.normalize();
-        footprints.push_back(std::vector<double>());
-        footprints[1].push_back(com.x());
-        footprints[1].push_back(com.y());
-        footprints[1].push_back(com.z());
+        //footprints.push_back(std::vector<double>());
+        footprints[0].push_back(com.x());
+        footprints[0].push_back(com.y());
+        footprints[0].push_back(com.z());
 
         //compute nconn footprint
         // float nconn = 0.0;
