@@ -1,6 +1,9 @@
 #ifndef PLUGIN_COLORS_HPP
 #define PLUGIN_COLORS_HPP
 
+#include <math.h>
+#include <array>
+
 using namespace MecacellViewer;
 
 struct ColorModePlugins {
@@ -8,9 +11,19 @@ struct ColorModePlugins {
 		bool enabled = false;
 		template <typename W> void postBehaviorUpdate(W* w) {
 			if (enabled) {
+				std::array<std::pair<double, double>, 3> MinMaxSM;
+				for (auto& c : w->cells)
+					for(int i = 0; i < 3;  ++i){
+						MinMaxSM[i].first = min(MinMaxSM[i].first, c->sm[i]);
+						MinMaxSM[i].second = max(MinMaxSM[i].second, c->sm[i]);
+					}
+
 				for (auto& c : w->cells) {
-					//double d = sqrt(c->sm[0]*c->sm[0] + c->sm[1]*c->sm[1] + c->sm[2]*c->sm[2]);
-					c->setColorRGB(c->sm[0]*200, c->sm[1]*200, c->sm[2]*200);
+					std::array<double, 3> sm{};
+					for(int i = 0; i < 3; ++i)
+						sm[i] = (c->sm[i] - MinMaxSM[i].first)/(MinMaxSM[i].second - MinMaxSM[i].first);
+					
+					c->setColorRGB(sm[0]*200, sm[1]*200, sm[2]*200);
 				}
 			}
 		}

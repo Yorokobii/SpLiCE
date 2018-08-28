@@ -29,6 +29,7 @@ template <typename Controller, typename Config> class Cell
   //Graph related
   bool visited = false;
   bool root = false;
+  Vec initialPosition;
 
   double surroundContract = 0.0;
   int contractionCount = 0;
@@ -64,6 +65,7 @@ template <typename Controller, typename Config> class Cell
     this->getBody().setMass(config.cellMass);
     adhCoef = config.adhCoef;
     contractDuration = config.contractDuration;
+    initialPosition = this->getPosition();
   }
 
   double getAdhesionWith(Cell* c, MecaCell::Vec) { return (this->isDuplicated || c->isDuplicated) ? adhCoef : 0.0; }
@@ -195,6 +197,7 @@ template <typename Controller, typename Config> class Cell
     else{
       isDuplicated = false;
     }
+
     if (/*!isNew && */ctrl_update) {
       // set inputs
       updateInputs(w);
