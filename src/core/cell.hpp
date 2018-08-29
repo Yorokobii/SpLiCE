@@ -66,7 +66,6 @@ template <typename Controller, typename Config> class Cell
   template <typename W> void updateInputs(W& w) {
     // ctrl.setInput("theta", theta / (2 * M_PI));
     // ctrl.setInput("phi", phi / (2 * M_PI));
-    // ctrl.setInput("pressure", pressure);
     ctrl.setInput("pressure", pressure);
     // ctrl.setInput("energy", max((energy / config.energyInitial), 0.0));
     ctrl.setInput("comdist", comdist);
@@ -75,7 +74,6 @@ template <typename Controller, typename Config> class Cell
     // ctrl.setInput("ncells", (double)ncells);
     // ctrl.setInput("isDuplicated", (double)isDuplicated);
     ctrl.setInput("surroundContract", surroundContract);
-    ctrl.setInput("contractForceInput", contractForce);
     ctrl.setInput("velocity", this->getBody().getVelocity().length());
     //debug
     for(auto i = 0u; i < NB_MORPHOGENS; ++i)
@@ -139,11 +137,12 @@ template <typename Controller, typename Config> class Cell
       usedEnergy = config.energyRotate;
     } else if (action == "contraction") {
 
-      Vec dpos {sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
       contractionCount++;
       for (auto &conn : this->getBody().cellConnections)
         if (conn->unbreakable)
-          conn->adhCoef = adhCoef;
+          conn->adhCoef = adhCoef*((contractForce *
+                                  (config.maxContractForce - config.minContractForce)) +
+                                  config.minContractForce);
       contractionTimer = age + config.contractDuration;
       usedEnergy = config.energyContraction * contractForce;
 
@@ -158,9 +157,7 @@ template <typename Controller, typename Config> class Cell
     if(action != "contraction" && contractionTimer < age)
       for (auto &conn : this->getBody().cellConnections)
         if (conn->unbreakable)
-          conn->adhCoef = adhCoef*((contractForce *
-                                  (config.maxContractForce - config.minContractForce)) +
-                                  config.minContractForce);
+          conn->adhCoef = adhCoef;
     ctrl_update = false;
   }
 

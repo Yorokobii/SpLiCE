@@ -60,6 +60,9 @@ int main(int argc, char** argv) {
         footprints[0].push_back(com.x());
         footprints[0].push_back(com.z());
 
+
+        // novelty number of clusters
+
         // if (scenario.getWorld().cells.size() != 0) {
         //   auto clusters =
         //       ClusterTools::getClusters(scenario.getWorld().cells);

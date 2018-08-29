@@ -36,7 +36,7 @@ struct ColorModePlugins {
 		MenuElement<R> color = {"Cell coloration",
 		                        elementType::exclusiveGroup,
 		                        {
-		                            {"Red", true}, {"Blue", false}, {"Morphogens", false},
+		                            {"Red", false}, {"Blue", false}, {"Morphogens", true},
 		                        }};
 
 		color.onToggled = [&](auto* r, auto* me) {
