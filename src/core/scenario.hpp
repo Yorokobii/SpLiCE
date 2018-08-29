@@ -18,14 +18,11 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
   double duration = 0.0;
   double energy = 0.0;
   double fit = 0.0;
-  double shapefit = 0.0;
   int worldAge = 0;
   ctrl_t controller;
   MecaCell::Vec com = MecaCell::Vec::zero();
   MecaCell::Vec prevCom = MecaCell::Vec::zero();
-  MecaCell::Vec totalCom = MecaCell::Vec::zero();
   double deltCom = 0.0;
-  double sumVelocity = 0.0;
 
 
  protected:
@@ -117,10 +114,9 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     size_t ncells = world.cells.size();
 
     for (auto& c : world.cells) {
-      nconn = 0.0;
+      nconn = 0;
       c->surroundContract = 0.0;
       energy -= c->usedEnergy;
-      c->nage = (double) c->age / (double) worldAge;
 
       MecaCell::Vec pressure = MecaCell::Vec::zero();
       for (auto& con : c->getBody().cellConnections) {
@@ -150,7 +146,6 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
     for (auto& c : world.cells) {
       if ((c->nconn == 0) && world.cells.size() > 1) c->die();
       c->energy = energy;
-      c->worldAge = worldAge;
       c->ncells = ncells;
       c->deltcom = (com - prevCom).length();
 
@@ -168,37 +163,19 @@ template <typename cell_t, typename ctrl_t, typename cfg_t> class Scenario {
       if(c->isDuplicated) duplicated = true;
     }
 
+    //create "void" on duplicate
     if(duplicated)
       sfp.fluidDensity = 0.0;
     else{
       sfp.fluidDensity = config.fluidDensity;
-      totalCom += (com - prevCom);
     }
     
-    // totalCom += (com - prevCom);
-    
-    // if(!duplicated)
-    // 	if((com - prevCom).length() > deltCom*(deltCom<1.0 ? 10.0 : 2.0)){
-    //   		deltCom = (com - prevCom).length();
-    //   		fit++;
-    // 	}
-
-    // fit = totalCom.length();
     fit = com.length()/10.0;
-
-    //velocity fitness
-    float velocity = (com - prevCom).length();
-    // sumVelocity += velocity;
-
-    // fit = sumVelocity / (double)worldAge;
-    
-    // fit = velocity;
 
     prevCom = com;
 
     MecaCell::logger<MecaCell::DBG>(":S| ", currentTime, " ", worldAge, " ", energy, " ",
-                                    world.cells.size(), " ",
-                                    totalCom, " ", fit, " ", velocity);
+                                    world.cells.size(), " ",fit);
 
   }
 

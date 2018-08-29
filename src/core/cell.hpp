@@ -18,7 +18,7 @@ template <typename Controller, typename Config> class Cell
   static const unsigned int NB_MORPHOGENS = 3;
   using morphogrid =
     std::vector<std::array<std::pair<MecaCell::Vec, double>, NB_MORPHOGENS>>;
-  double contracting = false;
+  double contracting = 0.0;
   double contractTime = 0.0;
   double contractDuration = 0.0;
 
@@ -29,7 +29,6 @@ template <typename Controller, typename Config> class Cell
   //Graph related
   bool visited = false;
   bool root = false;
-  Vec initialPosition;
 
   double surroundContract = 0.0;
   int contractionCount = 0;
@@ -44,16 +43,11 @@ template <typename Controller, typename Config> class Cell
   int nconn = 0;
   int ncells = 0;
   int age = 0;
-  int worldAge = 0;
-  double nage = 0.0;
   double contractForce = 1.0;
   double contractionTimer = 0.0;
 
-  // Vec* com = NULL;
-  // Vec* prevCom = NULL;
-
   bool ctrl_update = false;
-  bool isNew = true;
+  bool isNew = true; //used in scenario
   bool isDuplicated = true;
   Controller ctrl;
   Config& config;
@@ -65,7 +59,6 @@ template <typename Controller, typename Config> class Cell
     this->getBody().setMass(config.cellMass);
     adhCoef = config.adhCoef;
     contractDuration = config.contractDuration;
-    initialPosition = this->getPosition();
   }
 
   double getAdhesionWith(Cell* c, MecaCell::Vec) { return (this->isDuplicated || c->isDuplicated) ? adhCoef : 0.0; }
@@ -73,7 +66,7 @@ template <typename Controller, typename Config> class Cell
   template <typename W> void updateInputs(W& w) {
     // ctrl.setInput("theta", theta / (2 * M_PI));
     // ctrl.setInput("phi", phi / (2 * M_PI));
-    // ctrl.setInput("pressure", exp(-pressure / config.betaPressure));
+    // ctrl.setInput("pressure", pressure);
     ctrl.setInput("pressure", pressure);
     // ctrl.setInput("energy", max((energy / config.energyInitial), 0.0));
     ctrl.setInput("comdist", comdist);
@@ -111,10 +104,7 @@ template <typename Controller, typename Config> class Cell
     }
     else
       action_outputs = {"quiescence", "rotate", "contraction"};
-    //set bone-like 
-    // if(nconn>10){
-    //   action_outputs = {"quiescence"};
-    // }
+
 
     std::vector<double> actions;
     for (auto& astr : action_outputs) {
@@ -189,16 +179,13 @@ template <typename Controller, typename Config> class Cell
 
   template <typename W> void updateBehavior(W& w) {
     //passed a certain age the cell is not new anymore
-    if(age < config.newAge){
-      for(auto& c : this->getBody().cellConnections){
+    if(age < config.newAge)
+      for(auto& c : this->getBody().cellConnections)
         c->unbreakable = true;
-      }
-    }
-    else{
+    else
       isDuplicated = false;
-    }
 
-    if (/*!isNew && */ctrl_update) {
+    if (ctrl_update) {
       // set inputs
       updateInputs(w);
       // call the controller
